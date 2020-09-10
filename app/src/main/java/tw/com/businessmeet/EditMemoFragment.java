@@ -8,6 +8,10 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.Spanned;
+import android.text.TextWatcher;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +20,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -23,7 +29,9 @@ import java.util.List;
 
 import retrofit2.Call;
 import tw.com.businessmeet.adapter.FriendMemoAddColumnRecyclerViewAdapter;
+import tw.com.businessmeet.adapter.FriendMemoTagRecyclerViewAdapter;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
+import tw.com.businessmeet.bean.FriendLabelBean;
 import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.dao.FriendCustomizationDAO;
 import tw.com.businessmeet.helper.AsyncTasKHelper;
@@ -51,6 +59,10 @@ public class EditMemoFragment extends Fragment {
     // floating button
     private FloatingActionButton floatingActionButton;
 
+    //chip
+    private Chip chips;
+    private FriendMemoTagRecyclerViewAdapter friendMemoTagRecyclerViewAdapter;
+    private ArrayList<FriendLabelBean> friendLabelBeanList = new ArrayList<FriendLabelBean>();
     // MemoFragment
     private FriendCustomizationBean fcb = new FriendCustomizationBean();
     private RecyclerView recyclerViewMemo;
@@ -79,6 +91,7 @@ public class EditMemoFragment extends Fragment {
                 }
             };
 
+    //column
     private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>> searchResponseListener = new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>>() {
 
         @Override
@@ -142,7 +155,7 @@ public class EditMemoFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_edit_memo, container, false);
         // recyclerView
         recyclerViewMemo = (RecyclerView) view.findViewById(R.id.friends_edit_profile_memo_recycleView);
-        initRecyclerView();
+        initMemoRecyclerView();
         // floating button
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.memo_addColumn);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -191,7 +204,7 @@ public class EditMemoFragment extends Fragment {
         friendCustomizationDAO = new FriendCustomizationDAO(dh);
     }
 
-    private void initRecyclerView() {
+    private void initMemoRecyclerView() {
         // 創建adapter
         friendMemoAddColumnRecyclerViewAdapter = new FriendMemoAddColumnRecyclerViewAdapter(getActivity(), friendCustomizationBeanList);
         // recycleView設置adapter

@@ -133,4 +133,9 @@
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
+    <!-- chip -->
+    <style name="chip" parent="TextAppearance.MaterialComponents.Chip">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 </resources>

@@ -1,69 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="6dp"
     android:layout_marginBottom="6dp">
 
     <LinearLayout
+        android:id="@+id/friends_edit_profile_memo_recycleView_column"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="center|left"
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/friends_edit_profile_memo_recycleView_removeColumn"
+            android:id="@+id/friends_edit_profile_memo_recycleView_column_removeColumn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:background="@color/trasparent"
             android:src="@drawable/ic_remove_circle_outline_black_16dp" />
 
         <TextView
-            android:id="@+id/friends_edit_profile_memo_recycleView_title"
+            android:id="@+id/friends_edit_profile_memo_recycleView_column_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="15"
-            android:text=""
+            android:layout_marginLeft="4dp"
+            android:text="test"
             android:textColor="@color/black"
             android:textSize="18dp" />
-        <!--
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/friends_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginLeft="12dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="4dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|left"
-                        android:text="王曉明"
-                        android:textColor="@color/colorAlmostBlack"
-                        android:textSize="17sp" />
-
-                    <TextView
-                        android:id="@+id/friends_profession"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginLeft="12dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|left"
-                        android:text="學生"
-                        android:textColor="#6F6F6F"
-                        android:textSize="14sp" />
-                </LinearLayout>
-                -->
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/friends_edit_profile_memo_recycleView_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/friends_edit_profile_memo_recycleView_column">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/friends_edit_profile_memo_recycleView_tag_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="請輸入標籤" />
+        <!--
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chips"
+                    style="@style/Widget.MaterialComponents.Chip.Entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center|left"
+                    android:text="Your Tag"
+                    app:closeIcon="@drawable/ic_cancel_16dp"
+                    app:closeIconEnabled="true"
+                    app:layout_constraintStart_toStartOf="@id/friends_edit_profile_memo_recycleView_tag"
+                    app:layout_constraintTop_toBottomOf="@id/friends_edit_profile_memo_recycleView_tag" />
+        -->
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/friends_edit_profile_memo_tags_recycleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/friends_edit_profile_memo_recycleView_tag" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
