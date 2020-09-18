@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -152,7 +151,7 @@ public class EditMemoFragment extends Fragment {
                 Log.d("EditMemoFragment", "friendNo:" + getActivity().getIntent().getIntExtra("friendNo", 0));
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                View view = inflater.inflate(R.layout.add_column, null);
+                View view = inflater.inflate(R.layout.friend_add_column, null);
                 builder.setView(view);
                 builder.create();
                 AlertDialog alertDialog = builder.show();

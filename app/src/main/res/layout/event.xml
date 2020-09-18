@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/event_toolbar"
         android:layout_marginTop="8dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -88,6 +88,7 @@
                 tools:ignore="MissingConstraints" />
 
             <ImageView
+
                 android:id="@+id/tag_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -100,6 +101,7 @@
                 tools:ignore="MissingConstraints" />
 
             <TextView
+
                 android:id="@+id/event_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -189,15 +191,16 @@
 
             <TextView
                 android:id="@+id/add_event_memo"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:maxWidth="300dp"
-                android:maxEms="100"
-                android:text="準備準備準備準備準備準備準備準備準備準468791454987備準備準備準備準備12354"
-                android:textSize="16dp"
+                android:text="準備準備準備wwwwwwwwwwwwww準備準備準備準備準備準備準468791454987備準備準備準備準備12354"
                 android:textColor="@color/colorAlmostBlack"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/participant_avatar"
+
                 app:layout_constraintTop_toBottomOf="@+id/event_participant"
                 tools:ignore="MissingConstraints" />
 

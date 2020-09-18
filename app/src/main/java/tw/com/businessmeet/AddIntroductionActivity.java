@@ -64,7 +64,7 @@ public class AddIntroductionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_introduction);
+        setContentView(R.layout.introduction_add);
         confirm = (Button)findViewById(R.id.confirm_introduction);
         userId = (TextView)findViewById(R.id.add_profile_user_id);
         password = (TextView)findViewById(R.id.add_profile_password);

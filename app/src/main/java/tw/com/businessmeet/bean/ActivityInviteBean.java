@@ -12,6 +12,8 @@ public class ActivityInviteBean {
     private String modifyDate;
     private Integer statusCode;
 
+    private String userName;
+    private String avatar;
 
 
     public static String[] getColumn() {
@@ -64,5 +66,21 @@ public class ActivityInviteBean {
 
     public void setStatusCode(Integer statusCode) {
         this.statusCode = statusCode;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
