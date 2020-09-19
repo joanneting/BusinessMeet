@@ -1,20 +1,13 @@
 package tw.com.businessmeet;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewCompat;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-
-import java.util.concurrent.FutureTask;
 
 public class ColorSelectActivity extends AppCompatActivity {
     private RadioGroup radioGroup;
@@ -23,7 +16,7 @@ public class ColorSelectActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.color_select);
+        setContentView(R.layout.event_color_select);
 
         //Pop
         DisplayMetrics displayMetrics = new DisplayMetrics();

@@ -2,7 +2,6 @@ package tw.com.businessmeet;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import tw.com.businessmeet.R;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -11,20 +10,12 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
-import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
-import org.w3c.dom.Text;
 
 public class CrateEventActivity extends AppCompatActivity {
 
@@ -37,7 +28,7 @@ public class CrateEventActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.crate_event);
+        setContentView(R.layout.event_create);
 
         //Event = (TextView) findViewById(R.);
 
@@ -115,7 +106,7 @@ public class CrateEventActivity extends AppCompatActivity {
                 Intent i = new Intent(getApplicationContext(), ColorSelectActivity.class);
                 startActivity(i);
 //                MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(CrateEventActivity.this);
-//                materialAlertDialogBuilder.setView(R.layout.color_select);
+//                materialAlertDialogBuilder.setView(R.layout.event_color_select);
             }
         });
 

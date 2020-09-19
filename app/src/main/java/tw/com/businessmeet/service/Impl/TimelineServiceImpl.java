@@ -17,6 +17,10 @@ public class TimelineServiceImpl implements TimelineService{
     public Call<ResponseBody<List<TimelineBean>>> search(TimelineBean timelineBean) {
         return TimelineApi.search(timelineBean);
     }
+    @Override
+    public Call<ResponseBody<List<TimelineBean>>> searchList(TimelineBean timelineBean) {
+        return TimelineApi.searchList(timelineBean);
+    }
 
     @Override
     public Call<ResponseBody<TimelineBean>> add(TimelineBean timelineBean) {
@@ -31,5 +35,9 @@ public class TimelineServiceImpl implements TimelineService{
     @Override
     public Call<ResponseBody<Empty>> delete(Integer timelineNo) {
         return TimelineApi.delete(timelineNo);
+    }
+    @Override
+    public Call<ResponseBody<TimelineBean>> getById(Integer timelineNo) {
+        return TimelineApi.getById(timelineNo);
     }
 }

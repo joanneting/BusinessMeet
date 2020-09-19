@@ -29,7 +29,7 @@ public class TimelineDAO {
         values.put(column[5],timelineBean.getRemark());
         values.put(column[6],timelineBean.getTimelinePropertiesNo());
         values.put(column[7],timelineBean.getColor());
-        values.put(column[8],timelineBean.getCreateDate());
+        values.put(column[8],timelineBean.getCreateDateStr());
         values.put(column[9],timelineBean.getModifyDate());
         return values;
     }
@@ -47,7 +47,7 @@ public class TimelineDAO {
     public Cursor search(TimelineBean timelineBean){
         String matchmakerId = timelineBean.getMatchmakerId();
         String friendId = timelineBean.getFriendId();
-        String createDate = timelineBean.getCreateDate();
+        String createDate = timelineBean.getCreateDateStr();
         String[] searchValue = new String[]{matchmakerId,friendId,createDate};
         String[] searchColumn = new String[]{column[1],column[2],column[8]};
         String where = "";

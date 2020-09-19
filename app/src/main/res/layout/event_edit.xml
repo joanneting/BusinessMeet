@@ -45,15 +45,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="64dp"
                 android:layout_marginLeft="64dp"
-                android:hint="編集活動"
+                android:hint="編輯活動"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="MissingConstraints">
-
-            </EditText>
-
-
-
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/clock_icon"
@@ -64,82 +59,7 @@
                 android:src="@drawable/ic_schedule_24px"
                 app:layout_constraintBottom_toBottomOf="@id/event_date"
                 app:layout_constraintStart_toStartOf="parent"
-
-                app:layout_constraintTop_toTopOf="@id/event_date"
-                tools:ignore="MissingConstraints" />
-
-            <ImageView
-                android:id="@+id/tag_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:src="@drawable/ic_local_offer_24px"
-                app:layout_constraintBottom_toBottomOf="@+id/event_tag"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/event_tag"
-                app:layout_constraintVertical_bias="1.0"
-                tools:ignore="MissingConstraints" />
-
-
-            <ImageView
-                android:id="@+id/location_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_place_24px"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_event_location"
-                app:layout_constraintEnd_toEndOf="@+id/tag_icon"
-                app:layout_constraintStart_toStartOf="@+id/tag_icon"
-                app:layout_constraintTop_toTopOf="@+id/edit_event_location"
-                tools:ignore="MissingConstraints" />
-
-            <ImageView
-                android:id="@+id/participant_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_people_24px"
-                app:layout_constraintBottom_toBottomOf="@+id/event_participant"
-                app:layout_constraintEnd_toEndOf="@+id/location_icon"
-                app:layout_constraintStart_toStartOf="@+id/location_icon"
-                app:layout_constraintTop_toTopOf="@+id/edit_event_participant"
-                tools:ignore="MissingConstraints" />
-
-
-            <ImageView
-                android:id="@+id/memo_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_format_align_left_24px"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_event_memo"
-                app:layout_constraintEnd_toEndOf="@+id/participant_icon"
-                app:layout_constraintStart_toStartOf="@+id/participant_icon"
-                app:layout_constraintTop_toTopOf="@+id/edit_event_memo"
-                tools:ignore="MissingConstraints" />
-
-            <ImageView
-                android:id="@+id/add_event_color"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@color/timelineGreen"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_color"
-                app:layout_constraintEnd_toEndOf="@+id/participant_icon"
-                app:layout_constraintHorizontal_bias="0.08"
-
-                app:layout_constraintStart_toStartOf="@+id/participant_icon"
-                app:layout_constraintTop_toTopOf="@+id/edit_color" />
-
-
-            <Switch
-                android:id="@+id/switch_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:text=""
-                app:layout_constraintBottom_toBottomOf="@+id/event_date"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/event_date"
-                tools:ignore="MissingConstraints" />
+                app:layout_constraintTop_toTopOf="@id/event_date" />
 
             <TextView
                 android:id="@+id/event_date"
@@ -152,8 +72,18 @@
                 android:textSize="14dp"
                 android:theme="@style/AppTheme.content"
                 app:layout_constraintStart_toEndOf="@id/clock_icon"
-                app:layout_constraintTop_toBottomOf="@+id/edit_event"
-                tools:ignore="MissingConstraints" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_event" />
+
+            <Switch
+                android:id="@+id/switch_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:text=""
+                app:layout_constraintBottom_toBottomOf="@+id/event_date"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/event_date" />
 
             <TextView
                 android:id="@+id/date_start"
@@ -163,9 +93,7 @@
                 android:hint="開始日期"
                 android:theme="@style/AppTheme.content"
                 app:layout_constraintStart_toStartOf="@+id/event_date"
-                app:layout_constraintTop_toBottomOf="@+id/event_date"
-                tools:ignore="MissingConstraints" />
-
+                app:layout_constraintTop_toBottomOf="@+id/event_date" />
 
             <TextView
                 android:id="@+id/time_start"
@@ -175,8 +103,7 @@
                 android:theme="@style/AppTheme.content"
                 app:layout_constraintBottom_toBottomOf="@+id/date_start"
                 app:layout_constraintEnd_toEndOf="@+id/switch_day"
-                app:layout_constraintTop_toTopOf="@+id/date_start"
-                tools:ignore="MissingConstraints" />
+                app:layout_constraintTop_toTopOf="@+id/date_start" />
 
             <TextView
                 android:id="@+id/date_end"
@@ -186,8 +113,7 @@
                 android:hint="結束日期"
                 android:theme="@style/AppTheme.content"
                 app:layout_constraintStart_toStartOf="@+id/date_start"
-                app:layout_constraintTop_toBottomOf="@+id/date_start"
-                tools:ignore="MissingConstraints" />
+                app:layout_constraintTop_toBottomOf="@+id/date_start" />
 
 
             <TextView
@@ -198,9 +124,17 @@
                 android:theme="@style/AppTheme.content"
                 app:layout_constraintBottom_toBottomOf="@+id/date_end"
                 app:layout_constraintEnd_toEndOf="@+id/time_start"
-                app:layout_constraintTop_toTopOf="@+id/date_end"
-                tools:ignore="MissingConstraints" />
+                app:layout_constraintTop_toTopOf="@+id/date_end" />
 
+            <ImageView
+                android:id="@+id/tag_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_local_offer_24px"
+                app:layout_constraintBottom_toBottomOf="@+id/event_tag"
+                app:layout_constraintStart_toStartOf="@+id/clock_icon"
+                app:layout_constraintTop_toTopOf="@+id/event_tag"
+                app:layout_constraintVertical_bias="1.0" />
 
             <TextView
                 android:id="@+id/event_tag"
@@ -215,8 +149,7 @@
                 android:text="會議"
                 android:textSize="14dp"
                 app:layout_constraintStart_toStartOf="@+id/date_end"
-                app:layout_constraintTop_toBottomOf="@+id/date_end"
-                tools:ignore="MissingConstraints" />
+                app:layout_constraintTop_toBottomOf="@+id/date_end" />
 
             <TextView
                 android:id="@+id/more_event_tag"
@@ -230,8 +163,17 @@
                 android:text="更多標籤"
                 android:textSize="14dp"
                 app:layout_constraintStart_toStartOf="@+id/date_end"
-                app:layout_constraintTop_toBottomOf="@+id/event_tag"
-                tools:ignore="MissingConstraints" />
+                app:layout_constraintTop_toBottomOf="@+id/event_tag" />
+
+            <ImageView
+                android:id="@+id/location_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_place_24px"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_event_location"
+                app:layout_constraintEnd_toEndOf="@+id/tag_icon"
+                app:layout_constraintStart_toStartOf="@+id/tag_icon"
+                app:layout_constraintTop_toTopOf="@+id/edit_event_location" />
 
             <TextView
                 android:id="@+id/edit_event_location"
@@ -242,20 +184,17 @@
                 android:textColor="@color/colorAlmostBlack"
                 android:textSize="14dp"
                 app:layout_constraintStart_toStartOf="@+id/more_event_tag"
-                app:layout_constraintTop_toBottomOf="@+id/more_event_tag"
-                tools:ignore="MissingConstraints" />
+                app:layout_constraintTop_toBottomOf="@+id/more_event_tag" />
 
-            <TextView
-                android:id="@+id/edit_color"
+            <ImageView
+                android:id="@+id/participant_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:hint="預設顏色"
-                android:textColor="@color/colorAlmostBlack"
-                android:textSize="14dp"
-                app:layout_constraintStart_toStartOf="@+id/edit_event_participant"
-                app:layout_constraintTop_toBottomOf="@id/edit_event_participant"
-                tools:ignore="MissingConstraints" />
+                android:src="@drawable/ic_people_24px"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_event_participant"
+                app:layout_constraintEnd_toEndOf="@+id/location_icon"
+                app:layout_constraintStart_toStartOf="@+id/location_icon"
+                app:layout_constraintTop_toTopOf="@+id/edit_event_participant" />
 
             <TextView
                 android:id="@+id/edit_event_participant"
@@ -266,8 +205,40 @@
                 android:textColor="@color/colorAlmostBlack"
                 android:textSize="14dp"
                 app:layout_constraintStart_toStartOf="@+id/edit_event_location"
-                app:layout_constraintTop_toBottomOf="@+id/edit_event_location"
-                tools:ignore="MissingConstraints" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_event_location" />
+
+            <ImageView
+                android:id="@+id/add_event_color"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@color/timelineGreen"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_color"
+                app:layout_constraintEnd_toEndOf="@+id/participant_icon"
+                app:layout_constraintHorizontal_bias="0.08"
+                app:layout_constraintStart_toStartOf="@+id/participant_icon"
+                app:layout_constraintTop_toTopOf="@+id/edit_color" />
+
+            <TextView
+                android:id="@+id/edit_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:hint="預設顏色"
+                android:textColor="@color/colorAlmostBlack"
+                android:textSize="14dp"
+                app:layout_constraintStart_toStartOf="@+id/edit_event_participant"
+                app:layout_constraintTop_toBottomOf="@id/edit_event_participant" />
+
+            <ImageView
+                android:id="@+id/memo_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_format_align_left_24px"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_event_memo"
+                app:layout_constraintEnd_toEndOf="@+id/add_event_color"
+                app:layout_constraintStart_toStartOf="@+id/add_event_color"
+                app:layout_constraintTop_toTopOf="@+id/edit_event_memo" />
+
             <EditText
                 android:id="@+id/edit_event_memo"
                 android:layout_width="wrap_content"
@@ -276,11 +247,12 @@
                 android:hint="新增說明"
                 android:minWidth="250dp"
                 android:textColor="@color/colorAlmostBlack"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/edit_color"
                 app:layout_constraintTop_toBottomOf="@+id/edit_color"
-                tools:ignore="MissingConstraints" />
-
-
+                app:layout_constraintVertical_bias="1.0" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

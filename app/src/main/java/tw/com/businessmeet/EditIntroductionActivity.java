@@ -61,7 +61,7 @@ public class EditIntroductionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_introduction);
+        setContentView(R.layout.introduction_edit);
         editConfirmButtom = (ImageButton) findViewById(R.id.editProfileConfirmButtom);
         editConfirmButtom.setOnClickListener(editConfirmClick);
         avatar = (ImageView) findViewById(R.id.profilePhoto);

@@ -11,6 +11,7 @@ import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.adapter.FriendsRecyclerViewAdapter;
 import tw.com.businessmeet.adapter.FriendsTimelineRecyclerViewAdapter;
 import tw.com.businessmeet.bean.ResponseBody;
+import tw.com.businessmeet.bean.TimelineBean;
 import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.FriendDAO;
 import tw.com.businessmeet.dao.UserInformationDAO;
@@ -19,6 +20,7 @@ import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.BlueToothHelper;
 import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
+import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 
 import android.content.Intent;
@@ -38,6 +40,7 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,11 +56,12 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
     private FriendDAO matchedDAO;
     private FriendBean matchedBean = new FriendBean();
     private UserInformationServiceImpl userInformationService = new UserInformationServiceImpl();
+    private TimelineServiceImpl timelineService = new TimelineServiceImpl();
     private FriendServiceImpl matchedService = new FriendServiceImpl();
     private Toolbar toolbar;
     private RecyclerView recyclerViewFriendsTimeline;
     private FriendsTimelineRecyclerViewAdapter friendsTimelineRecyclerViewAdapter;
-    private List<UserInformationBean> userInformationBeanList = new ArrayList<>();
+    private List<TimelineBean> timelineBeanList = new ArrayList<>();
     private AsyncTasKHelper.OnResponseListener<String, UserInformationBean> userInfoResponseListener = new AsyncTasKHelper.OnResponseListener<String, UserInformationBean>() {
 
 
@@ -78,41 +82,20 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         }
     };
 
-    private AsyncTasKHelper.OnResponseListener<FriendBean, List<FriendBean>> searchResponseListener =
-            new AsyncTasKHelper.OnResponseListener<FriendBean, List<FriendBean>>() {
-                @Override
-                public Call<ResponseBody<List<FriendBean>>> request(FriendBean... matchedBean) {
 
-                    return matchedService.search(matchedBean[0]);
+    private AsyncTasKHelper.OnResponseListener<TimelineBean,List<TimelineBean>> searchTimelineResponseListener =
+            new AsyncTasKHelper.OnResponseListener<TimelineBean,List<TimelineBean>>() {
+                @Override
+                public Call<ResponseBody<List<TimelineBean>>> request(TimelineBean... timelineBeans) {
+
+                    return timelineService.searchList(timelineBeans[0]);
                 }
 
                 @Override
-                public void onSuccess(List<FriendBean> matchedBeanList) {
-                    Log.e("MatchedBean","success");
-                    for(FriendBean matchedBean : matchedBeanList) {
-                        AsyncTasKHelper.execute(getByIdResponseListener,matchedBean.getFriendId());
-                        Log.e("MatchedBean", String.valueOf(matchedBean));
-                        //Log.e("MatchedBean", String.valueOf(matchedBean.getBlueTooth()));
+                public void onSuccess(List<TimelineBean> timelineBeanList) {
+                    for (TimelineBean timelineBean:timelineBeanList){
+                        friendsTimelineRecyclerViewAdapter.dataInsert(timelineBean);
                     }
-                }
-
-                @Override
-                public void onFail(int status, String message) {
-
-                }
-            };
-
-    private AsyncTasKHelper.OnResponseListener<String,UserInformationBean> getByIdResponseListener =
-            new AsyncTasKHelper.OnResponseListener<String,UserInformationBean>() {
-                @Override
-                public Call<ResponseBody<UserInformationBean>> request(String... blueTooth) {
-
-                    return userInformationService.getById(blueTooth[0]);
-                }
-
-                @Override
-                public void onSuccess(UserInformationBean userInformationBean) {
-                    friendsTimelineRecyclerViewAdapter.dataInsert(userInformationBean);
                 }
 
                 @Override
@@ -127,11 +110,13 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         String friendId = getIntent().getStringExtra("friendId");
         AsyncTasKHelper.execute(userInfoResponseListener, friendId);
         matchedBean.setFriendId(friendId);
-        AsyncTasKHelper.execute(searchResponseListener, matchedBean); //timelineInfor
         blueToothHelper = new BlueToothHelper(this);
         matchedBean.setMatchmakerId(blueToothHelper.getUserId());
         recyclerViewFriendsTimeline = findViewById(R.id.timeline_view);
-
+        TimelineBean timelineBean = new TimelineBean();
+        timelineBean.setMatchmakerId(blueToothHelper.getUserId());
+        timelineBean.setFriendId(matchedBean.getFriendId());
+        AsyncTasKHelper.execute(searchTimelineResponseListener,timelineBean);
         userName = (TextView) findViewById(R.id.friends_name);
         goProfile = (ImageButton) findViewById(R.id.goProfile);
         goProfile.setOnClickListener(goProfileClick);
@@ -210,7 +195,7 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
     }
     private void createRecyclerViewFriendsTimeline() {
         recyclerViewFriendsTimeline.setLayoutManager(new LinearLayoutManager(this));
-        friendsTimelineRecyclerViewAdapter = new FriendsTimelineRecyclerViewAdapter(this, this.userInformationBeanList);
+        friendsTimelineRecyclerViewAdapter = new FriendsTimelineRecyclerViewAdapter(this, this.timelineBeanList);
         friendsTimelineRecyclerViewAdapter.setClickListener(this);
         recyclerViewFriendsTimeline.setAdapter(friendsTimelineRecyclerViewAdapter);
 
@@ -220,7 +205,7 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         Intent intent = new Intent();
         intent.setClass(this,EventActivity.class); //改到活動事件內容
         Bundle bundle = new Bundle();
-        bundle.putString("blueToothAddress",friendsTimelineRecyclerViewAdapter.getUserInformation(position).getBluetooth());
+        bundle.putString("timelineNo",friendsTimelineRecyclerViewAdapter.getTimelineBean(position).getTimelineNo().toString());
         intent.putExtras(bundle);
         startActivity(intent);
 

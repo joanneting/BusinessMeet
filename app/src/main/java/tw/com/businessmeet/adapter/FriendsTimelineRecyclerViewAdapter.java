@@ -13,18 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import tw.com.businessmeet.FriendsTimelineActivity;
 import tw.com.businessmeet.R;
-import tw.com.businessmeet.bean.UserInformationBean;
+import tw.com.businessmeet.bean.TimelineBean;
 import tw.com.businessmeet.helper.AvatarHelper;
 
 public class FriendsTimelineRecyclerViewAdapter extends RecyclerView.Adapter<FriendsTimelineRecyclerViewAdapter.ViewHolder> {
     private LayoutInflater layoutInflater;
     private Context context;
-    private List<UserInformationBean> userInformationBeanList;
+    private List<TimelineBean> timelineBeanList;
     private ClickListener clickListener;
-    public FriendsTimelineRecyclerViewAdapter(Context context, List<UserInformationBean> userInformationBeanList) {
+    public FriendsTimelineRecyclerViewAdapter(Context context, List<TimelineBean> timelineBeanList) {
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
-        this.userInformationBeanList = userInformationBeanList;
+        this.timelineBeanList = timelineBeanList;
     }
 
     @NonNull
@@ -37,14 +37,14 @@ public class FriendsTimelineRecyclerViewAdapter extends RecyclerView.Adapter<Fri
     @Override
     public void onBindViewHolder(@NonNull FriendsTimelineRecyclerViewAdapter.ViewHolder holder, int position) {
         //holder.friends_place.setText("八大");
-        UserInformationBean ufb = userInformationBeanList.get(position);
-        holder.bindInformation(ufb.getName(),ufb.getProfession());
+        TimelineBean tlb = timelineBeanList.get(position);
 
+        holder.bindInformation(tlb.getTimelinePropertiesNo()==1?tlb.getStartDate():tlb.getCreateDateStr(),tlb.getPlace());
     }
 
     @Override
     public int getItemCount() {
-        return userInformationBeanList.size();
+        return timelineBeanList.size();
     }
 
 
@@ -60,9 +60,9 @@ public class FriendsTimelineRecyclerViewAdapter extends RecyclerView.Adapter<Fri
             itemView.setOnClickListener(this);
         }
 
-        void bindInformation(String userName,String userCompany){
-            friends_date.setText(userName);
-            friends_place.setText(userCompany);
+        void bindInformation(String date,String place){
+            friends_date.setText(date);
+            friends_place.setText(place);
         }
 
         @Override
@@ -72,12 +72,12 @@ public class FriendsTimelineRecyclerViewAdapter extends RecyclerView.Adapter<Fri
             }
         }
     }
-    public UserInformationBean getUserInformation(int position){
-        return userInformationBeanList.get(position);
+    public TimelineBean getTimelineBean(int position){
+        return timelineBeanList.get(position);
     }
     public void  setClickListener(ClickListener clickListener){this.clickListener = clickListener;}
-    public void dataInsert(UserInformationBean userInformationBean){
-        userInformationBeanList.add(userInformationBean);
+    public void dataInsert(TimelineBean timelineBean){
+        timelineBeanList.add(timelineBean);
         notifyItemInserted(getItemCount());
     }
     public interface ClickListener{
