@@ -12,24 +12,36 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.appcompat.widget.Toolbar;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import tw.com.businessmeet.adapter.ProfileTimelineRecyclerViewAdapter;
 import tw.com.businessmeet.background.NotificationService;
+import tw.com.businessmeet.bean.FriendBean;
+import tw.com.businessmeet.bean.ResponseBody;
+import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.UserInformationDAO;
+import tw.com.businessmeet.helper.AsyncTasKHelper;
 import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.BlueToothHelper;
 import tw.com.businessmeet.helper.DBHelper;
+import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 
-public class SelfIntroductionActivity extends AppCompatActivity {
-    private TextView userName, profession, gender, email, tel;
-    private Button editButton;
+public class SelfIntroductionActivity extends AppCompatActivity implements ProfileTimelineRecyclerViewAdapter .ClickListener {
+    private TextView userName,userId;
     private ImageView avatar;
+    private ImageButton goProfile;
     private UserInformationDAO userInformationDAO;
     private DBHelper DH;
     private AvatarHelper avatarHelper;
@@ -37,20 +49,88 @@ public class SelfIntroductionActivity extends AppCompatActivity {
     private BlueToothHelper blueToothHelper;
     private NotificationService notificationService = null;
     private Toolbar toolbar;
+    private RecyclerView recyclerViewProfileTimeline;
+    private UserInformationBean userInformationBean = new UserInformationBean();
+    private UserInformationServiceImpl userInformationService = new UserInformationServiceImpl();
+    private ProfileTimelineRecyclerViewAdapter profileTimelineRecyclerViewAdapter;
+    private List<UserInformationBean> userInformationBeanList = new ArrayList<>();
+
+//    private AsyncTasKHelper.OnResponseListener<String, UserInformationBean> userInfoResponseListener = new AsyncTasKHelper.OnResponseListener<String, UserInformationBean>() {
+//
+//
+//        @Override
+//        public Call<ResponseBody<UserInformationBean>> request(String... userId) {
+//            return userInformationService.getById(userId[0]);
+//        }
+//
+//        @Override
+//        public void onSuccess(UserInformationBean userInformationBean) {
+//            userName.append(userInformationBean.getName());
+//            position.append(userInformationBean.getProfession());
+//            avatar.setImageBitmap(avatarHelper.getImageResource(userInformationBean.getAvatar()));
+//        }
+//
+//        @Override
+//        public void onFail(int status,String message) {
+//        }
+//    };
+
+//    private AsyncTasKHelper.OnResponseListener<UserInformationBean, List<UserInformationBean>> searchResponseListener =
+//            new AsyncTasKHelper.OnResponseListener<UserInformationBean, List<UserInformationBean>>() {
+//                @Override
+//                public Call<ResponseBody<List<UserInformationBean>>> request(UserInformationBean... userInformationBeans) {
+//
+//                    return userInformationService.search(userInformationBean[0]);
+//                }
+//
+//                @Override
+//                public void onSuccess(List<UserInformationBean> userInformationBeanList) {
+//                    Log.e("MatchedBean","success");
+//                    for(UserInformationBean userInformationBean : userInformationBeanList) {
+//                        AsyncTasKHelper.execute(getByIdResponseListener,userInformationBean.getUserId());
+//                        Log.e("MatchedBean", String.valueOf(userInformationBean));
+//                        //Log.e("MatchedBean", String.valueOf(matchedBean.getBlueTooth()));
+//                    }
+//                }
+//
+//                @Override
+//                public void onFail(int status, String message) {
+//
+//                }
+//            };
+
+    private AsyncTasKHelper.OnResponseListener<String,UserInformationBean> getByIdResponseListener =
+            new AsyncTasKHelper.OnResponseListener<String,UserInformationBean>() {
+                @Override
+                public Call<ResponseBody<UserInformationBean>> request(String... blueTooth) {
+
+                    return userInformationService.getById(blueTooth[0]);
+                }
+
+                @Override
+                public void onSuccess(UserInformationBean userInformationBean) {
+                    profileTimelineRecyclerViewAdapter.dataInsert(userInformationBean);
+                }
+
+                @Override
+                public void onFail(int status, String message) {
+
+                }
+            };
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.self_introduction);
         userName = (TextView) findViewById(R.id.profile_name);
-        profession = (TextView) findViewById(R.id.profile_profession);
-        gender = (TextView) findViewById(R.id.profile_gender);
-        email = (TextView) findViewById(R.id.profile_mail);
-        tel = (TextView) findViewById(R.id.profile_tel);
-        avatar = (ImageView) findViewById(R.id.edit_person_photo);
-        editButton = (Button) findViewById(R.id.editPersonalProfileButton);
-        editButton.setOnClickListener(editButtonClick);
+        userId = (TextView) findViewById(R.id.user_id);
+        avatar = (ImageView)findViewById(R.id.edit_person_photo);
+        goProfile = (ImageButton) findViewById(R.id.goProfile);
+        goProfile.setOnClickListener(goProfileClick);
         menu = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        recyclerViewProfileTimeline = findViewById(R.id.profile_timeline_view);
         //this.personal = personal;
         blueToothHelper = new BlueToothHelper(this);
         avatarHelper = new AvatarHelper();
@@ -77,12 +157,10 @@ public class SelfIntroductionActivity extends AppCompatActivity {
         //Set Home
         bottomNavigationView.setSelectedItemId(R.id.menu_home);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
-
-
         Menu BVMenu = bottomNavigationView.getMenu();
         bottomNavigationView.setItemIconTintList(null);  //顯示頭像
         AvatarHelper avatarHelper = new AvatarHelper();
-        blueToothHelper.startBuleTooth();
+        createRecyclerViewProfileTimeline();
         Log.d("seedmess", "ness");
         Cursor result = userInformationDAO.getById(blueToothHelper.getUserId());
         Log.e("result", String.valueOf(result));
@@ -92,18 +170,6 @@ public class SelfIntroductionActivity extends AppCompatActivity {
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
 
     }
-
-    //    private ServiceConnection notificationServiceConnect = new ServiceConnection() {
-//        @Override
-//        public void onServiceConnected(ComponentName name, IBinder service) {
-//            notificationService = ((NotificationService.LocalBinder)service).getService();
-//        }
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName name) {
-//
-//        }
-//    };
 
 
     private void openDB(){
@@ -124,12 +190,8 @@ public class SelfIntroductionActivity extends AppCompatActivity {
 
         if (result.moveToFirst()) {
             userName.append(result.getString(result.getColumnIndex("name")));
-            gender.append(result.getString(result.getColumnIndex("gender")));
-            profession.append(result.getString(result.getColumnIndex("profession")));
-            email.append(result.getString(result.getColumnIndex("mail")));
-            tel.append(result.getString(result.getColumnIndex("tel")));
+            userId.append(result.getString(result.getColumnIndex("user_id")));
             avatar.setImageBitmap(avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar"))));
-
         }
         result.close();
 
@@ -137,16 +199,38 @@ public class SelfIntroductionActivity extends AppCompatActivity {
 
     }
 
-    public View.OnClickListener editButtonClick = new View.OnClickListener() {
+    public View.OnClickListener goProfileClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            changeToEditIntroductionPage();
+            changeToSelfIntroductionActivityPage();
         }
     };
-    public void changeToEditIntroductionPage(){
+
+    public void changeToSelfIntroductionActivityPage() {
         Intent intent = new Intent();
-        intent.setClass(SelfIntroductionActivity.this,EditIntroductionActivity.class);
+        intent.setClass(SelfIntroductionActivity.this, SelfInformationActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("userId",getIntent().getStringExtra("userId"));
+        intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    private void createRecyclerViewProfileTimeline() {
+        recyclerViewProfileTimeline.setLayoutManager(new LinearLayoutManager(this));
+        profileTimelineRecyclerViewAdapter = new ProfileTimelineRecyclerViewAdapter(this, this.userInformationBeanList);
+        profileTimelineRecyclerViewAdapter.setClickListener(this);
+        recyclerViewProfileTimeline.setAdapter(profileTimelineRecyclerViewAdapter);
+
+    }
+
+    public void onClick(View view, int position){
+        Intent intent = new Intent();
+        intent.setClass(this,EventActivity.class); //改到活動事件內容
+        Bundle bundle = new Bundle();
+        bundle.putString("blueToothAddress",profileTimelineRecyclerViewAdapter.getUserInformation(position).getBluetooth());
+        intent.putExtras(bundle);
+        startActivity(intent);
+
     }
 
 

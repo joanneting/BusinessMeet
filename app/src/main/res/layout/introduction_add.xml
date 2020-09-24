@@ -7,25 +7,35 @@
     android:layout_height="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+
         android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/addInfoTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="15dp"
-        android:text="輸入個人資料"
-        android:textColor="@color/colorAlmostBlack"
-        android:textSize="23.6sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/add_photo_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        <TextView
+            android:id="@+id/addInfoTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:paddingLeft="40dp"
+            android:paddingTop="32dp"
+            android:paddingBottom="24dp"
+            android:text="註冊"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/add_photo_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:background="@drawable/shape_radius_2corner"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
     <ImageView
         android:id="@+id/add_photo_button"
         android:layout_width="wrap_content"
@@ -43,6 +53,19 @@
         app:layout_constraintTop_toBottomOf="@+id/addInfoTitle"
         android:background="@drawable/addphoto"
         tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/account_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="帳號"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/add_profile_user_id"
+            app:layout_constraintStart_toStartOf="@+id/add_profile_user_id"
+            tools:ignore="MissingConstraints">
+        </TextView>
+
         <EditText
             android:id="@+id/add_profile_user_id"
             android:layout_width="wrap_content"
@@ -55,6 +78,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/add_photo_button"
             tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/pwd_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="密碼"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/add_profile_password"
+            app:layout_constraintStart_toStartOf="@+id/add_profile_password"
+            tools:ignore="MissingConstraints"></TextView>
         <EditText
             android:id="@+id/add_profile_password"
             android:layout_width="wrap_content"
@@ -67,6 +101,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/add_profile_user_id"
             tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/profile_name_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="姓名"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/add_profile_name"
+            app:layout_constraintStart_toStartOf="@+id/add_profile_name"
+            tools:ignore="MissingConstraints"></TextView>
 
     <EditText
         android:id="@+id/add_profile_name"
@@ -81,6 +125,17 @@
         app:layout_constraintTop_toBottomOf="@+id/add_profile_password"
         tools:ignore="MissingConstraints" />
 
+        <TextView
+            android:id="@+id/profile_gender_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="性別"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/add_profile_gender"
+            app:layout_constraintStart_toStartOf="@+id/add_profile_gender"
+            tools:ignore="MissingConstraints"></TextView>
+
     <EditText
         android:id="@+id/add_profile_gender"
         android:layout_width="wrap_content"
@@ -94,6 +149,17 @@
         app:layout_constraintTop_toBottomOf="@+id/add_profile_name"
         tools:ignore="MissingConstraints" />
 
+        <TextView
+            android:id="@+id/profile_profession_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="職業"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/add_profile_profession"
+            app:layout_constraintStart_toStartOf="@+id/add_profile_profession"
+            tools:ignore="MissingConstraints"></TextView>
+
     <EditText
         android:id="@+id/add_profile_profession"
         android:layout_width="wrap_content"
@@ -106,7 +172,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_profile_gender" />
 
-    <EditText
+        <TextView
+            android:id="@+id/profile_mail_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="職業"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/add_profile_mail"
+            app:layout_constraintStart_toStartOf="@+id/add_profile_mail"
+            tools:ignore="MissingConstraints"></TextView>
+        <EditText
         android:id="@+id/add_profile_mail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -118,6 +194,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_profile_profession"
         tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/profile_tel_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:text="電話"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/add_profile_tel"
+            app:layout_constraintStart_toStartOf="@+id/add_profile_tel"
+            tools:ignore="MissingConstraints"></TextView>
 
     <EditText
         android:id="@+id/add_profile_tel"

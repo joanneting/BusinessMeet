@@ -129,7 +129,7 @@ public class EditIntroductionActivity extends AppCompatActivity {
 
     public void changeToSelfIntroductionPage() {
         Intent intent = new Intent();
-        intent.setClass(EditIntroductionActivity.this, SelfIntroductionActivity.class);
+        intent.setClass(EditIntroductionActivity.this, SelfInformationActivity.class);
         startActivity(intent);
     }
 
