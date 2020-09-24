@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +40,7 @@ public class EditFriendsProfileActivity extends AppCompatActivity {
 
         //toolbar
         toolbar = (Toolbar) findViewById(R.id.friends_profile_topAppBar);
+        setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_ios_24px); //back
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +54,7 @@ public class EditFriendsProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
 
         //tab
         viewPager = findViewById(R.id.viewPager);

@@ -34,7 +34,7 @@
     <string name="friends_profile_edit_topAppBar_confirmIcon">確認</string>
 
     <!-- edit_friends_profile floating button-->
-    <string name="add_column_memo">新增備註欄位</string>
+    <string name="add_column_memo">新增備註</string>
     <string name="add_column_profile">新增好友資訊欄位</string>
 
     <!-- edit_friends_profile dialog -->

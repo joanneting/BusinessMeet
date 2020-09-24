@@ -13,6 +13,7 @@ import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import android.widget.EditText;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -59,9 +61,10 @@ public class EditMemoFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
 
     //chip
-    private Chip chips;
+    private ChipGroup chipGroup;
     private FriendMemoTagRecyclerViewAdapter friendMemoTagRecyclerViewAdapter;
     private ArrayList<FriendLabelBean> friendLabelBeanList = new ArrayList<FriendLabelBean>();
+
     // MemoFragment
     private FriendCustomizationBean fcb = new FriendCustomizationBean();
     private RecyclerView recyclerViewMemo;
@@ -71,6 +74,7 @@ public class EditMemoFragment extends Fragment {
     // dialog
     private Button confirm, cancel;
     private EditText addColumnMemo;
+    private EditText addChipMemo;
     private FriendCustomizationDAO friendCustomizationDAO;
     private DBHelper dh = null;
     private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
@@ -100,11 +104,9 @@ public class EditMemoFragment extends Fragment {
 
         @Override
         public void onSuccess(List<FriendCustomizationBean> friendCustomizationBeans) {
-            Log.d("MemoTitle", "count:" + friendCustomizationBeans.size());
             if (friendCustomizationBeans.size() > 1 || (friendCustomizationBeans.size() == 1 && (friendCustomizationBeans.get(0).getCreateDate() != null && !friendCustomizationBeans.get(0).equals("")))) {
                 for (int i = 0; i < friendCustomizationBeans.size(); i++) {
                     friendCustomizationBeanList.add(friendCustomizationBeans.get(i));
-                    Log.d("TitleName", i + ":" + friendCustomizationBeanList.get(i).getName());
                 }
             }
         }
@@ -143,15 +145,15 @@ public class EditMemoFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        fcb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
-        Log.d("fcb", "No:" + fcb.getFriendNo());
-        AsyncTasKHelper.execute(searchResponseListener, fcb);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_edit_memo, container, false);
+        fcb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
+        AsyncTasKHelper.execute(searchResponseListener, fcb);
         // recyclerView
         recyclerViewMemo = (RecyclerView) view.findViewById(R.id.friends_edit_profile_memo_recycleView);
         initMemoRecyclerView();
@@ -161,7 +163,6 @@ public class EditMemoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // dialog
-                Log.d("EditMemoFragment", "friendNo:" + getActivity().getIntent().getIntExtra("friendNo", 0));
                 LayoutInflater inflater = getActivity().getLayoutInflater();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 View view = inflater.inflate(R.layout.friend_add_column, null);
@@ -170,6 +171,36 @@ public class EditMemoFragment extends Fragment {
                 AlertDialog alertDialog = builder.show();
 
                 addColumnMemo = (EditText) view.findViewById(R.id.addColumn_dialog_Input);
+                addChipMemo = (EditText) view.findViewById(R.id.addTag_dialog_Input);
+                chipGroup = (ChipGroup) view.findViewById(R.id.addTag_dialog_selectedBox);
+                addChipMemo.setOnKeyListener(new View.OnKeyListener() {
+                    @Override
+                    public boolean onKey(View v, int keyCode, KeyEvent event) {
+                        if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                            String chipContent = addChipMemo.getText().toString();
+                            System.out.println("content - " + addChipMemo.getText().toString());
+                            LayoutInflater chipInflater = LayoutInflater.from(getContext());
+                            Chip chip = new Chip(getContext());
+                            ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(getContext(), null, 0, R.style.Widget_MaterialComponents_Chip_Action);
+                            chip.setChipDrawable(chipDrawable);
+                            chip.setText(chipContent);
+                            chip.setCloseIconVisible(true);
+                            chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    chipGroup.removeView(chip);
+                                }
+                            });
+                            chipGroup.addView(chip);
+                            return true;
+                        } else if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+                            addChipMemo.setText("");
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
                 confirm = (Button) view.findViewById(R.id.addColumn_dialog_confirmButton);
                 confirm.setOnClickListener(new View.OnClickListener() {
                     @Override

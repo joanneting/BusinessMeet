@@ -22,6 +22,7 @@
             android:text="@string/add_column_memo"
             android:textColor="@color/black"
             android:textSize="18sp"
+
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -41,6 +42,46 @@
                 android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/addTag_dialog_InputBox"
+            style="@style/addColumn_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:hint="備註"
+            app:hintTextColor="@color/colorPrimary"
+            app:layout_constraintStart_toStartOf="@id/addColumn_dialog_title"
+            app:layout_constraintTop_toBottomOf="@id/addColumn_dialog_InputBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/addTag_dialog_Input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <HorizontalScrollView
+            android:id="@+id/addTag_dialog_scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:scrollbars="none"
+            app:layout_constraintTop_toBottomOf="@id/addTag_dialog_InputBox"
+            app:layout_constraintBottom_toTopOf="@id/addColumn_dialog_confirmButton">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/addTag_dialog_selectedBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true"
+                app:singleSelection="false"
+                app:layout_constraintTop_toBottomOf="@id/addTag_dialog_InputBox">
+
+            </com.google.android.material.chip.ChipGroup>
+
+        </HorizontalScrollView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/addColumn_dialog_cancelButton"
@@ -62,7 +103,7 @@
             android:text="@string/confirm"
             android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addColumn_dialog_InputBox"
+            app:layout_constraintTop_toBottomOf="@id/addTag_dialog_scrollView"
             app:strokeColor="@color/colorPrimary" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
