@@ -12,7 +12,7 @@ import java.util.Date;
 public class DBHelper extends SQLiteOpenHelper {
     private final static int _DBVersion = 1;
     private final static String _DBName = "BeMet.db";
-    private final static String[] _TableName = new String[]{"user_information","user_customization","friend","groups","friend_group","friend_customization","friend_label","friend_remark","timeline_properties","timeline","activity_label","activity_remind","activity_invite","problem_report","user_role"};
+    private final static String[] _TableName = new String[]{"user_information","user_customization","friend","groups","friend_group","friend_customization","friend_label","friend_remark","timeline_properties","timeline","activity_label","activity_remind","activity_invite","problem_report","user_role","activity_date"};
 
     public DBHelper(Context context) {
             super(context, _DBName, null, _DBVersion);
@@ -75,6 +75,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQL = "create table if not exists "+ _TableName[5] + "("+
                 "friend_customization_no int    primary key,"+
                 "name    nvarchar(100) not null,"+
+                "content nvarchar(1000) ,"+
                 "friend_no   int not null references "+ _TableName[2] + "(friend_no),"+
                 "create_date datetime not null,"+
                 "modify_date datetime    "+
@@ -163,6 +164,15 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL);
         SQL = "insert into "+_TableName[14]+"(role_no,role_name)"+
                 "values(1,'admin'),(2,'manage'),(3,'user');";
+        db.execSQL(SQL);
+        SQL = "create table if not exists "+ _TableName[15] + "("+
+                "activity_date_no int primary key,"+
+                "activity_no int  not null references"+_TableName[9]+"(timeline_no)," +
+                "start_date datetime,"+
+                "end_date datetime,"+
+                "create_date datetime not null,"+
+                "modify_date datetime"+
+                ");";
         db.execSQL(SQL);
     }
 

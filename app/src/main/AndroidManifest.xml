@@ -25,9 +25,9 @@
         <activity android:name=".adapter.EventTagRecyclerViewAdapter"></activity>
         <activity android:name=".EventSearch" />
         <activity
-            android:name=".ColorSelectActivity"
+            android:name=".EventColorSelectActivity"
             android:theme="@style/AppTheme.PopMe" />
-        <activity android:name=".CrateEventActivity" />
+        <activity android:name=".EventCrateActivity" />
         <activity android:name=".EditEventActivity" />
         <activity android:name=".EventActivity" />
         <activity
