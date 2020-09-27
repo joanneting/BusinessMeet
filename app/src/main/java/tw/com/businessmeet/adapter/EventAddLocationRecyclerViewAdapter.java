@@ -46,4 +46,5 @@ public class EventAddLocationRecyclerViewAdapter extends RecyclerView.Adapter<Ev
             super(itemView);
         }
     }
+
 }
