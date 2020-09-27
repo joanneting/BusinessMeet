@@ -5,17 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import tw.com.businessmeet.R;
 
-public class EventAddLocationRecyclerViewAdapter extends RecyclerView.Adapter<EventAddLocationRecyclerViewAdapter.ViewHolder> {
+public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter<EventAddParticipantRecyclerViewAdapter.ViewHolder> {
     private LayoutInflater layoutInflater;
     private Context context;
 
-    public EventAddLocationRecyclerViewAdapter(Context context) {
+    public EventAddParticipantRecyclerViewAdapter(Context context) {
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
 
@@ -23,9 +21,9 @@ public class EventAddLocationRecyclerViewAdapter extends RecyclerView.Adapter<Ev
 
     @NonNull
     @Override
-    public EventAddLocationRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public EventAddParticipantRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = layoutInflater.inflate(R.layout.recycler_view_row_event_add_participant, parent,false);
-        return new EventAddLocationRecyclerViewAdapter.ViewHolder(view);
+        return new EventAddParticipantRecyclerViewAdapter.ViewHolder(view);
     }
 
     @Override
@@ -36,6 +34,9 @@ public class EventAddLocationRecyclerViewAdapter extends RecyclerView.Adapter<Ev
     @Override
     public int getItemCount() {
         return 0;
+    }
+
+    public interface ClickListener {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
