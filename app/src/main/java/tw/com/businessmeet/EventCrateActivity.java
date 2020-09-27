@@ -32,8 +32,8 @@ import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 public class EventCrateActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private TextView dateStart,dateEnd,timeStart,timeEnd,addColor;
-    private TextView event, date, tag, addEventParticipant, addEventMemo,addEventLacation;
+    private TextView dateStart,dateEnd,timeStart,timeEnd,addColor,addLocation,addParticipant;
+    private TextView event, date, tag, addEventParticipant, addEventMemo,addEventLocation;
     private Switch switchDay;
     private BlueToothHelper blueToothHelper;
     public int timerHour,timerMinute;
@@ -66,7 +66,7 @@ public class EventCrateActivity extends AppCompatActivity {
         DBHelper dbHelper = new DBHelper(this);
         timelineDAO = new TimelineDAO(dbHelper);
         //Event = (TextView) findViewById(R.);
-        addEventLacation = findViewById(R.id.add_event_location);
+        addEventLocation = findViewById(R.id.add_event_location);
         switchDay = findViewById(R.id.switch_day);
         dateStart = findViewById(R.id.date_start);
         dateEnd = findViewById(R.id.date_end);
@@ -114,7 +114,7 @@ public class EventCrateActivity extends AppCompatActivity {
                         timelineBean.setMatchmakerId(blueToothHelper.getUserId());
                         timelineBean.setStartDate(dateStart+" "+timeStart);
                         timelineBean.setEndDate(dateEnd+" "+timeEnd);
-                        timelineBean.setPlace(addEventLacation.getText().toString());
+                        timelineBean.setPlace(addEventLocation.getText().toString());
                         timelineBean.setRemark(addEventMemo.getText().toString());
                         AsyncTasKHelper.execute(addEvent,timelineBean);
                 }
@@ -167,7 +167,7 @@ public class EventCrateActivity extends AppCompatActivity {
             }
         });
 
-        //add_color
+        //Add Color
         addColor = (TextView) findViewById(R.id.add_color);
         addColor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,6 +179,25 @@ public class EventCrateActivity extends AppCompatActivity {
             }
         });
 
+        //Add Location
+        addLocation = (TextView) findViewById(R.id.add_event_location);
+        addLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), EventAddLocationActivity.class);
+                startActivity(i);
+            }
+        });
+
+        //Add Participant
+        addParticipant = (TextView) findViewById(R.id.add_event_participant);
+        addParticipant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), EventAddParticipantActivity.class);
+                startActivity(i);
+            }
+        });
 
 //        //MaterialDatePicker
 //        MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
