@@ -1,10 +1,11 @@
 package tw.com.businessmeet;
 
 import androidx.appcompat.app.AppCompatActivity;
+import tw.com.businessmeet.adapter.EventAddParticipantRecyclerViewAdapter;
 
 import android.os.Bundle;
 
-public class EventAddParticipant extends AppCompatActivity {
+public class EventAddParticipantActivity extends AppCompatActivity implements EventAddParticipantRecyclerViewAdapter.ClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
