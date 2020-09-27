@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="tw.com.businessmeet"
-    xmlns:tools="http://schemas.android.com/tools">
-    <!-- 網路許可 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+    xmlns:tools="http://schemas.android.com/tools"
+    package="tw.com.businessmeet">
 
     <application
         android:allowBackup="true"
@@ -22,12 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".adapter.EventTagRecyclerViewAdapter"></activity>
+        <activity android:name=".EventAddParticipantActivity"></activity>
+        <activity android:name=".EventAddLocationActivity" />
+        <activity android:name=".adapter.EventTagRecyclerViewAdapter" />
         <activity android:name=".EventSearch" />
         <activity
             android:name=".EventColorSelectActivity"
             android:theme="@style/AppTheme.PopMe" />
-        <activity android:name=".EventCrateActivity" />
+        <activity android:name=".EventCreateActivity" />
         <activity android:name=".EditEventActivity" />
         <activity android:name=".EventActivity" />
         <activity
@@ -35,7 +26,7 @@
             android:parentActivityName=".FriendsActivity" />
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
         <activity android:name=".BaseActivity" />
         <activity android:name=".NotificationActivity" />
         <activity android:name=".FriendsActivity" />
@@ -57,9 +48,16 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".background.NotificationService"></service>
+        <service android:name=".background.NotificationService" />
     </application>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
