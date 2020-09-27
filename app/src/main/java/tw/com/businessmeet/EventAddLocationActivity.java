@@ -1,9 +1,11 @@
 package tw.com.businessmeet;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import tw.com.businessmeet.adapter.EventAddLocationRecyclerViewAdapter;
+
 import android.os.Bundle;
 
-public class EventAddLocationActivity extends AppCompatActivity {
+public class EventAddLocationActivity extends AppCompatActivity implements EventAddLocationRecyclerViewAdapter.ClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

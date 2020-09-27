@@ -20,7 +20,7 @@ import java.util.Calendar;
 public class CrateEventActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private TextView DateStart,DateEnd,TimerStart,TimerEnd,AddColor;
+    private TextView DateStart,DateEnd,TimerStart,TimerEnd,AddColor,AddLocation,AddParticipant;
     private TextView Event, Date, Tag, Participant, EventMemo;
     public int timerHour,timerMinute;
     private final Calendar calendar = Calendar.getInstance();
@@ -98,7 +98,7 @@ public class CrateEventActivity extends AppCompatActivity {
             }
         });
 
-        //add_color
+        //Add Color
         AddColor = (TextView) findViewById(R.id.add_color);
         AddColor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +109,27 @@ public class CrateEventActivity extends AppCompatActivity {
 //                materialAlertDialogBuilder.setView(R.layout.event_color_select);
             }
         });
+
+        //Add Location
+        AddLocation = (TextView) findViewById(R.id.add_event_location);
+        AddLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), EventAddLocationActivity.class);
+                startActivity(i);
+            }
+        });
+
+        //Add Participant
+        AddParticipant = (TextView) findViewById(R.id.add_event_participant);
+        AddParticipant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), EventAddParticipantActivity.class);
+                startActivity(i);
+            }
+        });
+
 
 
 //        //MaterialDatePicker
