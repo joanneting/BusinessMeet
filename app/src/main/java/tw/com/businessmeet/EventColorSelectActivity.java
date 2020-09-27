@@ -9,7 +9,7 @@ import android.view.WindowManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-public class ColorSelectActivity extends AppCompatActivity {
+public class EventColorSelectActivity extends AppCompatActivity {
     private RadioGroup radioGroup;
     private RadioButton radioButton;
 
