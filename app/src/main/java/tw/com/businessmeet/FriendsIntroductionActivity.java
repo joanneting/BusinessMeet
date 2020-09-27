@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import retrofit2.Call;
 import tw.com.businessmeet.bean.FriendBean;
+import tw.com.businessmeet.bean.FriendCustomizationBean;
 import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.FriendDAO;
@@ -13,6 +14,7 @@ import tw.com.businessmeet.helper.AsyncTasKHelper;
 import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.BlueToothHelper;
 import tw.com.businessmeet.helper.DBHelper;
+import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 
@@ -26,18 +28,23 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsIntroductionActivity extends AppCompatActivity {
-    private TextView userName, id, profession, gender, email, tel, remark;
+    private TextView userName, id, profession, gender, email, tel, remark, title, content;
     private Button editButton;
     private ImageView avatar;
+    private ListView listView;
     private String friendId;
     private Integer friendNo;
     private UserInformationDAO userInformationDAO;
@@ -48,6 +55,10 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
     private FriendBean friendBean = new FriendBean();
     private UserInformationServiceImpl userInformationService = new UserInformationServiceImpl();
     private FriendServiceImpl matchedService = new FriendServiceImpl();
+    private ArrayList<FriendCustomizationBean> friendCustomizationBeanList = new ArrayList<FriendCustomizationBean>();
+    private ArrayList<String> titleList = new ArrayList<String>();
+    private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
+
     private AsyncTasKHelper.OnResponseListener<String, UserInformationBean> userInfoResponseListener = new AsyncTasKHelper.OnResponseListener<String, UserInformationBean>() {
         @Override
         public Call<ResponseBody<UserInformationBean>> request(String... userId) {
@@ -75,7 +86,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFail(int status,String message) {
+        public void onFail(int status, String message) {
         }
     };
 
@@ -95,8 +106,32 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFail(int status,String message) {
+        public void onFail(int status, String message) {
 
+        }
+    };
+
+    private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>> searchResponseListener = new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>>() {
+
+        @Override
+        public Call<ResponseBody<List<FriendCustomizationBean>>> request(FriendCustomizationBean... friendCustomizationBeans) {
+            return friendCustomizationServiceImpl.search(friendCustomizationBeans[0]);
+        }
+
+        @Override
+        public void onSuccess(List<FriendCustomizationBean> friendCustomizationBeans) {
+            if (friendCustomizationBeans.size() > 1 || (friendCustomizationBeans.size() == 1 && (friendCustomizationBeans.get(0).getCreateDate() != null && !friendCustomizationBeans.get(0).equals("")))) {
+                for (int i = 0; i < friendCustomizationBeans.size(); i++) {
+                    friendCustomizationBeanList.add(friendCustomizationBeans.get(i));
+                    titleList.add(friendCustomizationBeanList.get(i).getName());
+//                    title.append(friendCustomizationBeans.get(i).getName());
+//                    System.out.println(friendCustomizationBeans.get(i).getName());
+                }
+            }
+        }
+
+        @Override
+        public void onFail(int status, String message) {
         }
     };
 
@@ -111,6 +146,9 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         blueToothHelper = new BlueToothHelper(this);
         friendBean.setMatchmakerId(blueToothHelper.getUserId());
         AsyncTasKHelper.execute(friendsMemoResponseListener, friendBean);
+        FriendCustomizationBean fcb = new FriendCustomizationBean();
+        fcb.setFriendNo(friendNo);
+        AsyncTasKHelper.execute(searchResponseListener, fcb);
 
         userName = (TextView) findViewById(R.id.friends_profile_information_name);
         id = (TextView) findViewById(R.id.friends_profile_information_id);
@@ -123,9 +161,13 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         avatarHelper = new AvatarHelper();
         editButton = (Button) findViewById(R.id.friends_profile_information_edit);
         editButton.setOnClickListener(editMemoButton);
-
-
-        //searchUserInformation();
+        listView = (ListView) findViewById(R.id.friends_profile_information_memo);
+        ListAdapter titleAdapter = new ArrayAdapter<String>(this, R.layout.recycler_view_row_friend_profile_memo, R.id.friends_profile_information_memo_title, titleList);
+        System.out.println("--------------------------------------");
+        listView.setAdapter(titleAdapter);
+        for (int i = 0; i < titleList.size(); i++) {
+            System.out.println("title - " + titleList.get(i));
+        }
 
         //bottomNavigationView
         //Initialize And Assign Variable

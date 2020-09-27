@@ -11,6 +11,7 @@ public class FriendCustomizationBean {
     private String createDate;
     private String modifyDate;
     private Integer statusCode;
+    private String content;
 
     public static String[] getColumn() {
         return column;
@@ -40,7 +41,6 @@ public class FriendCustomizationBean {
         this.friendNo = friendNo;
     }
 
-
     public String getCreateDate() {
         return createDate;
     }
@@ -63,5 +63,13 @@ public class FriendCustomizationBean {
 
     public void setStatusCode(Integer statusCode) {
         this.statusCode = statusCode;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }
