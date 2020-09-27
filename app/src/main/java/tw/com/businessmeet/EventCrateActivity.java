@@ -41,7 +41,7 @@ public class EventCrateActivity extends AppCompatActivity {
     private Context context;
     private TimelineServiceImpl timelineService = new TimelineServiceImpl();
     private TimelineDAO timelineDAO;
-    private AsyncTasKHelper.RequestSender<TimelineBean,TimelineBean> addEvent = new AsyncTasKHelper.RequestSender<TimelineBean, TimelineBean>() {
+    private AsyncTasKHelper.OnResponseListener<TimelineBean,TimelineBean> addEvent = new AsyncTasKHelper.OnResponseListener<TimelineBean, TimelineBean>() {
         @Override
         public Call<ResponseBody<TimelineBean>> request(TimelineBean... timelineBeans) {
             return timelineService.add(timelineBeans[0]);

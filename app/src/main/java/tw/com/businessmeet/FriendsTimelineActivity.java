@@ -147,7 +147,7 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
                         startActivity(intent);
                         break;
                     case R.id.menu_addevent:
-                        Intent intent1 = intent.setClass(FriendsTimelineActivity.this, CrateEventActivity.class);
+                        Intent intent1 = intent.setClass(FriendsTimelineActivity.this, EventCrateActivity.class);
                         startActivity(intent1);
                 }
 
