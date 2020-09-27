@@ -36,8 +36,9 @@ public class NotificationService  extends Service {
     public void onCreate() {
         Log.e("service ","serviceStart");
         blueToothHelper = new BlueToothHelper(this);
-        blueToothHelper.searchBlueToothInBackground();
         blueToothHelper.startBuleTooth();
+        blueToothHelper.searchBlueToothInBackground();
+
         super.onCreate();
     }
 

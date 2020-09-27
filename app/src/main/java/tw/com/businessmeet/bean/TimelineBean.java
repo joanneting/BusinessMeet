@@ -16,7 +16,7 @@ public class TimelineBean {
     private String color;
     private String activityDate;
     private String createDateStr;
-    private String modifyDate;
+    private String modifyDateStr;
     private String startDate;
     private String endDate;
     private List<ActivityLabelBean> activityLabelBeanList;
@@ -107,12 +107,12 @@ public class TimelineBean {
         this.createDateStr = createDateStr;
     }
 
-    public String getModifyDate() {
-        return modifyDate;
+    public String getModifyDateStr() {
+        return modifyDateStr;
     }
 
-    public void setModifyDate(String modifyDate) {
-        this.modifyDate = modifyDate;
+    public void setModifyDateStr(String modifyDateStr) {
+        this.modifyDateStr = modifyDateStr;
     }
 
     public String getStartDate() {
