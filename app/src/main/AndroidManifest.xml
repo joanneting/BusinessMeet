@@ -18,7 +18,7 @@
         <activity
             android:name=".EventColorSelectActivity"
             android:theme="@style/AppTheme.PopMe" />
-        <activity android:name=".EventCrateActivity" />
+        <activity android:name=".EventCreateActivity" />
         <activity android:name=".EditEventActivity" />
         <activity android:name=".EventActivity" />
         <activity

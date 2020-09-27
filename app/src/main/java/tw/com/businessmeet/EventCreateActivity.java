@@ -29,7 +29,7 @@ import tw.com.businessmeet.helper.BlueToothHelper;
 import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 
-public class EventCrateActivity extends AppCompatActivity {
+public class EventCreateActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TextView dateStart,dateEnd,timeStart,timeEnd,addColor;
@@ -133,7 +133,7 @@ public class EventCrateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        EventCrateActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        EventCreateActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         year = year;
@@ -152,7 +152,7 @@ public class EventCrateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        EventCrateActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        EventCreateActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         year = year;
@@ -222,7 +222,7 @@ public class EventCrateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(
-                        EventCrateActivity.this,
+                        EventCreateActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
@@ -249,7 +249,7 @@ public class EventCrateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(
-                        EventCrateActivity.this,
+                        EventCreateActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
