@@ -5,33 +5,76 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class CrateEventActivity extends AppCompatActivity {
+import retrofit2.Call;
+import tw.com.businessmeet.bean.ResponseBody;
+import tw.com.businessmeet.bean.TimelineBean;
+import tw.com.businessmeet.dao.TimelineDAO;
+import tw.com.businessmeet.helper.AsyncTasKHelper;
+import tw.com.businessmeet.helper.BlueToothHelper;
+import tw.com.businessmeet.helper.DBHelper;
+import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
+
+public class EventCrateActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-    private TextView DateStart,DateEnd,TimerStart,TimerEnd,AddColor,AddLocation,AddParticipant;
-    private TextView Event, Date, Tag, Participant, EventMemo;
+    private TextView dateStart,dateEnd,timeStart,timeEnd,addColor;
+    private TextView event, date, tag, addEventParticipant, addEventMemo,addEventLacation;
+    private Switch switchDay;
+    private BlueToothHelper blueToothHelper;
     public int timerHour,timerMinute;
     private final Calendar calendar = Calendar.getInstance();
+    private Context context;
+    private TimelineServiceImpl timelineService = new TimelineServiceImpl();
+    private TimelineDAO timelineDAO;
+    private AsyncTasKHelper.OnResponseListener<TimelineBean,TimelineBean> addEvent = new AsyncTasKHelper.OnResponseListener<TimelineBean, TimelineBean>() {
+        @Override
+        public Call<ResponseBody<TimelineBean>> request(TimelineBean... timelineBeans) {
+            return timelineService.add(timelineBeans[0]);
+        }
 
+        @Override
+        public void onSuccess(TimelineBean timelineBean) {
+            timelineService.add(timelineBean);
+
+        }
+
+        @Override
+        public void onFail(int status, String message) {
+
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_create);
-
+        context = this;
+        DBHelper dbHelper = new DBHelper(this);
+        timelineDAO = new TimelineDAO(dbHelper);
         //Event = (TextView) findViewById(R.);
-
+        addEventLacation = findViewById(R.id.add_event_location);
+        switchDay = findViewById(R.id.switch_day);
+        dateStart = findViewById(R.id.date_start);
+        dateEnd = findViewById(R.id.date_end);
+        timeStart = findViewById(R.id.time_start);
+        timeEnd = findViewById(R.id.time_end);
+        blueToothHelper = new BlueToothHelper(this);
+        addEventParticipant = findViewById(R.id.add_event_participant);
+        addEventMemo = findViewById(R.id.add_event_memo);
         //toolbar
         toolbar = (Toolbar) findViewById(R.id.event_create_toolbar);
         toolbar.inflateMenu(R.menu.event_create_toolbarmenu);
@@ -39,58 +82,65 @@ public class CrateEventActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
                 //do back
             }
         });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener(){
 
             @Override
-            public boolean onMenuItemClick(MenuItem item) { //偵測按下去的事件
+            public boolean onMenuItemClick(MenuItem item) {
+                switch(item.getItemId()){
+                    case R.id.menu_addevent:
+                        if(dateStart.getText() != null && dateStart.getText().equals("")){
+                            Toast.makeText(context,"請選擇開始日期",Toast.LENGTH_LONG).show();
+                            break;
+                        }
+                        if(dateEnd.getText() != null && dateEnd.getText().equals("")){
+                            Toast.makeText(context,"請選擇結束日期",Toast.LENGTH_LONG).show();
+                            break;
+                        }
+                        if(timeStart.getText() != null && timeStart.getText().equals("")){
+                            Toast.makeText(context,"請選擇開始時間",Toast.LENGTH_LONG).show();
+                            break;
+                        }
+                        if(timeEnd.getText() != null && timeEnd.getText().equals("")){
+                            Toast.makeText(context,"請選擇結束時間",Toast.LENGTH_LONG).show();
+                            break;
+                        }
+
+                        TimelineBean timelineBean = new TimelineBean();
+                        timelineBean.setFriendId(getIntent().getExtras().getString("friendId"));
+                        timelineBean.setMatchmakerId(blueToothHelper.getUserId());
+                        timelineBean.setStartDate(dateStart+" "+timeStart);
+                        timelineBean.setEndDate(dateEnd+" "+timeEnd);
+                        timelineBean.setPlace(addEventLacation.getText().toString());
+                        timelineBean.setRemark(addEventMemo.getText().toString());
+                        AsyncTasKHelper.execute(addEvent,timelineBean);
+                }
                 return false;
             }
 
         });
 
 
-        //Date_Start
-        DateStart = findViewById(R.id.date_start);
 
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DateStart.setOnClickListener(new View.OnClickListener() {
+        dateStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        CrateEventActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        EventCrateActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         year = year;
                         month = month;
                         day = day;
                         calendar.set(year,month,day);
-                        DateStart.setText(SimpleDateFormat.getDateInstance().format(calendar.getTime()));
-                    }
-                },year,month,day);
-                datePickerDialog.updateDate(year,month,day);
-                datePickerDialog.show();
-            }
-        });
-        //Date_End
-        DateEnd = findViewById(R.id.date_end);
-        DateEnd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        CrateEventActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        year = year;
-                        month = month;
-                        day = day;
-                        calendar.set(year,month,day);
-                        DateEnd.setText(SimpleDateFormat.getDateInstance().format(calendar.getTime()));
+                        dateStart.setText(SimpleDateFormat.getDateInstance().format(calendar.getTime()));
                     }
                 },year,month,day);
                 datePickerDialog.updateDate(year,month,day);
@@ -98,38 +148,36 @@ public class CrateEventActivity extends AppCompatActivity {
             }
         });
 
-        //Add Color
-        AddColor = (TextView) findViewById(R.id.add_color);
-        AddColor.setOnClickListener(new View.OnClickListener() {
+        dateEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), ColorSelectActivity.class);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        EventCrateActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                        year = year;
+                        month = month;
+                        day = day;
+                        calendar.set(year,month,day);
+                        dateEnd.setText(SimpleDateFormat.getDateInstance().format(calendar.getTime()));
+                    }
+                },year,month,day);
+                datePickerDialog.updateDate(year,month,day);
+                datePickerDialog.show();
+            }
+        });
+
+        //add_color
+        addColor = (TextView) findViewById(R.id.add_color);
+        addColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), EventColorSelectActivity.class);
                 startActivity(i);
 //                MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(CrateEventActivity.this);
 //                materialAlertDialogBuilder.setView(R.layout.event_color_select);
             }
         });
-
-        //Add Location
-        AddLocation = (TextView) findViewById(R.id.add_event_location);
-        AddLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), EventAddLocationActivity.class);
-                startActivity(i);
-            }
-        });
-
-        //Add Participant
-        AddParticipant = (TextView) findViewById(R.id.add_event_participant);
-        AddParticipant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), EventAddParticipantActivity.class);
-                startActivity(i);
-            }
-        });
-
 
 
 //        //MaterialDatePicker
@@ -146,13 +194,13 @@ public class CrateEventActivity extends AppCompatActivity {
 //        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
 //            @Override
 //            public void onPositiveButtonClick(Object selection) {
-//                DateStart.setText(materialDatePicker.getHeaderText());
+//                dateStart.setText(materialDatePicker.getHeaderText());
 //            }
 //        });
 
 //        //Date_End
 //        mDatePickerBtnEnd = findViewById(R.id.event_time_select_end);
-//        mDateEnd = findViewById(R.id.date_end);
+//        mdateEnd = findViewById(R.id.date_end);
 //        MaterialDatePicker.Builder builder2 = MaterialDatePicker.Builder.datePicker();
 //        MaterialDatePicker materialDatePicker2 = builder2.build();
 //        mDatePickerBtnEnd.setOnClickListener(new View.OnClickListener() {
@@ -164,18 +212,17 @@ public class CrateEventActivity extends AppCompatActivity {
 //        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
 //            @Override
 //            public void onPositiveButtonClick(Object selection) {
-//                mDateEnd.setText(materialDatePicker2.getHeaderText());
+//                mdateEnd.setText(materialDatePicker2.getHeaderText());
 //            }
 //        });
 
 
-        //Timer_Start
-        TimerStart = findViewById(R.id.time_start);
-        TimerStart.setOnClickListener(new View.OnClickListener() {
+
+        timeStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(
-                        CrateEventActivity.this,
+                        EventCrateActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
@@ -183,7 +230,7 @@ public class CrateEventActivity extends AppCompatActivity {
                                 timerMinute = minute;
                                 //Set hour and minute
                                 calendar.set(0,0,0,timerHour,timerMinute);
-                                TimerStart.setText(DateFormat.format("aa hh:mm",calendar));
+                                timeStart.setText(DateFormat.format("aa hh:mm",calendar));
                             }
                         },12,0,false
 
@@ -197,13 +244,12 @@ public class CrateEventActivity extends AppCompatActivity {
         });
 
 
-        //Timer_End
-        TimerEnd = findViewById(R.id.time_end);
-        TimerEnd.setOnClickListener(new View.OnClickListener() {
+
+        timeEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(
-                        CrateEventActivity.this,
+                        EventCrateActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
@@ -211,7 +257,7 @@ public class CrateEventActivity extends AppCompatActivity {
                                 timerMinute = minute;
                                 //Set hour and minute
                                 calendar.set(0,0,0,timerHour,timerMinute);
-                                TimerEnd.setText(DateFormat.format("aa hh:mm",calendar));
+                                timeEnd.setText(DateFormat.format("aa hh:mm",calendar));
                             }
                         },12,0,false
 

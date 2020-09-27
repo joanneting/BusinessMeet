@@ -15,7 +15,7 @@ public class TimelineDAO {
     private String[] column = TimelineBean.getColumn();
     private String whereClause = column[0] + " = ?";
     private SQLiteDatabase db;
-    private SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public TimelineDAO(DBHelper DH){
         db = DH.getWritableDatabase();
     }
@@ -30,16 +30,19 @@ public class TimelineDAO {
         values.put(column[6],timelineBean.getTimelinePropertiesNo());
         values.put(column[7],timelineBean.getColor());
         values.put(column[8],timelineBean.getCreateDateStr());
-        values.put(column[9],timelineBean.getModifyDate());
+        values.put(column[9],timelineBean.getModifyDateStr());
         return values;
     }
     public void add(TimelineBean timelineBean){
+        String createDate = dateFormat.format(new Date());
+        timelineBean.setCreateDateStr(createDate);
         ContentValues values = putValues(timelineBean);
+
         db.insert(tableName,null,values);
     }
     public void update(TimelineBean timelineBean){
+        timelineBean.setModifyDateStr(dateFormat.format(new Date()));
         ContentValues values = putValues(timelineBean);
-        values.put("modify_date",dataFormat.format(new Date()));
         db.update(tableName,values,whereClause,new String[]{String.valueOf(timelineBean.getTimelineNo())});
 
     }

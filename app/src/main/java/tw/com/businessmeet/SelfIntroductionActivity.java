@@ -134,6 +134,8 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
         //this.personal = personal;
         blueToothHelper = new BlueToothHelper(this);
         avatarHelper = new AvatarHelper();
+        Intent intent = new Intent(this, NotificationService.class);
+        this.startService(intent);
         //toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbarMenu

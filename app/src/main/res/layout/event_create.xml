@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CrateEventActivity">
+    tools:context=".EventCrateActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/event_create_toolbar"
@@ -69,6 +69,30 @@
 
                 app:layout_constraintTop_toTopOf="@id/event_date"
                 tools:ignore="MissingConstraints" />
+            <TextView
+                android:id="@+id/event_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:text="整天"
+                android:textSize="14dp"
+                android:theme="@style/AppTheme.content"
+                app:layout_constraintStart_toEndOf="@id/clock_icon"
+                app:layout_constraintTop_toBottomOf="@+id/add_event"
+                tools:ignore="MissingConstraints" />
+            <Switch
+                android:id="@+id/switch_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:text=""
+                app:layout_constraintBottom_toBottomOf="@+id/event_date"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/event_date"
+                tools:ignore="MissingConstraints" />
 
             <ImageView
                 android:id="@+id/tag_icon"
@@ -131,31 +155,8 @@
                 app:layout_constraintTop_toTopOf="@+id/add_color" />
 
 
-            <Switch
-                android:id="@+id/switch_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:text=""
-                app:layout_constraintBottom_toBottomOf="@+id/event_date"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/event_date"
-                tools:ignore="MissingConstraints" />
 
-            <TextView
-                android:id="@+id/event_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:text="整天"
-                android:textSize="14dp"
-                android:theme="@style/AppTheme.content"
-                app:layout_constraintStart_toEndOf="@id/clock_icon"
-                app:layout_constraintTop_toBottomOf="@+id/add_event"
-                tools:ignore="MissingConstraints" />
+
 
             <TextView
                 android:id="@+id/date_start"
