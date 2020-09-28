@@ -3,12 +3,10 @@ package tw.com.businessmeet;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import tw.com.businessmeet.bean.FriendBean;
-import tw.com.businessmeet.adapter.FriendsRecyclerViewAdapter;
 import tw.com.businessmeet.adapter.FriendsTimelineRecyclerViewAdapter;
 import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.bean.TimelineBean;
@@ -40,7 +38,6 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -147,7 +144,7 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
                         startActivity(intent);
                         break;
                     case R.id.menu_addevent:
-                        Intent intent1 = intent.setClass(FriendsTimelineActivity.this, CrateEventActivity.class);
+                        Intent intent1 = intent.setClass(FriendsTimelineActivity.this, EventCreateActivity.class);
                         startActivity(intent1);
                 }
 
