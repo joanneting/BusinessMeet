@@ -11,17 +11,17 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import tw.com.businessmeet.R;
-import tw.com.businessmeet.bean.UserInformationBean;
+import tw.com.businessmeet.bean.TimelineBean;
 
 public class ProfileTimelineRecyclerViewAdapter extends RecyclerView.Adapter<ProfileTimelineRecyclerViewAdapter.ViewHolder> {
     private LayoutInflater layoutInflater;
     private Context context;
-    private List<UserInformationBean> userInformationBeanList;
+    private List<TimelineBean> timelineBeanList;
     private ClickListener clickListener;
-    public ProfileTimelineRecyclerViewAdapter(Context context, List<UserInformationBean> userInformationBeanList) {
+    public ProfileTimelineRecyclerViewAdapter(Context context, List<TimelineBean> timelineBeanList) {
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
-        this.userInformationBeanList = userInformationBeanList;
+        this.timelineBeanList = timelineBeanList;
     }
 
     @NonNull
@@ -35,14 +35,14 @@ public class ProfileTimelineRecyclerViewAdapter extends RecyclerView.Adapter<Pro
     @Override
     public void onBindViewHolder(@NonNull ProfileTimelineRecyclerViewAdapter.ViewHolder holder, int position) {
         //holder.profile_event_place.setText("八大");
-        UserInformationBean ufb = userInformationBeanList.get(position);
-        holder.bindInformation(ufb.getName(),ufb.getProfession());
+        TimelineBean tlb = timelineBeanList.get(position);
+        holder.bindInformation(tlb.getTimelinePropertiesNo()==1?tlb.getStartDate():tlb.getCreateDateStr(),tlb.getTitle());
 
     }
 
     @Override
     public int getItemCount() {
-        return userInformationBeanList.size();
+        return timelineBeanList.size();
     }
 
 
@@ -58,9 +58,9 @@ public class ProfileTimelineRecyclerViewAdapter extends RecyclerView.Adapter<Pro
             itemView.setOnClickListener(this);
         }
 
-        void bindInformation(String userName,String userCompany){
-            profile_event_date.setText(userName);
-            profile_event_place.setText(userCompany);
+        void bindInformation(String date,String title){
+            profile_event_date.setText(date);
+            profile_event_place.setText(title);
         }
 
         @Override
@@ -70,12 +70,12 @@ public class ProfileTimelineRecyclerViewAdapter extends RecyclerView.Adapter<Pro
             }
         }
     }
-    public UserInformationBean getUserInformation(int position){
-        return userInformationBeanList.get(position);
+    public TimelineBean getTimelineBean(int position){
+        return timelineBeanList.get(position);
     }
     public void  setClickListener(ClickListener clickListener){this.clickListener = clickListener;}
-    public void dataInsert(UserInformationBean userInformationBean){
-        userInformationBeanList.add(userInformationBean);
+    public void dataInsert(TimelineBean timelineBean){
+        timelineBeanList.add(timelineBean);
         notifyItemInserted(getItemCount());
     }
     public interface ClickListener{

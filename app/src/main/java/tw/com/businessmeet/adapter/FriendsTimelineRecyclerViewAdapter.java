@@ -39,7 +39,7 @@ public class FriendsTimelineRecyclerViewAdapter extends RecyclerView.Adapter<Fri
         //holder.friends_place.setText("八大");
         TimelineBean tlb = timelineBeanList.get(position);
 
-        holder.bindInformation(tlb.getTimelinePropertiesNo()==1?tlb.getStartDate():tlb.getCreateDateStr(),tlb.getPlace());
+        holder.bindInformation(tlb.getTimelinePropertiesNo()==1?tlb.getStartDate():tlb.getCreateDateStr(),tlb.getTitle());
     }
 
     @Override
@@ -60,9 +60,9 @@ public class FriendsTimelineRecyclerViewAdapter extends RecyclerView.Adapter<Fri
             itemView.setOnClickListener(this);
         }
 
-        void bindInformation(String date,String place){
+        void bindInformation(String date,String title){
             friends_date.setText(date);
-            friends_place.setText(place);
+            friends_place.setText(title);
         }
 
         @Override
