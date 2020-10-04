@@ -55,7 +55,7 @@ public class AddIntroductionActivity extends AppCompatActivity {
 
                 @Override
                 public void onFail(int status,String message) {
-
+                    Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
                 }
             };
 

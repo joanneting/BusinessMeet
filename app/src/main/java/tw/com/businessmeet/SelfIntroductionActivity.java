@@ -30,12 +30,14 @@ import tw.com.businessmeet.adapter.ProfileTimelineRecyclerViewAdapter;
 import tw.com.businessmeet.background.NotificationService;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.ResponseBody;
+import tw.com.businessmeet.bean.TimelineBean;
 import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.helper.AsyncTasKHelper;
 import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.BlueToothHelper;
 import tw.com.businessmeet.helper.DBHelper;
+import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 
 public class SelfIntroductionActivity extends AppCompatActivity implements ProfileTimelineRecyclerViewAdapter .ClickListener {
@@ -50,66 +52,26 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
     private NotificationService notificationService = null;
     private Toolbar toolbar;
     private RecyclerView recyclerViewProfileTimeline;
-    private UserInformationBean userInformationBean = new UserInformationBean();
-    private UserInformationServiceImpl userInformationService = new UserInformationServiceImpl();
+    private TimelineServiceImpl timelineService = new TimelineServiceImpl();
     private ProfileTimelineRecyclerViewAdapter profileTimelineRecyclerViewAdapter;
-    private List<UserInformationBean> userInformationBeanList = new ArrayList<>();
+    private List<TimelineBean> timelineBeanList = new ArrayList<>();
 
-//    private AsyncTasKHelper.OnResponseListener<String, UserInformationBean> userInfoResponseListener = new AsyncTasKHelper.OnResponseListener<String, UserInformationBean>() {
-//
-//
-//        @Override
-//        public Call<ResponseBody<UserInformationBean>> request(String... userId) {
-//            return userInformationService.getById(userId[0]);
-//        }
-//
-//        @Override
-//        public void onSuccess(UserInformationBean userInformationBean) {
-//            userName.append(userInformationBean.getName());
-//            position.append(userInformationBean.getProfession());
-//            avatar.setImageBitmap(avatarHelper.getImageResource(userInformationBean.getAvatar()));
-//        }
-//
-//        @Override
-//        public void onFail(int status,String message) {
-//        }
-//    };
 
-//    private AsyncTasKHelper.OnResponseListener<UserInformationBean, List<UserInformationBean>> searchResponseListener =
-//            new AsyncTasKHelper.OnResponseListener<UserInformationBean, List<UserInformationBean>>() {
-//                @Override
-//                public Call<ResponseBody<List<UserInformationBean>>> request(UserInformationBean... userInformationBeans) {
-//
-//                    return userInformationService.search(userInformationBean[0]);
-//                }
-//
-//                @Override
-//                public void onSuccess(List<UserInformationBean> userInformationBeanList) {
-//                    Log.e("MatchedBean","success");
-//                    for(UserInformationBean userInformationBean : userInformationBeanList) {
-//                        AsyncTasKHelper.execute(getByIdResponseListener,userInformationBean.getUserId());
-//                        Log.e("MatchedBean", String.valueOf(userInformationBean));
-//                        //Log.e("MatchedBean", String.valueOf(matchedBean.getBlueTooth()));
-//                    }
-//                }
-//
-//                @Override
-//                public void onFail(int status, String message) {
-//
-//                }
-//            };
-
-    private AsyncTasKHelper.OnResponseListener<String,UserInformationBean> getByIdResponseListener =
-            new AsyncTasKHelper.OnResponseListener<String,UserInformationBean>() {
+    private AsyncTasKHelper.OnResponseListener<TimelineBean, List<TimelineBean>> searchTimelineResponseListener =
+            new AsyncTasKHelper.OnResponseListener<TimelineBean, List<TimelineBean>>() {
                 @Override
-                public Call<ResponseBody<UserInformationBean>> request(String... blueTooth) {
+                public Call<ResponseBody<List<TimelineBean>>> request(TimelineBean... timelineBeans) {
 
-                    return userInformationService.getById(blueTooth[0]);
+                    return timelineService.search(timelineBeans[0]);
                 }
 
                 @Override
-                public void onSuccess(UserInformationBean userInformationBean) {
-                    profileTimelineRecyclerViewAdapter.dataInsert(userInformationBean);
+                public void onSuccess(List<TimelineBean> timelineBeanList) {
+                    Log.e("MatchedBean","success");
+                    for(TimelineBean timelineBean : timelineBeanList) {
+                      profileTimelineRecyclerViewAdapter.dataInsert(timelineBean);
+                        //Log.e("MatchedBean", String.valueOf(matchedBean.getBlueTooth()));
+                    }
                 }
 
                 @Override
@@ -117,6 +79,8 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
 
                 }
             };
+
+
 
 
 
@@ -148,7 +112,9 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
             }
 
         });
-
+        TimelineBean timelineBean = new TimelineBean();
+        timelineBean.setMatchmakerId(blueToothHelper.getUserId());
+        AsyncTasKHelper.execute(searchTimelineResponseListener,timelineBean);
         openDB();
         searchUserInformation();
 
@@ -219,7 +185,7 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
 
     private void createRecyclerViewProfileTimeline() {
         recyclerViewProfileTimeline.setLayoutManager(new LinearLayoutManager(this));
-        profileTimelineRecyclerViewAdapter = new ProfileTimelineRecyclerViewAdapter(this, this.userInformationBeanList);
+        profileTimelineRecyclerViewAdapter = new ProfileTimelineRecyclerViewAdapter(this, this.timelineBeanList);
         profileTimelineRecyclerViewAdapter.setClickListener(this);
         recyclerViewProfileTimeline.setAdapter(profileTimelineRecyclerViewAdapter);
 
@@ -229,7 +195,7 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
         Intent intent = new Intent();
         intent.setClass(this,EventActivity.class); //改到活動事件內容
         Bundle bundle = new Bundle();
-        bundle.putString("blueToothAddress",profileTimelineRecyclerViewAdapter.getUserInformation(position).getBluetooth());
+        bundle.putString("timelineNo",profileTimelineRecyclerViewAdapter.getTimelineBean(position).getTimelineNo().toString());
         intent.putExtras(bundle);
         startActivity(intent);
 
