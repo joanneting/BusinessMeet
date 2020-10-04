@@ -167,7 +167,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL);
         SQL = "create table if not exists "+ _TableName[15] + "("+
                 "activity_date_no int primary key,"+
-                "activity_no int  not null references"+_TableName[9]+"(timeline_no)," +
+                "activity_no int  not null references "+_TableName[9]+"(timeline_no)," +
                 "start_date datetime,"+
                 "end_date datetime,"+
                 "create_date datetime not null,"+

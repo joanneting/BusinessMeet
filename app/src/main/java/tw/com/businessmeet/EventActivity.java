@@ -28,7 +28,7 @@ public class EventActivity extends AppCompatActivity {
     private TimelineServiceImpl timelineService = new TimelineServiceImpl();
     private TextView event,eventDate,eventTime,eventLocation,eventParticipant,addEventMemo,eventTag;
     private ImageView participantAvatar,tagIcon,participantIcon;
-    private AvatarHelper avatarHelper;
+    private AvatarHelper avatarHelper = new AvatarHelper();
     private AsyncTasKHelper.OnResponseListener<Integer, TimelineBean> timelineBeanOnResponseListener = new AsyncTasKHelper.OnResponseListener<Integer, TimelineBean>() {
         @Override
         public Call<ResponseBody<TimelineBean>> request(Integer... timelineNos) {

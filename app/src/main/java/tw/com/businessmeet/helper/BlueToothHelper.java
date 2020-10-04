@@ -203,6 +203,7 @@ public class BlueToothHelper {
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+//        BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE
     }
 
     public void searchBlueToothInBackground() {
@@ -470,8 +471,9 @@ public class BlueToothHelper {
             System.out.println("mBluetoothAdapter.isEnabled() : " + mBluetoothAdapter.isEnabled());
             String userId = getUserId();
             Intent intent = new Intent();
+
             if(userId == "" || userId == null ){
-                intent.setClass(activity,AddIntroductionActivity.class);
+                intent.setClass(activity,LoginActivity.class);
                 activity.startActivity(intent);
             }else{
                 AsyncTasKHelper.execute(getLoginStatus,getUserId());

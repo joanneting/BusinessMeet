@@ -8,6 +8,7 @@ public class ResponseBody<D> {
     D data;
     String message;
 
+    Integer status;
     public boolean getSuccess() {
         return success;
     }
@@ -30,5 +31,13 @@ public class ResponseBody<D> {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
