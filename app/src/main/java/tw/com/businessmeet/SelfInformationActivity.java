@@ -57,10 +57,20 @@ public class SelfInformationActivity extends AppCompatActivity {
         //toolbarMenu
         toolbar.inflateMenu(R.menu.toolbarmenu);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                return false;
+            public boolean onMenuItemClick(MenuItem item) { //偵測按下去的事件
+                Intent intent = new Intent();
+                switch (item.getItemId()) {
+                    case R.id.menu_bell:
+                        intent.setClass(SelfInformationActivity.this, SelfInviteActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.menu_add_calendar:
+                        Intent intent1 = intent.setClass(SelfInformationActivity.this, EventCreateActivity.class);
+                        startActivity(intent1);
+                }
+
+                return true;
             }
 
         });
