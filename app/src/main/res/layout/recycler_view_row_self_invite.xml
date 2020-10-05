@@ -18,12 +18,13 @@
         android:layout_weight="1">
         <TextView
             android:id="@+id/invite_month"
-            android:text="month"
-            android:gravity="center_vertical|bottom"
+            android:text="2月"
+            android:gravity="center_vertical|center|bottom"
             android:layout_width="50dp"
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="1" />
+
         <TextView
             android:id="@+id/invite_date"
             android:text="date"
@@ -31,6 +32,7 @@
             android:layout_height="30dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
+            android:gravity="center_vertical|center|top"
             android:textColor="@color/colorAlmostBlack"
             android:textSize="16dp"
             android:layout_weight="1" />
