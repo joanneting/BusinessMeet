@@ -16,13 +16,15 @@ import tw.com.businessmeet.background.NotificationService;
 import tw.com.businessmeet.bean.LoginBean;
 import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.bean.UserInformationBean;
+import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.helper.AsyncTasKHelper;
 import tw.com.businessmeet.helper.BlueToothHelper;
+import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.network.ApplicationContext;
 import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 
 public class LoginActivity extends AppCompatActivity {
-
+private UserInformationDAO userInformationDAO;
 //    private LoginViewModel loginViewModel;
 private BlueToothHelper blueToothHelper;
     @Override
@@ -38,11 +40,14 @@ private BlueToothHelper blueToothHelper;
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
+        final Button registerButton = findViewById(R.id.register);
 //        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
         loginButton.setEnabled(true);
-        usernameEditText.append("test");
-        passwordEditText.append("test");
-
+        if(blueToothHelper.getUserId() == null || blueToothHelper.getUserId() =="") {
+            registerButton.setEnabled(true);
+        }
+        DBHelper dbHelper = new DBHelper(this);
+        userInformationDAO = new UserInformationDAO(dbHelper);
 //        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
 //            @Override
 //            public void onChanged(@Nullable LoginFormState loginFormState) {
@@ -124,6 +129,17 @@ private BlueToothHelper blueToothHelper;
                 AsyncTasKHelper.execute(login,userInformationBean);
             }
         });
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                loadingProgressBar.setVisibility(View.VISIBLE);
+//                loginViewModel.login(usernameEditText.getText().toString(),
+//                        passwordEditText.getText().toString());
+                Intent intent = new Intent();
+                intent.setClass(LoginActivity.this,AddIntroductionActivity.class);
+                LoginActivity.this.startActivity(intent);
+            }
+        });
     }
     private UserInformationServiceImpl userInformationService = new UserInformationServiceImpl();
     private AsyncTasKHelper.OnResponseListener<UserInformationBean, LoginBean> login = new AsyncTasKHelper.OnResponseListener<UserInformationBean, LoginBean>() {
@@ -136,6 +152,11 @@ private BlueToothHelper blueToothHelper;
             Intent it = new Intent(LoginActivity.this, NotificationService.class);
 //            stopService(it);
             startService(it);
+            String userId = blueToothHelper.getUserId();
+            System.out.println("loginBean.getUserInformationBean() = " + loginBean.getUserInformationBean());
+            if(userId == null || userId == ""){
+                userInformationDAO.add(loginBean.getUserInformationBean());
+            }
             Intent intent = new Intent();
             intent.setClass(LoginActivity.this, SelfIntroductionActivity.class);
             startActivity(intent);
