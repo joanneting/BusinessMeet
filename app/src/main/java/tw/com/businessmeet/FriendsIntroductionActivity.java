@@ -25,9 +25,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -36,6 +38,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +61,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
     private FriendServiceImpl matchedService = new FriendServiceImpl();
     private ArrayList<FriendCustomizationBean> friendCustomizationBeanList = new ArrayList<FriendCustomizationBean>();
     private ArrayList<String> titleList = new ArrayList<String>();
+    private ArrayList<String> contentList = new ArrayList<String>();
     private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
 
     private AsyncTasKHelper.OnResponseListener<String, UserInformationBean> userInfoResponseListener = new AsyncTasKHelper.OnResponseListener<String, UserInformationBean>() {
@@ -101,8 +106,12 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
             System.out.println(friendBeanList.get(0).getRemark() + "=============================");
             System.out.println(friendBeanList.size() + "=============================");
             friendNo = friendBeanList.get(0).getFriendNo();
-            if (friendBeanList.get(0).getRemark() != null)
-                remark.append(friendBeanList.get(0).getRemark());
+            FriendCustomizationBean fcb = new FriendCustomizationBean();
+            fcb.setFriendNo(friendNo);
+            System.out.println("friendNo = " + friendNo);
+            AsyncTasKHelper.execute(searchResponseListener, fcb);
+//            if (friendBeanList.get(0).getRemark() != null)
+//                remark.append(friendBeanList.get(0).getRemark());
         }
 
         @Override
@@ -124,9 +133,28 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
                 for (int i = 0; i < friendCustomizationBeans.size(); i++) {
                     friendCustomizationBeanList.add(friendCustomizationBeans.get(i));
                     titleList.add(friendCustomizationBeanList.get(i).getName());
-//                    title.append(friendCustomizationBeans.get(i).getName());
-//                    System.out.println(friendCustomizationBeans.get(i).getName());
+                    contentList.add(friendCustomizationBeans.get(i).getContent());
                 }
+//                ArrayAdapter<String> titleAdapter = new ArrayAdapter(FriendsIntroductionActivity.this, R.layout.recycler_view_row_friend_profile_memo, R.id.friends_profile_information_memo_title, titleList);
+                for (int i = 0; i < contentList.size(); i++) {
+                    ArrayAdapter<String> titleAdapter = new ArrayAdapter(FriendsIntroductionActivity.this, R.layout.recycler_view_row_friend_profile_memo, R.id.friends_profile_information_memo_title, titleList);
+                    String[] contents = contentList.get(i).split(",");
+                    for (String content : contents) {
+
+                        ArrayAdapter<String> contentAdapter = new ArrayAdapter(FriendsIntroductionActivity.this, R.layout.recycler_view_row_friend_profile_memo, R.id.friends_profile_information_memo_content, titleList);
+                        LayoutInflater chipInflater = LayoutInflater.from(FriendsIntroductionActivity.this);
+                        Chip chip = new Chip(getApplicationContext());
+                        ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(FriendsIntroductionActivity.this, null, 0, R.style.Widget_MaterialComponents_Chip_Action);
+                        chip.setChipDrawable(chipDrawable);
+                        chip.setText(contentList.get(i));
+                        chip.setCloseIconVisible(true);
+                    }
+                    listView.setAdapter(titleAdapter);
+
+                }
+                setListViewHeight(listView);
+
+
             }
         }
 
@@ -134,6 +162,26 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         public void onFail(int status, String message) {
         }
     };
+
+    private static void setListViewHeight(ListView listView) {
+        if (listView == null) {
+            return;
+        }
+        ListAdapter titleAdapter = listView.getAdapter();
+        if (titleAdapter == null) {
+            return;
+        }
+        int totalHeight = 0;
+        for (int i = 0; i < titleAdapter.getCount(); i++) {
+            View listItem = titleAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (titleAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,9 +194,6 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         blueToothHelper = new BlueToothHelper(this);
         friendBean.setMatchmakerId(blueToothHelper.getUserId());
         AsyncTasKHelper.execute(friendsMemoResponseListener, friendBean);
-        FriendCustomizationBean fcb = new FriendCustomizationBean();
-        fcb.setFriendNo(friendNo);
-        AsyncTasKHelper.execute(searchResponseListener, fcb);
 
         userName = (TextView) findViewById(R.id.friends_profile_information_name);
         id = (TextView) findViewById(R.id.friends_profile_information_id);
@@ -157,17 +202,10 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         email = (TextView) findViewById(R.id.friends_profile_information_email);
         tel = (TextView) findViewById(R.id.friends_profile_information_phone);
         avatar = (ImageView) findViewById(R.id.friends_profile_information_photo);
-        //remark = (TextView) findViewById(R.id.friends_memo);
         avatarHelper = new AvatarHelper();
         editButton = (Button) findViewById(R.id.friends_profile_information_edit);
         editButton.setOnClickListener(editMemoButton);
         listView = (ListView) findViewById(R.id.friends_profile_information_memo);
-        ListAdapter titleAdapter = new ArrayAdapter<String>(this, R.layout.recycler_view_row_friend_profile_memo, R.id.friends_profile_information_memo_title, titleList);
-        System.out.println("--------------------------------------");
-        listView.setAdapter(titleAdapter);
-        for (int i = 0; i < titleList.size(); i++) {
-            System.out.println("title - " + titleList.get(i));
-        }
 
         //bottomNavigationView
         //Initialize And Assign Variable
@@ -218,7 +256,6 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         intent.putExtras(bundle);
         startActivity(intent);
     }
-
 
     //Perform ItemSelectedListener
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
