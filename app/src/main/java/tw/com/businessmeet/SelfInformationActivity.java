@@ -101,18 +101,6 @@ public class SelfInformationActivity extends AppCompatActivity {
 
     }
 
-    //    private ServiceConnection notificationServiceConnect = new ServiceConnection() {
-//        @Override
-//        public void onServiceConnected(ComponentName name, IBinder service) {
-//            notificationService = ((NotificationService.LocalBinder)service).getService();
-//        }
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName name) {
-//
-//        }
-//    };
-
 
     private void openDB(){
         Log.d("add","openDB");
