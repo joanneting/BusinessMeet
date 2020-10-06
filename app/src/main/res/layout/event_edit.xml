@@ -228,7 +228,7 @@
 
             <!--            地點-->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="16dp">
@@ -260,7 +260,7 @@
 
             <!--            參與者-->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="16dp">
@@ -291,7 +291,7 @@
 
             <!--            color-->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="16dp">
@@ -312,7 +312,7 @@
                 android:id="@+id/edit_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="20dp"
                 android:hint="預設顏色"
                 android:textColor="@color/colorAlmostBlack"
                 android:textSize="14dp"
@@ -323,7 +323,7 @@
 
             <!--            說明-->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="16dp"
