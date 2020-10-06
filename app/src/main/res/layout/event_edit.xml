@@ -35,9 +35,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/event_create_toolbar">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/edit_event"
@@ -50,126 +51,193 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/clock_icon"
+            <!--            時間-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+                <ImageView
+                    android:id="@+id/clock_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginLeft="24dp"
+                    android:src="@drawable/ic_schedule_24px"
+                    app:layout_constraintBottom_toBottomOf="@id/event_date"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/event_date" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp">
+
+                        <TextView
+                            android:id="@+id/event_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="整天"
+                            android:textSize="14dp"
+                            android:theme="@style/AppTheme.content"
+                            app:layout_constraintStart_toEndOf="@id/clock_icon"
+                            app:layout_constraintTop_toBottomOf="@+id/edit_event"
+                            android:layout_weight="1"/>
+
+                        <Switch
+                            android:id="@+id/switch_day"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            app:layout_constraintBottom_toBottomOf="@+id/event_date"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/event_date" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_margin="16dp">
+
+                        <TextView
+                            android:id="@+id/date_start"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="開始日期"
+                            android:theme="@style/AppTheme.content"
+                            app:layout_constraintStart_toStartOf="@+id/event_date"
+                            app:layout_constraintTop_toBottomOf="@+id/event_date"
+                            android:layout_weight="1"/>
+
+                        <TextView
+                            android:id="@+id/time_start"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="開始時間"
+                            android:theme="@style/AppTheme.content"
+                            app:layout_constraintBottom_toBottomOf="@+id/date_start"
+                            app:layout_constraintEnd_toEndOf="@+id/switch_day"
+                            app:layout_constraintTop_toTopOf="@+id/date_start"
+                            />
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_margin="16dp">
+                        <TextView
+                            android:id="@+id/date_end"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="結束日期"
+                            android:theme="@style/AppTheme.content"
+                            app:layout_constraintStart_toStartOf="@+id/date_start"
+                            app:layout_constraintTop_toBottomOf="@+id/date_start"
+                            android:layout_weight="1"/>
+
+
+                        <TextView
+                            android:id="@+id/time_end"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="結束時間"
+                            android:theme="@style/AppTheme.content"
+                            app:layout_constraintBottom_toBottomOf="@+id/date_end"
+                            app:layout_constraintEnd_toEndOf="@+id/time_start"
+                            app:layout_constraintTop_toTopOf="@+id/date_end" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <!--            時間-->
+
+            <!--            tag-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+
+                <ImageView
+                    android:id="@+id/tag_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginLeft="24dp"
+                    android:src="@drawable/ic_local_offer_24px"
+                    app:layout_constraintBottom_toBottomOf="@+id/event_tag"
+                    app:layout_constraintStart_toStartOf="@+id/clock_icon"
+                    app:layout_constraintTop_toTopOf="@+id/event_tag"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="16dp">
+
+                    <TextView
+                        android:id="@+id/event_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape_radius"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="3dp"
+                        android:layout_marginBottom="16dp"
+                        android:text="會議"
+                        android:textSize="14dp"
+                        app:layout_constraintStart_toStartOf="@+id/date_end"
+                        app:layout_constraintTop_toBottomOf="@+id/date_end" />
+
+                    <TextView
+                        android:id="@+id/more_event_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="更多標籤"
+                        android:textSize="14dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <!--            tag-->
+
+            <!--            地點-->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:src="@drawable/ic_schedule_24px"
-                app:layout_constraintBottom_toBottomOf="@id/event_date"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/event_date" />
-
-            <TextView
-                android:id="@+id/event_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:text="整天"
-                android:textSize="14dp"
-                android:theme="@style/AppTheme.content"
-                app:layout_constraintStart_toEndOf="@id/clock_icon"
-                app:layout_constraintTop_toBottomOf="@+id/edit_event" />
-
-            <Switch
-                android:id="@+id/switch_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:text=""
-                app:layout_constraintBottom_toBottomOf="@+id/event_date"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/event_date" />
-
-            <TextView
-                android:id="@+id/date_start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:hint="開始日期"
-                android:theme="@style/AppTheme.content"
-                app:layout_constraintStart_toStartOf="@+id/event_date"
-                app:layout_constraintTop_toBottomOf="@+id/event_date" />
-
-            <TextView
-                android:id="@+id/time_start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="開始時間"
-                android:theme="@style/AppTheme.content"
-                app:layout_constraintBottom_toBottomOf="@+id/date_start"
-                app:layout_constraintEnd_toEndOf="@+id/switch_day"
-                app:layout_constraintTop_toTopOf="@+id/date_start" />
-
-            <TextView
-                android:id="@+id/date_end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:hint="結束日期"
-                android:theme="@style/AppTheme.content"
-                app:layout_constraintStart_toStartOf="@+id/date_start"
-                app:layout_constraintTop_toBottomOf="@+id/date_start" />
-
-
-            <TextView
-                android:id="@+id/time_end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="結束時間"
-                android:theme="@style/AppTheme.content"
-                app:layout_constraintBottom_toBottomOf="@+id/date_end"
-                app:layout_constraintEnd_toEndOf="@+id/time_start"
-                app:layout_constraintTop_toTopOf="@+id/date_end" />
-
-            <ImageView
-                android:id="@+id/tag_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_local_offer_24px"
-                app:layout_constraintBottom_toBottomOf="@+id/event_tag"
-                app:layout_constraintStart_toStartOf="@+id/clock_icon"
-                app:layout_constraintTop_toTopOf="@+id/event_tag"
-                app:layout_constraintVertical_bias="1.0" />
-
-            <TextView
-                android:id="@+id/event_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/shape_radius"
-                android:paddingLeft="10dp"
-                android:paddingTop="3dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="3dp"
-                android:text="會議"
-                android:textSize="14dp"
-                app:layout_constraintStart_toStartOf="@+id/date_end"
-                app:layout_constraintTop_toBottomOf="@+id/date_end" />
-
-            <TextView
-                android:id="@+id/more_event_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:paddingLeft="10dp"
-                android:paddingTop="3dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="3dp"
-                android:text="更多標籤"
-                android:textSize="14dp"
-                app:layout_constraintStart_toStartOf="@+id/date_end"
-                app:layout_constraintTop_toBottomOf="@+id/event_tag" />
-
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
             <ImageView
                 android:id="@+id/location_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_place_24px"
+                android:layout_marginLeft="24dp"
                 app:layout_constraintBottom_toBottomOf="@+id/edit_event_location"
                 app:layout_constraintEnd_toEndOf="@+id/tag_icon"
                 app:layout_constraintStart_toStartOf="@+id/tag_icon"
@@ -179,18 +247,30 @@
                 android:id="@+id/edit_event_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:hint="新增地點"
+                android:layout_marginLeft="16dp"
                 android:textColor="@color/colorAlmostBlack"
                 android:textSize="14dp"
                 app:layout_constraintStart_toStartOf="@+id/more_event_tag"
                 app:layout_constraintTop_toBottomOf="@+id/more_event_tag" />
+
+            <!--            地點-->
+
+            </LinearLayout>
+
+            <!--            參與者-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
 
             <ImageView
                 android:id="@+id/participant_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_people_24px"
+                android:layout_marginLeft="24dp"
                 app:layout_constraintBottom_toBottomOf="@+id/edit_event_participant"
                 app:layout_constraintEnd_toEndOf="@+id/location_icon"
                 app:layout_constraintStart_toStartOf="@+id/location_icon"
@@ -200,17 +280,27 @@
                 android:id="@+id/edit_event_participant"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginLeft="16dp"
                 android:hint="新增參與者"
                 android:textColor="@color/colorAlmostBlack"
                 android:textSize="14dp"
                 app:layout_constraintStart_toStartOf="@+id/edit_event_location"
                 app:layout_constraintTop_toBottomOf="@+id/edit_event_location" />
+        </LinearLayout>
+            <!--            參與者-->
+
+            <!--            color-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
 
             <ImageView
                 android:id="@+id/add_event_color"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginLeft="24dp"
                 android:background="@color/timelineGreen"
                 app:layout_constraintBottom_toBottomOf="@+id/edit_color"
                 app:layout_constraintEnd_toEndOf="@+id/participant_icon"
@@ -222,17 +312,27 @@
                 android:id="@+id/edit_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginLeft="16dp"
                 android:hint="預設顏色"
                 android:textColor="@color/colorAlmostBlack"
                 android:textSize="14dp"
                 app:layout_constraintStart_toStartOf="@+id/edit_event_participant"
                 app:layout_constraintTop_toBottomOf="@id/edit_event_participant" />
+            <!--            color-->
+        </LinearLayout>
 
+            <!--            說明-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_vertical|left">
             <ImageView
                 android:id="@+id/memo_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
                 android:src="@drawable/ic_format_align_left_24px"
                 app:layout_constraintBottom_toBottomOf="@+id/edit_event_memo"
                 app:layout_constraintEnd_toEndOf="@+id/add_event_color"
@@ -243,9 +343,10 @@
                 android:id="@+id/edit_event_memo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:hint="新增說明"
                 android:minWidth="250dp"
+                android:textSize="16dp"
+                android:layout_marginLeft="16dp"
                 android:textColor="@color/colorAlmostBlack"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -253,9 +354,10 @@
                 app:layout_constraintStart_toStartOf="@+id/edit_color"
                 app:layout_constraintTop_toBottomOf="@+id/edit_color"
                 app:layout_constraintVertical_bias="1.0" />
+        </LinearLayout>
 
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <!--            說明-->
+        </LinearLayout>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
