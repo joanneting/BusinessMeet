@@ -45,7 +45,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                >
 
 
                 <ImageView
@@ -53,12 +54,8 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="24dp"
-                    android:background="@color/timelineBrown"
-                    app:layout_constraintBottom_toBottomOf="@+id/event"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.08"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/event" />
+                    android:layout_marginTop="4dp"
+                    android:background="@color/timelineBrown"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -73,10 +70,6 @@
                         android:text="討論下半年演藝活動"
                         android:textSize="20dp"
                         android:textColor="@color/colorAlmostBlack"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/event_color"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
@@ -85,10 +78,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="星期二, 7月15日"
-                        android:textSize="14dp"
-                        app:layout_constraintStart_toStartOf="@+id/event"
-                        app:layout_constraintTop_toBottomOf="@+id/event"
-                        tools:ignore="MissingConstraints" />
+                        android:textSize="14dp"/>
 
                     <TextView
                         android:id="@+id/event_time"
@@ -97,8 +87,6 @@
                         android:layout_marginTop="8dp"
                         android:text="3:40 PM - 5:40 PM"
                         android:textSize="14dp"
-                        app:layout_constraintStart_toStartOf="@+id/event_date"
-                        app:layout_constraintTop_toBottomOf="@+id/event_date"
                         tools:ignore="MissingConstraints" />
                 </LinearLayout>
 
@@ -123,13 +111,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="24dp"
-                    android:src="@drawable/ic_local_offer_24px"
-                    app:layout_constraintBottom_toBottomOf="@+id/event_tag"
-                    app:layout_constraintEnd_toEndOf="@+id/event_color"
-                    app:layout_constraintStart_toStartOf="@+id/event_color"
-                    app:layout_constraintTop_toTopOf="@+id/event_tag"
-                    app:layout_constraintVertical_bias="1.0"
-                    tools:ignore="MissingConstraints" />
+                    android:src="@drawable/ic_local_offer_24px" />
 
                 <TextView
 
@@ -143,10 +125,7 @@
                     android:paddingBottom="3dp"
                     android:text="會議"
                     android:textSize="14dp"
-                    android:layout_marginLeft="16dp"
-                    app:layout_constraintStart_toStartOf="@+id/event_time"
-                    app:layout_constraintTop_toBottomOf="@+id/event_time"
-                    tools:ignore="MissingConstraints" />
+                    android:layout_marginLeft="16dp" />
             </LinearLayout>
 
 
@@ -165,12 +144,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_place_24px"
-                android:layout_marginLeft="24dp"
-                app:layout_constraintTop_toTopOf="@+id/event_location"
-                app:layout_constraintBottom_toBottomOf="@+id/event_location"
-                app:layout_constraintStart_toStartOf="@+id/tag_icon"
-                app:layout_constraintEnd_toEndOf="@+id/tag_icon"
-                tools:ignore="MissingConstraints" />
+                android:layout_marginLeft="24dp" />
 
             <TextView
                 android:id="@+id/event_location"
@@ -179,10 +153,7 @@
                 android:text="八大電視台"
                 android:textSize="14dp"
                 android:layout_marginLeft="16dp"
-                android:textColor="@color/colorAlmostBlack"
-                app:layout_constraintStart_toStartOf="@+id/event_tag"
-                app:layout_constraintTop_toBottomOf="@+id/event_tag"
-                tools:ignore="MissingConstraints" />
+                android:textColor="@color/colorAlmostBlack" />
         </LinearLayout>
 
 
@@ -200,12 +171,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_people_24px"
-                android:layout_marginLeft="24dp"
-                app:layout_constraintTop_toTopOf="@+id/event_participant"
-                app:layout_constraintBottom_toBottomOf="@+id/event_participant"
-                app:layout_constraintStart_toStartOf="@+id/location_icon"
-                app:layout_constraintEnd_toEndOf="@+id/location_icon"
-                tools:ignore="MissingConstraints" />
+                android:layout_marginLeft="24dp" />
 
             <ImageView
                 android:id="@+id/participant_avatar"
@@ -223,10 +189,7 @@
                 android:layout_marginLeft="8dp"
                 android:text="Alice Lee"
                 android:textSize="14dp"
-                android:textColor="@color/colorAlmostBlack"
-                app:layout_constraintStart_toEndOf="@+id/participant_avatar"
-                app:layout_constraintTop_toBottomOf="@+id/event_location"
-                tools:ignore="MissingConstraints" />
+                android:textColor="@color/colorAlmostBlack" />
         </LinearLayout>
 
             <!-- people-->
@@ -243,12 +206,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_format_align_left_24px"
-                android:layout_marginLeft="24dp"
-                app:layout_constraintTop_toTopOf="@+id/add_event_memo"
-                app:layout_constraintBottom_toBottomOf="@+id/add_event_memo"
-                app:layout_constraintStart_toStartOf="@+id/participant_icon"
-                app:layout_constraintEnd_toEndOf="@+id/participant_icon"
-                tools:ignore="MissingConstraints" />
+                android:layout_marginLeft="24dp" />
 
             <TextView
                 android:id="@+id/add_event_memo"
@@ -256,10 +214,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:text="準備準備準備wwwwwwwwwwwwww準備準備準備準備準備準備準468791454987備準備準備準備準備12354"
-                android:textColor="@color/colorAlmostBlack"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:ignore="MissingConstraints" />
+                android:textColor="@color/colorAlmostBlack" />
             <!--note-->
         </LinearLayout>
         </LinearLayout>
