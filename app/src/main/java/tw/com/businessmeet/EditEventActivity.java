@@ -1,6 +1,7 @@
 package tw.com.businessmeet;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.view.View;
@@ -64,5 +65,17 @@ public class EditEventActivity extends AppCompatActivity {
 
 
         }
+
+        //toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.event_create_toolbar);
+        toolbar.inflateMenu(R.menu.event_create_toolbarmenu);
+        toolbar.setNavigationIcon(R.drawable.ic_cancel_16dp);  //back
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                //do back
+            }
+        });
     }
 }
