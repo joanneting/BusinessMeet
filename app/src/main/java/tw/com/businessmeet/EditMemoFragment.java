@@ -32,9 +32,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import tw.com.businessmeet.adapter.FriendMemoAddColumnRecyclerViewAdapter;
-import tw.com.businessmeet.adapter.FriendMemoTagRecyclerViewAdapter;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
-import tw.com.businessmeet.bean.FriendLabelBean;
 import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.dao.FriendCustomizationDAO;
 import tw.com.businessmeet.helper.AsyncTasKHelper;

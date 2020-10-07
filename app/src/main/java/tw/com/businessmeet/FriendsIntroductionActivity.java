@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import retrofit2.Call;
+import tw.com.businessmeet.adapter.FriendProfileListViewAdapter;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
 import tw.com.businessmeet.bean.ResponseBody;
@@ -38,8 +39,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipDrawable;
+import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +60,6 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
     private UserInformationServiceImpl userInformationService = new UserInformationServiceImpl();
     private FriendServiceImpl matchedService = new FriendServiceImpl();
     private ArrayList<FriendCustomizationBean> friendCustomizationBeanList = new ArrayList<FriendCustomizationBean>();
-    private ArrayList<String> titleList = new ArrayList<String>();
-    private ArrayList<String> contentList = new ArrayList<String>();
     private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
 
     private AsyncTasKHelper.OnResponseListener<String, UserInformationBean> userInfoResponseListener = new AsyncTasKHelper.OnResponseListener<String, UserInformationBean>() {
@@ -110,8 +108,6 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
             fcb.setFriendNo(friendNo);
             System.out.println("friendNo = " + friendNo);
             AsyncTasKHelper.execute(searchResponseListener, fcb);
-//            if (friendBeanList.get(0).getRemark() != null)
-//                remark.append(friendBeanList.get(0).getRemark());
         }
 
         @Override
@@ -132,29 +128,10 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
             if (friendCustomizationBeans.size() > 1 || (friendCustomizationBeans.size() == 1 && (friendCustomizationBeans.get(0).getCreateDate() != null && !friendCustomizationBeans.get(0).equals("")))) {
                 for (int i = 0; i < friendCustomizationBeans.size(); i++) {
                     friendCustomizationBeanList.add(friendCustomizationBeans.get(i));
-                    titleList.add(friendCustomizationBeanList.get(i).getName());
-                    contentList.add(friendCustomizationBeans.get(i).getContent());
                 }
-//                ArrayAdapter<String> titleAdapter = new ArrayAdapter(FriendsIntroductionActivity.this, R.layout.recycler_view_row_friend_profile_memo, R.id.friends_profile_information_memo_title, titleList);
-                for (int i = 0; i < contentList.size(); i++) {
-                    ArrayAdapter<String> titleAdapter = new ArrayAdapter(FriendsIntroductionActivity.this, R.layout.recycler_view_row_friend_profile_memo, R.id.friends_profile_information_memo_title, titleList);
-                    String[] contents = contentList.get(i).split(",");
-                    for (String content : contents) {
-
-                        ArrayAdapter<String> contentAdapter = new ArrayAdapter(FriendsIntroductionActivity.this, R.layout.recycler_view_row_friend_profile_memo, R.id.friends_profile_information_memo_content, titleList);
-                        LayoutInflater chipInflater = LayoutInflater.from(FriendsIntroductionActivity.this);
-                        Chip chip = new Chip(getApplicationContext());
-                        ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(FriendsIntroductionActivity.this, null, 0, R.style.Widget_MaterialComponents_Chip_Action);
-                        chip.setChipDrawable(chipDrawable);
-                        chip.setText(contentList.get(i));
-                        chip.setCloseIconVisible(true);
-                    }
-                    listView.setAdapter(titleAdapter);
-
-                }
+                FriendProfileListViewAdapter friendProfileListViewAdapter = new FriendProfileListViewAdapter(FriendsIntroductionActivity.this, friendCustomizationBeanList);
+                listView.setAdapter(friendProfileListViewAdapter);
                 setListViewHeight(listView);
-
-
             }
         }
 
