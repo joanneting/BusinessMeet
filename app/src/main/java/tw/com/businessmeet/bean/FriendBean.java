@@ -7,6 +7,8 @@ public class FriendBean {
     private Integer friendNo;
     private String matchmakerId;
     private String friendId;
+    private String friendName;
+    private String friendAvatar;
     private String remark;
     private String createDate;
     private String modifyDate;
@@ -39,6 +41,22 @@ public class FriendBean {
 
     public void setFriendId(String friendId) {
         this.friendId = friendId;
+    }
+
+    public String getFriendName() {
+        return friendName;
+    }
+
+    public void setFriendName(String friendName) {
+        this.friendName = friendName;
+    }
+
+    public String getFriendAvatar() {
+        return friendAvatar;
+    }
+
+    public void setFriendAvatar(String friendAvatar) {
+        this.friendAvatar = friendAvatar;
     }
 
     public String getRemark() {
