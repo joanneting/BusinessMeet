@@ -39,7 +39,7 @@
                 android:textColor="@color/colorAlmostBlack"
                 android:textSize="17sp" />
             <CheckBox
-                android:id="@+id/participant_check"
+                android:id="@+id/invite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/colorPrimary"/>

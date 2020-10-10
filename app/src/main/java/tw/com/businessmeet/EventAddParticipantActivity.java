@@ -61,10 +61,7 @@ public class EventAddParticipantActivity extends AppCompatActivity implements Ev
 
         //checkbox
         recyclerViewEventAddParticipant = findViewById(R.id.search_participant_ResultView);
-        checkBox = (CheckBox) findViewById(R.id.participant_check);
-        if (checkBox.isChecked()) {
-            checkBox.setChecked(false);
-        }
+
         eventAddParticipantRecyclerViewAdapter();
         BlueToothHelper blueToothHelper = new BlueToothHelper(this);
         FriendBean friendBean = new FriendBean();
