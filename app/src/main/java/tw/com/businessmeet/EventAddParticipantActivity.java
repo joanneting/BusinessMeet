@@ -17,20 +17,24 @@ import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.SearchView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventAddParticipantActivity extends AppCompatActivity implements EventAddParticipantRecyclerViewAdapter.ClickListener {
+public class EventAddParticipantActivity extends AppCompatActivity implements EventAddParticipantRecyclerViewAdapter.ClickListener  {
 
     private RecyclerView recyclerViewEventAddParticipant;
     private EventAddParticipantRecyclerViewAdapter eventAddParticipantRecyclerViewAdapter;
     private List<ActivityInviteBean> activityInviteBeanList  = new ArrayList<>();
     private FriendServiceImpl friendService = new FriendServiceImpl();
+    private EditText searchView ;
     private AsyncTasKHelper.OnResponseListener<FriendBean,List<FriendBean>> searchFriendResponseListener = new AsyncTasKHelper.OnResponseListener<FriendBean, List<FriendBean>>() {
         @Override
         public Call<ResponseBody<List<FriendBean>>> request(FriendBean... friendBeans) {
@@ -59,7 +63,6 @@ public class EventAddParticipantActivity extends AppCompatActivity implements Ev
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_add_participant);
 
-        //checkbox
         recyclerViewEventAddParticipant = findViewById(R.id.search_participant_ResultView);
 
         eventAddParticipantRecyclerViewAdapter();
@@ -68,8 +71,9 @@ public class EventAddParticipantActivity extends AppCompatActivity implements Ev
         friendBean.setMatchmakerId(blueToothHelper.getUserId());
         System.out.println("blueToothHelper.getUserId() = " + blueToothHelper.getUserId());
         AsyncTasKHelper.execute(searchFriendResponseListener,friendBean);
+        searchView = (EditText) findViewById(R.id.participantSearch_searchbar);
+        searchView.addTextChangedListener(textWatcher);
     }
-
     private void eventAddParticipantRecyclerViewAdapter() {
         recyclerViewEventAddParticipant.setLayoutManager(new LinearLayoutManager(this));
         eventAddParticipantRecyclerViewAdapter = new EventAddParticipantRecyclerViewAdapter(this,activityInviteBeanList);
@@ -86,4 +90,21 @@ public class EventAddParticipantActivity extends AppCompatActivity implements Ev
         eventAddParticipantRecyclerViewAdapter.dataUpdate(activityInviteBean,position);
 //      
     }
+
+    public TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            eventAddParticipantRecyclerViewAdapter.getFilter().filter(s);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 }
