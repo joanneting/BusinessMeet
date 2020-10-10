@@ -11,9 +11,9 @@ public class ActivityInviteBean {
     private String createDate;
     private String modifyDate;
     private Integer statusCode;
-
     private String userName;
     private String avatar;
+    private Boolean isInvite;
 
 
     public static String[] getColumn() {
@@ -82,5 +82,13 @@ public class ActivityInviteBean {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Boolean isInvite() {
+        return isInvite;
+    }
+
+    public void setInvite(Boolean invite) {
+        isInvite = invite;
     }
 }

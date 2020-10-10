@@ -178,7 +178,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:text="職業"
+            android:text="信箱"
             android:textColor="@color/colorPrimary"
             app:layout_constraintBottom_toTopOf="@+id/add_profile_mail"
             app:layout_constraintStart_toStartOf="@+id/add_profile_mail"
