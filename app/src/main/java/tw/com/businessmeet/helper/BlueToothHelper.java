@@ -674,9 +674,6 @@ public class BlueToothHelper {
                             longitude = location.getLongitude();        //取得經度
                             latitude = location.getLatitude();
                         List<Address> lstAddress = gc.getFromLocation(latitude, longitude, 1);
-                        Toast.makeText(
-                                notificationService.getBaseContext(),
-                                lstAddress.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
                         timelineBean.setPlace(lstAddress.get(0).getAddressLine(0));
                         locationManager.removeUpdates(locationListener);
                     }catch (Exception e){
@@ -689,7 +686,6 @@ public class BlueToothHelper {
                     timelineBean.setTimelinePropertiesNo(2);
 
                     timelineBean.setTitle(timelineBean.getPlace());
-                    Log.d("place", timelineBean.getPlace());
                     AsyncTasKHelper.execute(addTimeline, timelineBean);
                     notificationHelper.sendBackgroundMessage(userInformationBean, friendBeanList.get(0).getRemark());
                 }
@@ -697,17 +693,12 @@ public class BlueToothHelper {
         }
         @Override
         public void onFail(int status,String message) {
-            Log.d("intomatched","success");
             //unmatchedDeviceRecyclerViewAdapter.dataInsert(userInformationBean);
         }
     }; private class MyLocationListener implements LocationListener {
 
         @Override
         public void onLocationChanged(Location loc) {
-            Toast.makeText(
-                    notificationService,
-                    "Location changed: Lat: " + loc.getLatitude() + " Lng: "
-                            + loc.getLongitude(), Toast.LENGTH_SHORT).show();
              longitude = loc.getLongitude();
              latitude =  loc.getLatitude();
 
