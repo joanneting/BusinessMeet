@@ -19,8 +19,10 @@ import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 
 import java.sql.Time;
+import java.util.List;
 
 import retrofit2.Call;
+import tw.com.businessmeet.bean.ActivityInviteBean;
 import tw.com.businessmeet.bean.ActivityLabelBean;
 import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.bean.TimelineBean;
@@ -34,6 +36,7 @@ public class EventActivity extends AppCompatActivity {
     private TimelineServiceImpl timelineService = new TimelineServiceImpl();
     private TextView event,eventDate,eventTime,eventLocation,eventParticipant,addEventMemo;
     private ChipGroup eventTag;
+    private Boolean meet = true;
     private ImageView participantAvatar,tagIcon,participantIcon;
     private AvatarHelper avatarHelper = new AvatarHelper();
     private AsyncTasKHelper.OnResponseListener<Integer, TimelineBean> timelineBeanOnResponseListener = new AsyncTasKHelper.OnResponseListener<Integer, TimelineBean>() {
@@ -49,6 +52,8 @@ public class EventActivity extends AppCompatActivity {
             eventLocation.setText(timelineBean.getPlace());
             addEventMemo.setText(timelineBean.getRemark());
             if(timelineBean.getTimelinePropertiesNo() == 1){
+                meet = false;
+                System.out.println("timelineBean.getStartDate() = " + timelineBean.getStartDate());
                 eventDate.setText(timelineBean.getStartDate());
                 eventTime.setText(timelineBean.getEndDate());
                 ActivityLabelBean activityLabelBean = timelineBean.getActivityLabelBean();
@@ -63,8 +68,18 @@ public class EventActivity extends AppCompatActivity {
                     eventTag.addView(chip);
                 }
 //                eventTag.setText(timelineBean.getActivityLabelBeanList().get(0).getContent());
-                eventParticipant.setText(timelineBean.getActivityInviteBeanList().get(0).getUserId());
+
+                List<ActivityInviteBean> activityInviteBeanList = timelineBean.getActivityInviteBeanList();
                 participantAvatar.setImageBitmap(avatarHelper.getImageResource(timelineBean.getActivityInviteBeanList().get(0).getAvatar()));
+                String inviteName = "";
+                for (int i = 0; i < activityInviteBeanList.size(); i++) {
+                    if(i==0){
+                        inviteName = activityInviteBeanList.get(i).getUserName();
+                    }else{
+                        inviteName +=","+ activityInviteBeanList.get(i).getUserName();
+                    }
+                }
+                eventParticipant.setText(inviteName);
             }else{
                 tagIcon.setVisibility(View.GONE);
                 eventTag.setVisibility(View.GONE);
