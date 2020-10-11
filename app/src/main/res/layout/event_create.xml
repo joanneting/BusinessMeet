@@ -143,6 +143,7 @@
                 tools:ignore="MissingConstraints" />
 
             <ImageView
+                android:visibility="gone"
                 android:id="@+id/add_event_color"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
@@ -245,6 +246,8 @@
                 tools:ignore="MissingConstraints" />
 
             <TextView
+
+                android:visibility="gone"
                 android:id="@+id/add_color"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

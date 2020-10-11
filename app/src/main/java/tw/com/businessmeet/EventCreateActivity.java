@@ -156,6 +156,7 @@ public class EventCreateActivity extends AppCompatActivity {
                         AsyncTasKHelper.execute(addEvent,timelineBean);
                         Intent intent = new Intent();
                         intent.setClass(EventCreateActivity.this,SelfIntroductionActivity.class);
+                        startActivity(intent);
                 }
                 return false;
             }
