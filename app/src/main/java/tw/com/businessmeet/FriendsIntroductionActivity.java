@@ -101,7 +101,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess(List<FriendBean> friendBeanList) {
-            System.out.println(friendBeanList.get(0).getRemark() + "=============================");
+            System.out.println(friendBeanList.get(0).getRemark() + " =============================");
             System.out.println(friendBeanList.size() + "=============================");
             friendNo = friendBeanList.get(0).getFriendNo();
             FriendCustomizationBean fcb = new FriendCustomizationBean();

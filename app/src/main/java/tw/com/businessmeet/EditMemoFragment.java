@@ -232,6 +232,7 @@ public class EditMemoFragment extends Fragment {
                     fcb.setName(addColumnMemo.getText().toString());
                     fcb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
                     fcb.setContent(chipContent);
+                    chipContent = "";
                     openDB();
                     friendCustomizationDAO.add(fcb);
                     AsyncTasKHelper.execute(addResponseListener, fcb);

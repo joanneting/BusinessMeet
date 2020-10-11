@@ -9,6 +9,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+
+import java.util.List;
+
+import retrofit2.Call;
+import tw.com.businessmeet.bean.FriendBean;
+import tw.com.businessmeet.bean.FriendCustomizationBean;
+import tw.com.businessmeet.bean.ResponseBody;
+import tw.com.businessmeet.dao.FriendDAO;
+import tw.com.businessmeet.helper.AsyncTasKHelper;
+import tw.com.businessmeet.helper.DBHelper;
+import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 
 
 /**
@@ -25,6 +38,36 @@ public class EditProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private View view;
+    private EditText addProfileContent;
+    private FriendBean friendBean = new FriendBean();
+    private Button confirmButton;
+    private FriendDAO friendDAO;
+    private DBHelper dh = null;
+    private FriendServiceImpl friendServiceImpl = new FriendServiceImpl();
+    private AsyncTasKHelper.OnResponseListener<FriendBean, FriendBean> addRemarkResponseListener = new AsyncTasKHelper.OnResponseListener<FriendBean, FriendBean>() {
+
+        @Override
+        public Call<ResponseBody<FriendBean>> request(FriendBean... friendBean) {
+            return friendServiceImpl.update(friendBean[0]);
+        }
+
+        @Override
+        public void onSuccess(FriendBean friendBean) {
+            openDB();
+            friendDAO.update(friendBean);
+        }
+
+        @Override
+        public void onFail(int status, String message) {
+        }
+    };
+
+    private void openDB() {
+        dh = new DBHelper(getContext());
+        friendDAO = new FriendDAO(dh);
+    }
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -60,7 +103,19 @@ public class EditProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        addProfileContent = (EditText) view.findViewById(R.id.addProfileContent_input);
+        confirmButton = (Button) view.findViewById(R.id.addColumn_dialog_confirmButton);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println(addProfileContent.getText().toString());
+                friendBean.setRemark(addProfileContent.getText().toString());
+                AsyncTasKHelper.execute(addRemarkResponseListener, friendBean);
+
+            }
+        });
+
+        return view;
     }
 }

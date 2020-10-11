@@ -75,21 +75,19 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/friends_profile_information_edit"
-                    style="@style/button"
+                    style="@style/confirmButton"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="16dp"
                     android:text="@string/friends_profile_information_edit"
-                    android:textColor="@color/colorPrimary"
                     app:layout_constraintBottom_toBottomOf="@id/friends_profile_information_major"
                     app:layout_constraintStart_toStartOf="@id/friends_profile_information_idTitle"
                     app:layout_constraintTop_toBottomOf="@id/friends_profile_information_idTitle" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/friends_profile_information_delete"
-                    style="@style/button"
+                    style="@style/cancelButton"
                     android:layout_marginLeft="20dp"
                     android:text="@string/friends_profile_information_delete"
-                    android:textColor="@color/colorAccent"
                     app:layout_constraintStart_toEndOf="@id/friends_profile_information_edit"
                     app:layout_constraintTop_toTopOf="@id/friends_profile_information_edit" />
 
