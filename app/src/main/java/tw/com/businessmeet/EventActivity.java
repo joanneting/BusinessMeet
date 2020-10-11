@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,9 +14,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
+import com.google.android.material.chip.ChipGroup;
+
 import java.sql.Time;
 
 import retrofit2.Call;
+import tw.com.businessmeet.bean.ActivityLabelBean;
 import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.bean.TimelineBean;
 import tw.com.businessmeet.helper.AsyncTasKHelper;
@@ -23,10 +29,11 @@ import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 
 public class EventActivity extends AppCompatActivity {
-
+    private Activity activity = this;
     private Toolbar toolbar;
     private TimelineServiceImpl timelineService = new TimelineServiceImpl();
-    private TextView event,eventDate,eventTime,eventLocation,eventParticipant,addEventMemo,eventTag;
+    private TextView event,eventDate,eventTime,eventLocation,eventParticipant,addEventMemo;
+    private ChipGroup eventTag;
     private ImageView participantAvatar,tagIcon,participantIcon;
     private AvatarHelper avatarHelper = new AvatarHelper();
     private AsyncTasKHelper.OnResponseListener<Integer, TimelineBean> timelineBeanOnResponseListener = new AsyncTasKHelper.OnResponseListener<Integer, TimelineBean>() {
@@ -44,7 +51,18 @@ public class EventActivity extends AppCompatActivity {
             if(timelineBean.getTimelinePropertiesNo() == 1){
                 eventDate.setText(timelineBean.getStartDate());
                 eventTime.setText(timelineBean.getEndDate());
-                eventTag.setText(timelineBean.getActivityLabelBeanList().get(0).getContent());
+                ActivityLabelBean activityLabelBean = timelineBean.getActivityLabelBean();
+                String[] contentArray = activityLabelBean.getContent().split(",");
+                for (String chipString : contentArray) {
+
+                    Chip chip = new Chip(activity);
+                    ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(activity, null, 0, R.style.Widget_MaterialComponents_Chip_Action);
+                    chip.setChipDrawable(chipDrawable);
+                    chip.setText(chipString);
+
+                    eventTag.addView(chip);
+                }
+//                eventTag.setText(timelineBean.getActivityLabelBeanList().get(0).getContent());
                 eventParticipant.setText(timelineBean.getActivityInviteBeanList().get(0).getUserId());
                 participantAvatar.setImageBitmap(avatarHelper.getImageResource(timelineBean.getActivityInviteBeanList().get(0).getAvatar()));
             }else{
@@ -75,7 +93,7 @@ public class EventActivity extends AppCompatActivity {
         eventTime = findViewById(R.id.event_time);
         eventLocation = findViewById(R.id.event_location);
         eventParticipant = findViewById(R.id.event_participant);
-        eventTag = findViewById(R.id.event_tag);
+        eventTag = findViewById(R.id.event_label);
         addEventMemo = findViewById(R.id.add_event_memo);
         participantAvatar = findViewById(R.id.participant_avatar);
         participantIcon = findViewById(R.id.participant_icon);

@@ -160,6 +160,7 @@ private BlueToothHelper blueToothHelper;
             Intent intent = new Intent();
             intent.setClass(LoginActivity.this, SelfIntroductionActivity.class);
             startActivity(intent);
+            finish();
             System.out.println("identty : " + loginBean.getIdentity() );
         }
         @Override
