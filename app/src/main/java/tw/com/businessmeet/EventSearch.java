@@ -36,4 +36,5 @@ public class EventSearch extends AppCompatActivity {
         intent.putExtras(bundle);
         startActivity(intent);
     }
+
 }

@@ -12,6 +12,8 @@ public interface FriendService {
     String baseRoute = "friend/";
     @POST(baseRoute+"search")
     Call<ResponseBody<List<FriendBean>>> search(@Body FriendBean friendBean);
+    @POST(baseRoute+"search/invitelist")
+    Call<ResponseBody<List<FriendBean>>> searchInviteAvatar(@Body FriendBean friendBean);
     @POST(baseRoute+"add")
     Call<ResponseBody<FriendBean>> add(@Body FriendBean friendBean);
     @POST(baseRoute+"update")

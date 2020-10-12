@@ -1,6 +1,7 @@
 package tw.com.businessmeet;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,13 +9,22 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.Spanned;
+import android.text.TextWatcher;
+import android.text.style.ImageSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -50,6 +60,13 @@ public class EditMemoFragment extends Fragment {
     // floating button
     private FloatingActionButton floatingActionButton;
 
+    //chip
+    private ChipGroup chipGroup;
+    private String chipContent;
+
+    //edit
+    private ImageButton editButton;
+
     // MemoFragment
     private FriendCustomizationBean fcb = new FriendCustomizationBean();
     private RecyclerView recyclerViewMemo;
@@ -59,6 +76,7 @@ public class EditMemoFragment extends Fragment {
     // dialog
     private Button confirm, cancel;
     private EditText addColumnMemo;
+    private EditText addChipMemo;
     private FriendCustomizationDAO friendCustomizationDAO;
     private DBHelper dh = null;
     private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
@@ -71,6 +89,7 @@ public class EditMemoFragment extends Fragment {
 
                 @Override
                 public void onSuccess(FriendCustomizationBean friendCustomizationBean) {
+                    AsyncTasKHelper.execute(searchResponseListener, fcb);
                 }
 
                 @Override
@@ -87,11 +106,9 @@ public class EditMemoFragment extends Fragment {
 
         @Override
         public void onSuccess(List<FriendCustomizationBean> friendCustomizationBeans) {
-            Log.d("MemoTitle", "count:" + friendCustomizationBeans.size());
             if (friendCustomizationBeans.size() > 1 || (friendCustomizationBeans.size() == 1 && (friendCustomizationBeans.get(0).getCreateDate() != null && !friendCustomizationBeans.get(0).equals("")))) {
                 for (int i = 0; i < friendCustomizationBeans.size(); i++) {
                     friendCustomizationBeanList.add(friendCustomizationBeans.get(i));
-                    Log.d("TitleName", i + ":" + friendCustomizationBeanList.get(i).getName());
                 }
             }
         }
@@ -130,58 +147,23 @@ public class EditMemoFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        fcb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
-        Log.d("fcb", "No:" + fcb.getFriendNo());
-        AsyncTasKHelper.execute(searchResponseListener, fcb);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_edit_memo, container, false);
+        fcb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
+        AsyncTasKHelper.execute(searchResponseListener, fcb);
+
         // recyclerView
         recyclerViewMemo = (RecyclerView) view.findViewById(R.id.friends_edit_profile_memo_recycleView);
-        initRecyclerView();
+        initMemoRecyclerView();
+
         // floating button
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.memo_addColumn);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // dialog
-                Log.d("EditMemoFragment", "friendNo:" + getActivity().getIntent().getIntExtra("friendNo", 0));
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                View view = inflater.inflate(R.layout.friend_add_column, null);
-                builder.setView(view);
-                builder.create();
-                AlertDialog alertDialog = builder.show();
+        floatingActionButton.setOnClickListener(dialogClick);
 
-                addColumnMemo = (EditText) view.findViewById(R.id.addColumn_dialog_Input);
-                confirm = (Button) view.findViewById(R.id.addColumn_dialog_confirmButton);
-                confirm.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        fcb.setName(addColumnMemo.getText().toString());
-                        fcb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
-                        openDB();
-                        friendCustomizationDAO.add(fcb);
-                        AsyncTasKHelper.execute(addResponseListener, fcb);
-                        if (alertDialog.isShowing()) {
-                            alertDialog.dismiss();
-                        }
-                    }
-                });
-                cancel = (Button) view.findViewById(R.id.addColumn_dialog_cancelButton);
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (alertDialog.isShowing()) {
-                            alertDialog.dismiss();
-                        }
-                    }
-                });
-            }
-        });
         return view;
     }
 
@@ -190,9 +172,9 @@ public class EditMemoFragment extends Fragment {
         friendCustomizationDAO = new FriendCustomizationDAO(dh);
     }
 
-    private void initRecyclerView() {
+    private void initMemoRecyclerView() {
         // 創建adapter
-        friendMemoAddColumnRecyclerViewAdapter = new FriendMemoAddColumnRecyclerViewAdapter(getActivity(), friendCustomizationBeanList);
+        friendMemoAddColumnRecyclerViewAdapter = new FriendMemoAddColumnRecyclerViewAdapter(getContext(), friendCustomizationBeanList);
         // recycleView設置adapter
         recyclerViewMemo.setAdapter(friendMemoAddColumnRecyclerViewAdapter);
         // 設置layoutManager，可以設置顯示效果(線性布局、grid布局、瀑布流布局)
@@ -200,5 +182,73 @@ public class EditMemoFragment extends Fragment {
         recyclerViewMemo.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         // 設置item的分割線
         recyclerViewMemo.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        //點擊進入編輯
+        recyclerViewMemo.setOnClickListener(dialogClick);
     }
+
+    public View.OnClickListener dialogClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            View view = inflater.inflate(R.layout.friend_add_column, null);
+            builder.setView(view);
+            builder.create();
+            AlertDialog alertDialog = builder.show();
+            addColumnMemo = (EditText) view.findViewById(R.id.addColumn_dialog_Input);
+            addChipMemo = (EditText) view.findViewById(R.id.addTag_dialog_Input);
+            chipGroup = (ChipGroup) view.findViewById(R.id.addTag_dialog_selectedBox);
+            addChipMemo.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                        chipContent = chipContent + "," + addChipMemo.getText().toString();
+                        LayoutInflater chipInflater = LayoutInflater.from(getContext());
+                        Chip chip = new Chip(getContext());
+                        ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(getContext(), null, 0, R.style.Widget_MaterialComponents_Chip_Action);
+                        chip.setChipDrawable(chipDrawable);
+                        chip.setText(addChipMemo.getText().toString());
+                        chip.setCloseIconVisible(true);
+                        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                chipGroup.removeView(chip);
+                            }
+                        });
+                        chipGroup.addView(chip);
+                        return true;
+                    } else if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+                        addChipMemo.setText("");
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+            confirm = (Button) view.findViewById(R.id.addColumn_dialog_confirmButton);
+            confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fcb.setName(addColumnMemo.getText().toString());
+                    fcb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
+                    fcb.setContent(chipContent);
+                    openDB();
+                    friendCustomizationDAO.add(fcb);
+                    AsyncTasKHelper.execute(addResponseListener, fcb);
+                    if (alertDialog.isShowing()) {
+                        alertDialog.dismiss();
+                    }
+                }
+            });
+            cancel = (Button) view.findViewById(R.id.addColumn_dialog_cancelButton);
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (alertDialog.isShowing()) {
+                        alertDialog.dismiss();
+                    }
+                }
+            });
+        }
+    };
 }

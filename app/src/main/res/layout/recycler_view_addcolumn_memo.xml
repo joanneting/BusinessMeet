@@ -1,69 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="6dp"
+    android:layout_marginTop="10dp"
     android:layout_marginBottom="6dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageButton
+        android:id="@+id/friends_edit_profile_memo_recycleView_column_removeColumn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/trasparent"
+        android:src="@drawable/ic_remove_circle_outline_black_16dp"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/friends_edit_profile_memo_recycleView_column_title"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_marginLeft="6dp"
+        android:text="test"
+        android:textColor="@color/black"
+        android:textSize="18dp"
+        app:layout_constraintStart_toEndOf="@id/friends_edit_profile_memo_recycleView_column_removeColumn" />
 
-        <ImageButton
-            android:id="@+id/friends_edit_profile_memo_recycleView_removeColumn"
+    <HorizontalScrollView
+        android:id="@+id/addTag_dialog_scrollView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:scrollbars="none"
+        app:layout_constraintStart_toStartOf="@id/friends_edit_profile_memo_recycleView_column_title"
+        app:layout_constraintTop_toBottomOf="@id/friends_edit_profile_memo_recycleView_column_title">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/friends_edit_profile_memo_chip_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/trasparent"
-            android:src="@drawable/ic_remove_circle_outline_black_16dp" />
+            app:singleLine="false"
+            app:layout_constraintStart_toStartOf="@id/friends_edit_profile_memo_recycleView_column_title"/>
 
-        <TextView
-            android:id="@+id/friends_edit_profile_memo_recycleView_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="15"
-            android:text=""
-            android:textColor="@color/black"
-            android:textSize="18dp" />
-        <!--
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/friends_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginLeft="12dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="4dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|left"
-                        android:text="王曉明"
-                        android:textColor="@color/colorAlmostBlack"
-                        android:textSize="17sp" />
-
-                    <TextView
-                        android:id="@+id/friends_profession"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginLeft="12dp"
-                        android:layout_marginBottom="8dp"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|left"
-                        android:text="學生"
-                        android:textColor="#6F6F6F"
-                        android:textSize="14sp" />
-                </LinearLayout>
-                -->
-    </LinearLayout>
+    </HorizontalScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

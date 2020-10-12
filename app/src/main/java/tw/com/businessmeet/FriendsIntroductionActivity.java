@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import retrofit2.Call;
+import tw.com.businessmeet.adapter.FriendProfileListViewAdapter;
 import tw.com.businessmeet.bean.FriendBean;
+import tw.com.businessmeet.bean.FriendCustomizationBean;
 import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.FriendDAO;
@@ -13,6 +15,7 @@ import tw.com.businessmeet.helper.AsyncTasKHelper;
 import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.BlueToothHelper;
 import tw.com.businessmeet.helper.DBHelper;
+import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 
@@ -23,21 +26,29 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.chip.ChipGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsIntroductionActivity extends AppCompatActivity {
-    private TextView userName, id, profession, gender, email, tel, remark;
+    private TextView userName, id, profession, gender, email, tel, remark, title, content;
     private Button editButton;
     private ImageView avatar;
+    private ListView listView;
     private String friendId;
     private Integer friendNo;
     private UserInformationDAO userInformationDAO;
@@ -48,6 +59,9 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
     private FriendBean friendBean = new FriendBean();
     private UserInformationServiceImpl userInformationService = new UserInformationServiceImpl();
     private FriendServiceImpl matchedService = new FriendServiceImpl();
+    private ArrayList<FriendCustomizationBean> friendCustomizationBeanList = new ArrayList<FriendCustomizationBean>();
+    private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
+
     private AsyncTasKHelper.OnResponseListener<String, UserInformationBean> userInfoResponseListener = new AsyncTasKHelper.OnResponseListener<String, UserInformationBean>() {
         @Override
         public Call<ResponseBody<UserInformationBean>> request(String... userId) {
@@ -75,7 +89,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFail(int status,String message) {
+        public void onFail(int status, String message) {
         }
     };
 
@@ -90,15 +104,61 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
             System.out.println(friendBeanList.get(0).getRemark() + "=============================");
             System.out.println(friendBeanList.size() + "=============================");
             friendNo = friendBeanList.get(0).getFriendNo();
-            if (friendBeanList.get(0).getRemark() != null)
-                remark.append(friendBeanList.get(0).getRemark());
+            FriendCustomizationBean fcb = new FriendCustomizationBean();
+            fcb.setFriendNo(friendNo);
+            System.out.println("friendNo = " + friendNo);
+            AsyncTasKHelper.execute(searchResponseListener, fcb);
         }
 
         @Override
-        public void onFail(int status,String message) {
+        public void onFail(int status, String message) {
 
         }
     };
+
+    private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>> searchResponseListener = new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>>() {
+
+        @Override
+        public Call<ResponseBody<List<FriendCustomizationBean>>> request(FriendCustomizationBean... friendCustomizationBeans) {
+            return friendCustomizationServiceImpl.search(friendCustomizationBeans[0]);
+        }
+
+        @Override
+        public void onSuccess(List<FriendCustomizationBean> friendCustomizationBeans) {
+            if (friendCustomizationBeans.size() > 1 || (friendCustomizationBeans.size() == 1 && (friendCustomizationBeans.get(0).getCreateDate() != null && !friendCustomizationBeans.get(0).equals("")))) {
+                for (int i = 0; i < friendCustomizationBeans.size(); i++) {
+                    friendCustomizationBeanList.add(friendCustomizationBeans.get(i));
+                }
+                FriendProfileListViewAdapter friendProfileListViewAdapter = new FriendProfileListViewAdapter(FriendsIntroductionActivity.this, friendCustomizationBeanList);
+                listView.setAdapter(friendProfileListViewAdapter);
+                setListViewHeight(listView);
+            }
+        }
+
+        @Override
+        public void onFail(int status, String message) {
+        }
+    };
+
+    private static void setListViewHeight(ListView listView) {
+        if (listView == null) {
+            return;
+        }
+        ListAdapter titleAdapter = listView.getAdapter();
+        if (titleAdapter == null) {
+            return;
+        }
+        int totalHeight = 0;
+        for (int i = 0; i < titleAdapter.getCount(); i++) {
+            View listItem = titleAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (titleAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,13 +179,10 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         email = (TextView) findViewById(R.id.friends_profile_information_email);
         tel = (TextView) findViewById(R.id.friends_profile_information_phone);
         avatar = (ImageView) findViewById(R.id.friends_profile_information_photo);
-        //remark = (TextView) findViewById(R.id.friends_memo);
         avatarHelper = new AvatarHelper();
         editButton = (Button) findViewById(R.id.friends_profile_information_edit);
         editButton.setOnClickListener(editMemoButton);
-
-
-        //searchUserInformation();
+        listView = (ListView) findViewById(R.id.friends_profile_information_memo);
 
         //bottomNavigationView
         //Initialize And Assign Variable
@@ -176,7 +233,6 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         intent.putExtras(bundle);
         startActivity(intent);
     }
-
 
     //Perform ItemSelectedListener
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =

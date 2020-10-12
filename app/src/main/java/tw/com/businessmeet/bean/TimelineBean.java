@@ -1,5 +1,7 @@
 package tw.com.businessmeet.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 import java.util.List;
 
@@ -17,9 +19,11 @@ public class TimelineBean {
     private String activityDate;
     private String createDateStr;
     private String modifyDateStr;
+    @SerializedName("startDateStr")
     private String startDate;
+    @SerializedName("endDateStr")
     private String endDate;
-    private List<ActivityLabelBean> activityLabelBeanList;
+    private ActivityLabelBean activityLabelBean;
     private List<ActivityInviteBean> activityInviteBeanList;
     private Integer statusCode;
 
@@ -131,12 +135,14 @@ public class TimelineBean {
         this.endDate = endDate;
     }
 
-    public List<ActivityLabelBean> getActivityLabelBeanList() {
-        return activityLabelBeanList;
+
+
+    public ActivityLabelBean getActivityLabelBean() {
+        return activityLabelBean;
     }
 
-    public void setActivityLabelBeanList(List<ActivityLabelBean> activityLabelBeanList) {
-        this.activityLabelBeanList = activityLabelBeanList;
+    public void setActivityLabelBean(ActivityLabelBean activityLabelBean) {
+        this.activityLabelBean = activityLabelBean;
     }
 
     public List<ActivityInviteBean> getActivityInviteBeanList() {

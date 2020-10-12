@@ -34,14 +34,7 @@
             android:hint="欄位名稱"
             app:hintTextColor="@color/colorPrimary"
             app:layout_constraintStart_toStartOf="@id/addColumn_dialog_title"
-            app:layout_constraintTop_toBottomOf="@id/addColumn_dialog_title">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/addColumn_dialog_Input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toBottomOf="@id/addColumn_dialog_title"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/addTag_dialog_InputBox"
@@ -49,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:hint="備註"
+            android:hint="標籤"
             app:hintTextColor="@color/colorPrimary"
             app:layout_constraintStart_toStartOf="@id/addColumn_dialog_title"
             app:layout_constraintTop_toBottomOf="@id/addColumn_dialog_InputBox">
