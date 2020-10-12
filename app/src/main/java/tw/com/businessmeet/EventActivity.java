@@ -50,10 +50,10 @@ public class EventActivity extends AppCompatActivity {
             System.out.println(timelineBean.getCreateDateStr());
             event.setText(timelineBean.getTitle());
             eventLocation.setText(timelineBean.getPlace());
+            System.out.println("timelineBean.getRemark() = " + timelineBean.getRemark());
             addEventMemo.setText(timelineBean.getRemark());
             if(timelineBean.getTimelinePropertiesNo() == 1){
                 meet = false;
-                System.out.println("timelineBean.getStartDate() = " + timelineBean.getStartDate());
                 eventDate.setText(timelineBean.getStartDate());
                 eventTime.setText(timelineBean.getEndDate());
                 ActivityLabelBean activityLabelBean = timelineBean.getActivityLabelBean();

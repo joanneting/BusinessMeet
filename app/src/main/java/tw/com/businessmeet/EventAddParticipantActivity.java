@@ -39,7 +39,7 @@ public class EventAddParticipantActivity extends AppCompatActivity implements Ev
     private AsyncTasKHelper.OnResponseListener<FriendBean,List<FriendBean>> searchFriendResponseListener = new AsyncTasKHelper.OnResponseListener<FriendBean, List<FriendBean>>() {
         @Override
         public Call<ResponseBody<List<FriendBean>>> request(FriendBean... friendBeans) {
-            return friendService.searchInviteAvatar(friendBeans[0]);
+            return friendService.searchInviteList(friendBeans[0]);
         }
 
         @Override
