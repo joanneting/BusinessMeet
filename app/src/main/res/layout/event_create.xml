@@ -233,14 +233,16 @@
                 app:layout_constraintTop_toBottomOf="@+id/event_label"
                 tools:ignore="MissingConstraints" />
 
-            <TextView
+            <EditText
                 android:id="@+id/add_event_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="28dp"
                 android:hint="新增地點"
                 android:textColor="@color/colorAlmostBlack"
                 android:textSize="14dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.007"
                 app:layout_constraintStart_toStartOf="@+id/more_event_tag"
                 app:layout_constraintTop_toBottomOf="@+id/more_event_tag"
                 tools:ignore="MissingConstraints" />

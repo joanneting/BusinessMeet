@@ -50,8 +50,8 @@ import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 public class EventCreateActivity extends AppCompatActivity {
     private Activity activity = this;
     private Toolbar toolbar;
-    private TextView dateStart,dateEnd,timeStart,timeEnd,addColor,addLocation,addParticipant;
-    private TextView event, date, moreEventTag, title, addEventMemo,addEventLocation;
+    private TextView dateStart,dateEnd,timeStart,timeEnd,addColor,addParticipant;
+    private TextView event, date, moreEventTag, title, addEventMemo,addLocation;
     private EditText addActivityLabel;
     private Switch switchDay;
     private BlueToothHelper blueToothHelper;
@@ -93,7 +93,7 @@ public class EventCreateActivity extends AppCompatActivity {
         timelineDAO = new TimelineDAO(dbHelper);
         activityLabelDAO = new ActivityLabelDAO(dbHelper);
         //Event = (TextView) findViewById(R.);
-        addEventLocation = findViewById(R.id.add_event_location);
+//        addEventLocation = findViewById(R.id.add_event_location);
         switchDay = findViewById(R.id.switch_day);
         dateStart = findViewById(R.id.date_start);
         dateEnd = findViewById(R.id.date_end);
@@ -144,8 +144,8 @@ public class EventCreateActivity extends AppCompatActivity {
                         timelineBean.setMatchmakerId(blueToothHelper.getUserId());
                         timelineBean.setStartDate(dateStart.getText().toString()+" "+timeStart.getText().toString());
                         timelineBean.setEndDate(dateEnd.getText().toString()+" "+timeEnd.getText().toString());
-//                        timelineBean.setPlace(addEventLocation.getText().toString());
-                        timelineBean.setPlace("place");
+                        timelineBean.setPlace(addLocation.getText().toString());
+//                        timelineBean.setPlace("place");
                         timelineBean.setTitle(title.getText().toString());
                         timelineBean.setTimelinePropertiesNo(1);
                         timelineBean.setRemark(addEventMemo.getText().toString());
@@ -222,14 +222,14 @@ public class EventCreateActivity extends AppCompatActivity {
         });
 
         //Add Location
-        addLocation = (TextView) findViewById(R.id.add_event_location);
-        addLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), EventAddLocationActivity.class);
-                startActivity(i);
-            }
-        });
+        addLocation = findViewById(R.id.add_event_location);
+//        addLocation.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent i = new Intent(getApplicationContext(), EventAddLocationActivity.class);
+//                startActivity(i);
+//            }
+//        });
 
         //Add Participant
         addParticipant = (TextView) findViewById(R.id.add_event_participant);
