@@ -13,7 +13,7 @@ public interface FriendService {
     @POST(baseRoute+"search")
     Call<ResponseBody<List<FriendBean>>> search(@Body FriendBean friendBean);
     @POST(baseRoute+"search/invitelist")
-    Call<ResponseBody<List<FriendBean>>> searchInviteAvatar(@Body FriendBean friendBean);
+    Call<ResponseBody<List<FriendBean>>> searchInviteList(@Body FriendBean friendBean);
     @POST(baseRoute+"add")
     Call<ResponseBody<FriendBean>> add(@Body FriendBean friendBean);
     @POST(baseRoute+"update")

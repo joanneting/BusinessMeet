@@ -653,19 +653,37 @@ public class BlueToothHelper {
             FriendBean friendBean = friendBeanList.get(0);
             UserInformationBean userInformationBean = backgroundBeanMap.get(friendBean.getFriendId());
             if (friendBeanList.size() > 1 || (friendBeanList.size() == 1 && (friendBeanList.get(0).getCreateDate() != null && !friendBeanList.get(0).equals("")))) {
+                TimelineBean timelineBean = new TimelineBean();
+                timelineBean.setFriendId(friendBean.getFriendId());
+                timelineBean.setMatchmakerId(friendBean.getMatchmakerId());
+                Cursor result = timelineDAO.search(timelineBean);
+                boolean isMeet = false;
+                if(result != null){
 
+                    String createDate = result.getString(result.getColumnIndex("create_date"));
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    try {
+                        Date lastDate = simpleDateFormat.parse(createDate);
+                        Date now = new Date();
+                        long meetHour = (now.getTime() - lastDate.getTime())/1000/60/60;
+                        isMeet = meetHour <= 1 ? true:false;
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                }
                 if (backgroundDistance <= 10000) {
                     if (ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
+                        return;
+                    }else if(isMeet){
                         return;
                     }
 
                     //更新位置
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
                     Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    TimelineBean timelineBean = new TimelineBean();
-                    timelineBean.setFriendId(friendBean.getFriendId());
-                    timelineBean.setMatchmakerId(friendBean.getMatchmakerId());
+
                     Geocoder gc = new Geocoder(notificationService, Locale.TRADITIONAL_CHINESE);
 
 

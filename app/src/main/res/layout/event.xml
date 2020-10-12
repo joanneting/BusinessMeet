@@ -210,7 +210,7 @@
 
             <TextView
                 android:id="@+id/add_event_memo"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:text="準備準備準備wwwwwwwwwwwwww準備準備準備準備準備準備準468791454987備準備準備準備準備12354"
