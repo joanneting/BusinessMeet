@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
                 @Override
                 public Call<ResponseBody<List<TimelineBean>>> request(TimelineBean... timelineBeans) {
 
-                    return timelineService.search(timelineBeans[0]);
+                    return timelineService.searchList(timelineBeans[0]);
                 }
 
                 @Override

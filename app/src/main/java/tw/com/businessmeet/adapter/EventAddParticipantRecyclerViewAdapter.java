@@ -52,9 +52,7 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecyclerViewFilterBean<ActivityInviteBean> recyclerViewFilterBean = filterList.get(position);
-        System.out.println("recyclerViewFilterBean.getData().getUserName() = " + recyclerViewFilterBean.getData().getUserName());
         ActivityInviteBean activityInviteBean = recyclerViewFilterBean.getData();
-        System.out.println("activityInviteBean.getUserName() = " + activityInviteBean.getUserName());
         holder.bindInformation(activityInviteBean.getUserName(),activityInviteBean.getAvatar(),activityInviteBean.isInvite());
     }
 
@@ -66,7 +64,17 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
     public ActivityInviteBean getActivityInviteBean(int position){
         return filterList.get(position).getData();
     }
-
+    public List<ActivityInviteBean> getInviteList(){
+        List<ActivityInviteBean> inviteList = new ArrayList<>();
+        for (ActivityInviteBean activityInviteBean : activityInviteBeanList) {
+            System.out.println("activityInviteBean.isInvite() = " + activityInviteBean.isInvite());
+            if (activityInviteBean.isInvite()) {
+                inviteList.add(activityInviteBean);
+            }
+        }
+        System.out.println("inviteList.size() = " + inviteList.size());
+        return inviteList;
+    }
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView friends_photo;
         TextView friends_name;
@@ -140,7 +148,7 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
                         String userName = activityInviteBean.getUserName();
                         System.out.println("userName = " + userName);
                         //根據需求，新增過濾內容
-                        if (userName.contains(filterString)) {
+                        if (userName.contains(filterString) || userName.toLowerCase().contains(filterString.toLowerCase()) || userName.toUpperCase().contains(filterString.toUpperCase())) {
                             RecyclerViewFilterBean<ActivityInviteBean> recyclerViewFilterBean = new RecyclerViewFilterBean<>();
                             recyclerViewFilterBean.setData(activityInviteBean);
                             recyclerViewFilterBean.setPosition(i);

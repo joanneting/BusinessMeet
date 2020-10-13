@@ -1,9 +1,17 @@
 package tw.com.businessmeet.bean;
 
+import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
-public class ActivityInviteBean {
+public class ActivityInviteBean  implements Parcelable {
+    public static List<ActivityInviteBean> inviteBean;
     private static String[] column = new String[]{"activityInvite_no","user_no","activity_no","create_date","modify_date"};
     private Integer activityInviteNo;
     private String userId;
@@ -13,8 +21,81 @@ public class ActivityInviteBean {
     private Integer statusCode;
     private String userName;
     private String avatar;
+    private Integer status;
     private Boolean isInvite;
 
+    public ActivityInviteBean() {
+    }
+
+    protected ActivityInviteBean(Parcel in) {
+        if (in.readByte() == 0) {
+            activityInviteNo = null;
+        } else {
+            activityInviteNo = in.readInt();
+        }
+        userId = in.readString();
+        if (in.readByte() == 0) {
+            activityNo = null;
+        } else {
+            activityNo = in.readInt();
+        }
+        createDate = in.readString();
+        modifyDate = in.readString();
+        if (in.readByte() == 0) {
+            statusCode = null;
+        } else {
+            statusCode = in.readInt();
+        }
+        userName = in.readString();
+        avatar = in.readString();
+        byte tmpIsInvite = in.readByte();
+        isInvite = tmpIsInvite == 0 ? null : tmpIsInvite == 1;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (activityInviteNo == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(activityInviteNo);
+        }
+        dest.writeString(userId);
+        if (activityNo == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(activityNo);
+        }
+        dest.writeString(createDate);
+        dest.writeString(modifyDate);
+        if (statusCode == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(statusCode);
+        }
+        dest.writeString(userName);
+        dest.writeString(avatar);
+        dest.writeByte((byte) (isInvite == null ? 0 : isInvite ? 1 : 2));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<ActivityInviteBean> CREATOR = new Creator<ActivityInviteBean>() {
+        @Override
+        public ActivityInviteBean createFromParcel(Parcel in) {
+            return new ActivityInviteBean(in);
+        }
+
+        @Override
+        public ActivityInviteBean[] newArray(int size) {
+            return new ActivityInviteBean[size];
+        }
+    };
 
     public static String[] getColumn() {
         return column;
@@ -84,6 +165,14 @@ public class ActivityInviteBean {
         this.avatar = avatar;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public Boolean isInvite() {
         return isInvite;
     }
@@ -91,4 +180,6 @@ public class ActivityInviteBean {
     public void setInvite(Boolean invite) {
         isInvite = invite;
     }
+
+
 }

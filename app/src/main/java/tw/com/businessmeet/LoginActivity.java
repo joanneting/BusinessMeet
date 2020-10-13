@@ -124,8 +124,7 @@ private BlueToothHelper blueToothHelper;
                 UserInformationBean userInformationBean = new UserInformationBean();
                 userInformationBean.setUserId(usernameEditText.getText().toString());
                 userInformationBean.setPassword(passwordEditText.getText().toString());
-                userInformationBean.setBluetooth(blueToothHelper.getMyBuleTooth());
-                System.out.println("userInformationBean.getBluetooth() = " + userInformationBean.getBluetooth());
+                userInformationBean.setIdentifier(blueToothHelper.getMyBuleTooth());
                 AsyncTasKHelper.execute(login,userInformationBean);
             }
         });
@@ -160,6 +159,7 @@ private BlueToothHelper blueToothHelper;
             Intent intent = new Intent();
             intent.setClass(LoginActivity.this, SelfIntroductionActivity.class);
             startActivity(intent);
+            finish();
             System.out.println("identty : " + loginBean.getIdentity() );
         }
         @Override

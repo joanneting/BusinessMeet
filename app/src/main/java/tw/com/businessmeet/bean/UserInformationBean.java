@@ -1,9 +1,7 @@
 package tw.com.businessmeet.bean;
 
-import java.util.Date;
-
 public class UserInformationBean {
-    private static String[] column = new String[]{ "user_id","password","name", "gender","mail","profession","bluetooth","avatar","tel","create_date","modify_date"};
+    private static String[] column = new String[]{ "user_id","password","name", "gender","mail","profession","identifier","avatar","tel","create_date","modify_date"};
 
     private String userId;
     private String password;
@@ -11,7 +9,7 @@ public class UserInformationBean {
     private String gender;
     private String mail;
     private String profession;
-    private String bluetooth;
+    private String identifier;
     private String avatar;
     private String tel;
     private Integer roleNo;
@@ -95,12 +93,12 @@ public class UserInformationBean {
         this.profession = profession;
     }
 
-    public String getBluetooth() {
-        return bluetooth;
+    public String getIdentifier() {
+        return identifier;
     }
 
-    public void setBluetooth(String bluetooth) {
-        this.bluetooth = bluetooth;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public String getCreateDate() {

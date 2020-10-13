@@ -112,20 +112,20 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="24dp"
                     android:src="@drawable/ic_local_offer_24px" />
-
-                <TextView
-
-                    android:id="@+id/event_tag"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/event_label"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape_radius"
+                    android:layout_height="40dp"
                     android:paddingLeft="10dp"
                     android:paddingTop="3dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="3dp"
-                    android:text="會議"
                     android:textSize="14dp"
-                    android:layout_marginLeft="16dp" />
+                    android:layout_marginLeft="16dp"
+                    app:singleLine="true"
+                    app:singleSelection="false" />
+
+
             </LinearLayout>
 
 
@@ -210,7 +210,7 @@
 
             <TextView
                 android:id="@+id/add_event_memo"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:text="準備準備準備wwwwwwwwwwwwww準備準備準備準備準備準備準468791454987備準備準備準備準備12354"

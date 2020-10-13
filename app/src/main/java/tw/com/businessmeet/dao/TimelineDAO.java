@@ -56,6 +56,9 @@ public class TimelineDAO {
         String where = "";
         ArrayList<String> args = new ArrayList<>();
         for(int i = 0; i < searchColumn.length; i ++){
+            if(searchValue[i] == null){
+                continue;
+            }
             if(!searchValue[i].equals("") && searchValue[i] != null){
                 if(!where.equals("")) where += " and ";
                 where += searchColumn[i] + " = ?";

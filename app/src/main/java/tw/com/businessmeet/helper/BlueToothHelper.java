@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -34,8 +35,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -47,7 +50,6 @@ import androidx.core.content.ContextCompat;
 
 
 import retrofit2.Call;
-import tw.com.businessmeet.AddIntroductionActivity;
 import tw.com.businessmeet.R;
 import tw.com.businessmeet.RequestCode;
 import tw.com.businessmeet.SelfIntroductionActivity;
@@ -61,7 +63,6 @@ import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.FriendDAO;
 import tw.com.businessmeet.dao.TimelineDAO;
 import tw.com.businessmeet.dao.UserInformationDAO;
-import tw.com.businessmeet.network.ApplicationContext;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
@@ -102,7 +103,7 @@ public class BlueToothHelper {
     private AsyncTasKHelper.OnResponseListener<String, UserInformationBean> getByIdResponseListener = new AsyncTasKHelper.OnResponseListener<String, UserInformationBean>() {
         @Override
         public Call<ResponseBody<UserInformationBean>> request(String... blueTooth) {
-            return userInformationService.getByBlueTooth(blueTooth[0]);
+            return userInformationService.getByIdentifier(blueTooth[0]);
         }
 
         public void onSuccess(UserInformationBean responseBean) {
@@ -110,7 +111,7 @@ public class BlueToothHelper {
             String searchId = responseBean.getUserId();
 
             userInformationBeanMap.put(searchId, responseBean);
-            String userId = userInformationDAO.getId(responseBean.getBluetooth());
+            String userId = userInformationDAO.getId(responseBean.getIdentifier());
             if (userId == null)
                 userInformationDAO.add(responseBean);
             friendBean = new FriendBean();
@@ -597,7 +598,7 @@ public class BlueToothHelper {
         if (repeatBeanMap.get(bluetoothAddress) == null) {
             first = true;
             UserInformationBean userInformationBean = new UserInformationBean();
-            userInformationBean.setBluetooth(bluetoothAddress);
+            userInformationBean.setIdentifier(bluetoothAddress);
             repeatBeanMap.put(bluetoothAddress, userInformationBean);
         }
         ;
@@ -619,8 +620,8 @@ public class BlueToothHelper {
     private FriendBean backgroundBean;
     private AsyncTasKHelper.OnResponseListener<String, UserInformationBean> backgroundUserInformationResponseListener = new AsyncTasKHelper.OnResponseListener<String, UserInformationBean>() {
         @Override
-        public Call<ResponseBody<UserInformationBean>> request(String... blueTooth) {
-            return userInformationService.getByBlueTooth(blueTooth[0]);
+        public Call<ResponseBody<UserInformationBean>> request(String... identifiers) {
+            return userInformationService.getByIdentifier(identifiers[0]);
         }
 
         public void onSuccess(UserInformationBean responseBean) {
@@ -653,19 +654,37 @@ public class BlueToothHelper {
             FriendBean friendBean = friendBeanList.get(0);
             UserInformationBean userInformationBean = backgroundBeanMap.get(friendBean.getFriendId());
             if (friendBeanList.size() > 1 || (friendBeanList.size() == 1 && (friendBeanList.get(0).getCreateDate() != null && !friendBeanList.get(0).equals("")))) {
+                TimelineBean timelineBean = new TimelineBean();
+                timelineBean.setFriendId(friendBean.getFriendId());
+                timelineBean.setMatchmakerId(friendBean.getMatchmakerId());
+                Cursor result = timelineDAO.search(timelineBean);
+                boolean isMeet = false;
+                if(result != null){
 
+                    String createDate = result.getString(result.getColumnIndex("create_date"));
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    try {
+                        Date lastDate = simpleDateFormat.parse(createDate);
+                        Date now = new Date();
+                        long meetHour = (now.getTime() - lastDate.getTime())/1000/60/60;
+                        isMeet = meetHour <= 1 ? true:false;
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                }
                 if (backgroundDistance <= 10000) {
                     if (ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
+                        return;
+                    }else if(isMeet){
                         return;
                     }
 
                     //更新位置
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
                     Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    TimelineBean timelineBean = new TimelineBean();
-                    timelineBean.setFriendId(friendBean.getFriendId());
-                    timelineBean.setMatchmakerId(friendBean.getMatchmakerId());
+
                     Geocoder gc = new Geocoder(notificationService, Locale.TRADITIONAL_CHINESE);
 
 
@@ -674,9 +693,6 @@ public class BlueToothHelper {
                             longitude = location.getLongitude();        //取得經度
                             latitude = location.getLatitude();
                         List<Address> lstAddress = gc.getFromLocation(latitude, longitude, 1);
-                        Toast.makeText(
-                                notificationService.getBaseContext(),
-                                lstAddress.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
                         timelineBean.setPlace(lstAddress.get(0).getAddressLine(0));
                         locationManager.removeUpdates(locationListener);
                     }catch (Exception e){
@@ -689,7 +705,6 @@ public class BlueToothHelper {
                     timelineBean.setTimelinePropertiesNo(2);
 
                     timelineBean.setTitle(timelineBean.getPlace());
-                    Log.d("place", timelineBean.getPlace());
                     AsyncTasKHelper.execute(addTimeline, timelineBean);
                     notificationHelper.sendBackgroundMessage(userInformationBean, friendBeanList.get(0).getRemark());
                 }
@@ -697,17 +712,12 @@ public class BlueToothHelper {
         }
         @Override
         public void onFail(int status,String message) {
-            Log.d("intomatched","success");
             //unmatchedDeviceRecyclerViewAdapter.dataInsert(userInformationBean);
         }
     }; private class MyLocationListener implements LocationListener {
 
         @Override
         public void onLocationChanged(Location loc) {
-            Toast.makeText(
-                    notificationService,
-                    "Location changed: Lat: " + loc.getLatitude() + " Lng: "
-                            + loc.getLongitude(), Toast.LENGTH_SHORT).show();
              longitude = loc.getLongitude();
              latitude =  loc.getLatitude();
 
