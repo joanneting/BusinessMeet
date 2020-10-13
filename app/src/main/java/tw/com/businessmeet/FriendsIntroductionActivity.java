@@ -201,12 +201,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         Bitmap myPhoto = avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
 
-        if (getIntent().hasExtra("avatar")) {
-            ImageView photo = findViewById(R.id.friends_photo);
-            Bitmap profilePhoto = BitmapFactory.decodeByteArray(
-                    getIntent().getByteArrayExtra("avatar"), 0, getIntent().getByteArrayExtra("avatar").length);
-            photo.setImageBitmap(profilePhoto);
-        }
+
     }
 
     private void openDB() {
