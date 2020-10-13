@@ -63,7 +63,7 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
                 @Override
                 public Call<ResponseBody<List<TimelineBean>>> request(TimelineBean... timelineBeans) {
 
-                    return timelineService.search(timelineBeans[0]);
+                    return timelineService.searchList(timelineBeans[0]);
                 }
 
                 @Override
