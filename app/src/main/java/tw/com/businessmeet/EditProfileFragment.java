@@ -1,6 +1,9 @@
 package tw.com.businessmeet;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -18,8 +21,10 @@ import retrofit2.Call;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
 import tw.com.businessmeet.bean.ResponseBody;
+import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.FriendDAO;
 import tw.com.businessmeet.helper.AsyncTasKHelper;
+import tw.com.businessmeet.helper.BlueToothHelper;
 import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 
@@ -41,33 +46,29 @@ public class EditProfileFragment extends Fragment {
 
     private View view;
     private EditText addProfileContent;
-    private FriendBean friendBean = new FriendBean();
+    private String remark;
     private Button confirmButton;
+    private FriendBean fb = new FriendBean();
     private FriendDAO friendDAO;
-    private DBHelper dh = null;
+    private DBHelper dbHelper;
+    private BlueToothHelper blueToothHelper;
     private FriendServiceImpl friendServiceImpl = new FriendServiceImpl();
+
     private AsyncTasKHelper.OnResponseListener<FriendBean, FriendBean> addRemarkResponseListener = new AsyncTasKHelper.OnResponseListener<FriendBean, FriendBean>() {
 
         @Override
-        public Call<ResponseBody<FriendBean>> request(FriendBean... friendBean) {
-            return friendServiceImpl.update(friendBean[0]);
+        public Call<ResponseBody<FriendBean>> request(FriendBean... friendBeans) {
+            return friendServiceImpl.update(friendBeans[0]);
         }
 
         @Override
         public void onSuccess(FriendBean friendBean) {
-            openDB();
-            friendDAO.update(friendBean);
         }
 
         @Override
         public void onFail(int status, String message) {
         }
     };
-
-    private void openDB() {
-        dh = new DBHelper(getContext());
-        friendDAO = new FriendDAO(dh);
-    }
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -101,21 +102,53 @@ public class EditProfileFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         addProfileContent = (EditText) view.findViewById(R.id.addProfileContent_input);
         confirmButton = (Button) view.findViewById(R.id.addColumn_dialog_confirmButton);
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(addProfileContent.getText().toString());
-                friendBean.setRemark(addProfileContent.getText().toString());
-                AsyncTasKHelper.execute(addRemarkResponseListener, friendBean);
-
+                fb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
+                openDB();
+                searchRemark();
+                fb.setMatchmakerId(blueToothHelper.getUserId());
+                fb.setFriendId(getActivity().getIntent().getStringExtra("friendId"));
+                fb.setRemark(addProfileContent.getText().toString());
+                AsyncTasKHelper.execute(addRemarkResponseListener, fb);
+                friendDAO.update(fb);
+                changeToSelfIntroductionPage();
             }
         });
-
         return view;
+    }
+
+    private void openDB() {
+        dbHelper = new DBHelper(getContext());
+        friendDAO = new FriendDAO(dbHelper);
+    }
+
+    public void searchRemark() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        blueToothHelper = new BlueToothHelper(getActivity());
+        blueToothHelper.startBuleTooth();
+        fb.setMatchmakerId(blueToothHelper.getUserId());
+
+        Cursor cursor = friendDAO.search(fb);
+        if (cursor.moveToFirst()) {
+            do {
+                remark = cursor.getString(cursor.getColumnIndex("remark"));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+    }
+
+    private void changeToSelfIntroductionPage() {
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), FriendsIntroductionActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("remark", fb.getRemark());
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

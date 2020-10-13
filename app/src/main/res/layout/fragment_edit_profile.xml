@@ -15,6 +15,30 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/addGroup_inputbox"
+                    style="@style/addColumn_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="群組名稱"
+                    app:hintTextColor="@color/colorPrimary"
+                    app:layout_constraintStart_toStartOf="@id/addColumn_dialog_title"
+                    app:layout_constraintTop_toBottomOf="@id/addColumn_dialog_title">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/addGroup_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/addProfileContent_inputbox"
                 style="@style/addColumn_input"
@@ -34,16 +58,24 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/addColumn_dialog_confirmButton"
+                style="@style/confirmButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
                 android:layout_marginTop="5dp"
-                android:text="@string/confirm"
-                style="@style/confirmButton"
-                android:layout_gravity="bottom|right"/>
+                android:text="@string/confirm" />
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <!--    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
+    <!--        android:id="@+id/memo_addColumn"-->
+    <!--        style="@style/floatingButton"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="新增群組"-->
+    <!--        tools:ignore="VectorDrawableCompat" />-->
 
 
 </FrameLayout>

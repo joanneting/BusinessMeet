@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsIntroductionActivity extends AppCompatActivity {
-    private TextView userName, id, profession, gender, email, tel, remark, title, content;
+    private TextView userName, id, profession, gender, email, tel, remark;
     private Button editButton;
     private ImageView avatar;
     private ListView listView;
@@ -101,8 +101,14 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess(List<FriendBean> friendBeanList) {
-            System.out.println(friendBeanList.get(0).getRemark() + " =============================");
-            System.out.println(friendBeanList.size() + "=============================");
+            System.out.println("friendBeanList.size() = " + friendBeanList.size());
+            System.out.println("friendBeanList.get(0) = " + friendBeanList.get(0));
+            System.out.println("friendBeanList.get(0).getRemark() = " + friendBeanList.get(0).getRemark());
+            if(friendBeanList.get(0).getRemark() != null){
+                System.out.println("remark - " + friendBeanList.get(0).getRemark());
+                    remark.append(friendBeanList.get(0).getRemark());
+            }
+
             friendNo = friendBeanList.get(0).getFriendNo();
             FriendCustomizationBean fcb = new FriendCustomizationBean();
             fcb.setFriendNo(friendNo);
@@ -129,7 +135,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
                 for (int i = 0; i < friendCustomizationBeans.size(); i++) {
                     friendCustomizationBeanList.add(friendCustomizationBeans.get(i));
                 }
-                FriendProfileListViewAdapter friendProfileListViewAdapter = new FriendProfileListViewAdapter(FriendsIntroductionActivity.this, friendCustomizationBeanList);
+                FriendProfileListViewAdapter friendProfileListViewAdapter = new FriendProfileListViewAdapter(  FriendsIntroductionActivity.this, friendCustomizationBeanList);
                 listView.setAdapter(friendProfileListViewAdapter);
                 setListViewHeight(listView);
             }
@@ -165,6 +171,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends_profile);
         openDB();
+        remark = (TextView) findViewById(R.id.firends_profile_information_remark);
         friendId = getIntent().getStringExtra("friendId");
         AsyncTasKHelper.execute(userInfoResponseListener, friendId);
         friendBean.setFriendId(friendId);

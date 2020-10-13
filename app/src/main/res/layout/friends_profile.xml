@@ -171,9 +171,25 @@
                     android:id="@+id/friends_profile_information_phone"
                     style="@style/input"
                     android:layout_marginBottom="16dp"
-                    app:layout_constraintBottom_toBottomOf="@id/friends_profile_information_basic"
                     app:layout_constraintStart_toStartOf="@id/friends_profile_information_genderTitle"
                     app:layout_constraintTop_toBottomOf="@id/friends_profile_information_phoneTitle" />
+
+                <TextView
+                    android:id="@+id/firends_profile_information_remarkTitle"
+                    style="@style/friends_profile_information_basic_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="備忘錄"
+                    app:layout_constraintStart_toStartOf="@id/friends_profile_information_genderTitle"
+                    app:layout_constraintTop_toBottomOf="@id/friends_profile_information_phone" />
+
+                <TextView
+                    android:id="@+id/firends_profile_information_remark"
+                    style="@style/input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@id/friends_profile_information_genderTitle"
+                    app:layout_constraintTop_toBottomOf="@id/firends_profile_information_remarkTitle" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -181,6 +197,7 @@
                 android:id="@+id/splitLine2"
                 android:layout_width="match_parent"
                 android:layout_height="16dp"
+                android:layout_marginTop="16dp"
                 android:background="@color/grey_96"
                 app:layout_constraintTop_toBottomOf="@id/friends_profile_information_basic" />
 

@@ -25,6 +25,7 @@ import android.widget.ImageButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class EditMemoFragment extends Fragment {
     private View view;
 
     // floating button
-    private FloatingActionButton floatingActionButton;
+    private ExtendedFloatingActionButton extendedFloatingActionButton;
 
     //chip
     private ChipGroup chipGroup;
@@ -161,8 +162,8 @@ public class EditMemoFragment extends Fragment {
         initMemoRecyclerView();
 
         // floating button
-        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.memo_addColumn);
-        floatingActionButton.setOnClickListener(dialogClick);
+        extendedFloatingActionButton = (ExtendedFloatingActionButton) view.findViewById(R.id.memo_addColumn);
+        extendedFloatingActionButton.setOnClickListener(dialogClick);
 
         return view;
     }
