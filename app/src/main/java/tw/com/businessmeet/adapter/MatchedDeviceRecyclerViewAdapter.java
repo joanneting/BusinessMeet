@@ -85,7 +85,7 @@ public class MatchedDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Match
         this.searchClickListener = searchClickLinster;
     }
     public void dataInsert(UserInformationBean userInformationBean){
-        Log.d("resultDataInsert",userInformationBean.getBluetooth());
+        Log.d("resultDataInsert",userInformationBean.getIdentifier());
         userInformationBeanList.add(userInformationBean);
         notifyItemInserted(getItemCount());
     }

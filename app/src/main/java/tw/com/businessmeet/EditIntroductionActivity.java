@@ -114,7 +114,7 @@ public class EditIntroductionActivity extends AppCompatActivity {
         public void onClick(View v) {
             UserInformationBean ufb = new UserInformationBean();
             ufb.setUserId(blueToothHelper.getUserId());
-            ufb.setBluetooth(blueToothHelper.getMyBuleTooth());
+            ufb.setIdentifier(blueToothHelper.getMyBuleTooth());
             ufb.setName(userName.getText().toString());
             ufb.setProfession(profession.getText().toString());
             ufb.setGender(gender.getText().toString());

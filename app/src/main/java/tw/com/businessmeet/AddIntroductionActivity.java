@@ -151,7 +151,7 @@ public class AddIntroductionActivity extends AppCompatActivity {
             ufb.setProfession(profession.getText().toString());
             ufb.setTel(tel.getText().toString());
             ufb.setAvatar(avatarHelper.setImageResource(avatar));
-            ufb.setBluetooth(blueTooth.getMyBuleTooth());
+            ufb.setIdentifier(blueTooth.getMyBuleTooth());
             ufb.setRoleNo(3);
             if(checkData(ufb)) {
                 AsyncTasKHelper.execute(addResponseListener, ufb);
