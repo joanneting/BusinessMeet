@@ -33,7 +33,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "avatar varchar(1000) not null,"+
                 "tel varchar(20), " +
                 "role_no int not null,"+
-                "bluetooth varchar(17) not null,"+
+                "identifier varchar(36) not null,"+
                 "create_date datetime not null,"+
                 "modify_date datetime"+
                 ");";

@@ -22,8 +22,8 @@ public interface UserInformationService {
     Call<ResponseBody<UserInformationBean>> update (@Body UserInformationBean userinformationBean);
     @POST(baseRoute+"get/{userId}")
     Call<ResponseBody<UserInformationBean>> getById(@Path("userId") String userId);
-    @POST(baseRoute+"getBluetooth/{bluetooth}")
-    Call<ResponseBody<UserInformationBean>> getByBlueTooth(@Path("bluetooth") String bluetooth);
+    @POST(baseRoute+"getbyidentifier/{identifier}")
+    Call<ResponseBody<UserInformationBean>> getByIdentifier(@Path("identifier") String identifier);
     @POST("login")
     Call<ResponseBody<LoginBean>> login(@Body UserInformationBean userInformationBean);
 }

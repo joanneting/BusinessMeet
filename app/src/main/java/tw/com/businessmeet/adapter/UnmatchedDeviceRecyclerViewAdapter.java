@@ -86,7 +86,7 @@ public class UnmatchedDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Unm
         return userInformationBeanList.get(position);
     }
     public void dataInsert(UserInformationBean userInformationBean){
-        Log.d("resultDataInsert",userInformationBean.getBluetooth());
+        Log.d("resultDataInsert",userInformationBean.getIdentifier());
         userInformationBeanList.add(userInformationBean);
         notifyItemInserted(getItemCount());
     }

@@ -39,7 +39,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -51,7 +50,6 @@ import androidx.core.content.ContextCompat;
 
 
 import retrofit2.Call;
-import tw.com.businessmeet.AddIntroductionActivity;
 import tw.com.businessmeet.R;
 import tw.com.businessmeet.RequestCode;
 import tw.com.businessmeet.SelfIntroductionActivity;
@@ -65,7 +63,6 @@ import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.FriendDAO;
 import tw.com.businessmeet.dao.TimelineDAO;
 import tw.com.businessmeet.dao.UserInformationDAO;
-import tw.com.businessmeet.network.ApplicationContext;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
@@ -106,7 +103,7 @@ public class BlueToothHelper {
     private AsyncTasKHelper.OnResponseListener<String, UserInformationBean> getByIdResponseListener = new AsyncTasKHelper.OnResponseListener<String, UserInformationBean>() {
         @Override
         public Call<ResponseBody<UserInformationBean>> request(String... blueTooth) {
-            return userInformationService.getByBlueTooth(blueTooth[0]);
+            return userInformationService.getByIdentifier(blueTooth[0]);
         }
 
         public void onSuccess(UserInformationBean responseBean) {
@@ -114,7 +111,7 @@ public class BlueToothHelper {
             String searchId = responseBean.getUserId();
 
             userInformationBeanMap.put(searchId, responseBean);
-            String userId = userInformationDAO.getId(responseBean.getBluetooth());
+            String userId = userInformationDAO.getId(responseBean.getIdentifier());
             if (userId == null)
                 userInformationDAO.add(responseBean);
             friendBean = new FriendBean();
@@ -601,7 +598,7 @@ public class BlueToothHelper {
         if (repeatBeanMap.get(bluetoothAddress) == null) {
             first = true;
             UserInformationBean userInformationBean = new UserInformationBean();
-            userInformationBean.setBluetooth(bluetoothAddress);
+            userInformationBean.setIdentifier(bluetoothAddress);
             repeatBeanMap.put(bluetoothAddress, userInformationBean);
         }
         ;
@@ -623,8 +620,8 @@ public class BlueToothHelper {
     private FriendBean backgroundBean;
     private AsyncTasKHelper.OnResponseListener<String, UserInformationBean> backgroundUserInformationResponseListener = new AsyncTasKHelper.OnResponseListener<String, UserInformationBean>() {
         @Override
-        public Call<ResponseBody<UserInformationBean>> request(String... blueTooth) {
-            return userInformationService.getByBlueTooth(blueTooth[0]);
+        public Call<ResponseBody<UserInformationBean>> request(String... identifiers) {
+            return userInformationService.getByIdentifier(identifiers[0]);
         }
 
         public void onSuccess(UserInformationBean responseBean) {
