@@ -177,12 +177,7 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
     }
     @Override
     public void onSearchClick(View view, int position) {
-        Log.d("results","success");
-        Log.d("results",String.valueOf(position));
-//        UserInformationBean userInformationBean = matchedRecyclerViewAdapter.getUserInformation(position);
-//        String address = userInformationBean.getBluetooth();
-//        String userName = userInformationBean.getName();
-//        blueTooth.matched(address,userName,addResponseListener,matchedDAO);
+
         blueTooth.cancelDiscovery();
         Intent intent = new Intent();
         intent.setClass(SearchActivity.this,FriendsIntroductionActivity.class);
@@ -200,7 +195,7 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
         Log.d("results",String.valueOf(position));
         blueTooth.cancelDiscovery();
         UserInformationBean userInformationBean = unmatchedRecyclerViewAdapter.getUserInformation(position);
-        String address = userInformationBean.getBluetooth();
+        String address = userInformationBean.getIdentifier();
         String userName = userInformationBean.getName();
         blueTooth.matched(address,userName,addResponseListener, friendDAO);
         Intent intent = new Intent();
