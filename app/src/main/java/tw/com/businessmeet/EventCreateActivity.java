@@ -3,12 +3,14 @@ package tw.com.businessmeet;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.KeyEvent;
@@ -180,10 +182,11 @@ public class EventCreateActivity extends AppCompatActivity {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         dateStart.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View view) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        EventCreateActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        EventCreateActivity.this,R.style.MyDatePicker, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         year = year;
@@ -196,6 +199,8 @@ public class EventCreateActivity extends AppCompatActivity {
                 },year,month,day);
                 datePickerDialog.updateDate(year,month,day);
                 datePickerDialog.show();
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(R.style.AppTheme);
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(R.style.AppTheme);
             }
         });
 

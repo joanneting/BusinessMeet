@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.ToolBarStyle">
@@ -137,5 +138,14 @@
     <style name="chip" parent="TextAppearance.MaterialComponents.Chip">
         <item name="android:textColor">@android:color/white</item>
     </style>
+
+    <style name="MyDatePicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+
 
 </resources>
