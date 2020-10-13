@@ -653,19 +653,37 @@ public class BlueToothHelper {
             FriendBean friendBean = friendBeanList.get(0);
             UserInformationBean userInformationBean = backgroundBeanMap.get(friendBean.getFriendId());
             if (friendBeanList.size() > 1 || (friendBeanList.size() == 1 && (friendBeanList.get(0).getCreateDate() != null && !friendBeanList.get(0).equals("")))) {
+                TimelineBean timelineBean = new TimelineBean();
+                timelineBean.setFriendId(friendBean.getFriendId());
+                timelineBean.setMatchmakerId(friendBean.getMatchmakerId());
+                Cursor result = timelineDAO.search(timelineBean);
+                boolean isMeet = false;
+                if(result != null){
 
+                    String createDate = result.getString(result.getColumnIndex("create_date"));
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    try {
+                        Date lastDate = simpleDateFormat.parse(createDate);
+                        Date now = new Date();
+                        long meetHour = (now.getTime() - lastDate.getTime())/1000/60/60;
+                        isMeet = meetHour <= 1 ? true:false;
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                }
                 if (backgroundDistance <= 10000) {
                     if (ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
+                        return;
+                    }else if(isMeet){
                         return;
                     }
 
                     //更新位置
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
                     Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    TimelineBean timelineBean = new TimelineBean();
-                    timelineBean.setFriendId(friendBean.getFriendId());
-                    timelineBean.setMatchmakerId(friendBean.getMatchmakerId());
+
                     Geocoder gc = new Geocoder(notificationService, Locale.TRADITIONAL_CHINESE);
 
 
@@ -674,9 +692,6 @@ public class BlueToothHelper {
                             longitude = location.getLongitude();        //取得經度
                             latitude = location.getLatitude();
                         List<Address> lstAddress = gc.getFromLocation(latitude, longitude, 1);
-                        Toast.makeText(
-                                notificationService.getBaseContext(),
-                                lstAddress.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
                         timelineBean.setPlace(lstAddress.get(0).getAddressLine(0));
                         locationManager.removeUpdates(locationListener);
                     }catch (Exception e){
@@ -689,7 +704,6 @@ public class BlueToothHelper {
                     timelineBean.setTimelinePropertiesNo(2);
 
                     timelineBean.setTitle(timelineBean.getPlace());
-                    Log.d("place", timelineBean.getPlace());
                     AsyncTasKHelper.execute(addTimeline, timelineBean);
                     notificationHelper.sendBackgroundMessage(userInformationBean, friendBeanList.get(0).getRemark());
                 }
@@ -697,17 +711,12 @@ public class BlueToothHelper {
         }
         @Override
         public void onFail(int status,String message) {
-            Log.d("intomatched","success");
             //unmatchedDeviceRecyclerViewAdapter.dataInsert(userInformationBean);
         }
     }; private class MyLocationListener implements LocationListener {
 
         @Override
         public void onLocationChanged(Location loc) {
-            Toast.makeText(
-                    notificationService,
-                    "Location changed: Lat: " + loc.getLatitude() + " Lng: "
-                            + loc.getLongitude(), Toast.LENGTH_SHORT).show();
              longitude = loc.getLongitude();
              latitude =  loc.getLatitude();
 

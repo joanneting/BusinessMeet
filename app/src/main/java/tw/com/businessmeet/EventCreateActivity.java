@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -50,8 +51,8 @@ import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 public class EventCreateActivity extends AppCompatActivity {
     private Activity activity = this;
     private Toolbar toolbar;
-    private TextView dateStart,dateEnd,timeStart,timeEnd,addColor,addLocation,addParticipant;
-    private TextView event, date, moreEventTag, title, addEventMemo,addEventLocation;
+    private TextView dateStart,dateEnd,timeStart,timeEnd,addColor,addParticipant;
+    private TextView event, date, moreEventTag, title, addEventMemo,addLocation;
     private EditText addActivityLabel;
     private Switch switchDay;
     private BlueToothHelper blueToothHelper;
@@ -93,7 +94,7 @@ public class EventCreateActivity extends AppCompatActivity {
         timelineDAO = new TimelineDAO(dbHelper);
         activityLabelDAO = new ActivityLabelDAO(dbHelper);
         //Event = (TextView) findViewById(R.);
-        addEventLocation = findViewById(R.id.add_event_location);
+//        addEventLocation = findViewById(R.id.add_event_location);
         switchDay = findViewById(R.id.switch_day);
         dateStart = findViewById(R.id.date_start);
         dateEnd = findViewById(R.id.date_end);
@@ -106,6 +107,8 @@ public class EventCreateActivity extends AppCompatActivity {
         moreEventTag = findViewById(R.id.more_event_tag);
         moreEventTag.setOnClickListener(dialogClick);
         title = findViewById(R.id.add_event);
+        switchDay = findViewById(R.id.switch_day);
+        switchDay.setOnCheckedChangeListener(switchClickListener);
         //toolbar
         toolbar = (Toolbar) findViewById(R.id.event_create_toolbar);
         toolbar.inflateMenu(R.menu.event_create_toolbarmenu);
@@ -131,21 +134,27 @@ public class EventCreateActivity extends AppCompatActivity {
                             Toast.makeText(context,"請選擇結束日期",Toast.LENGTH_LONG).show();
                             break;
                         }
-                        if(timeStart.getText() != null && timeStart.getText().equals("")){
-                            Toast.makeText(context,"請選擇開始時間",Toast.LENGTH_LONG).show();
-                            break;
-                        }
-                        if(timeEnd.getText() != null && timeEnd.getText().equals("")){
-                            Toast.makeText(context,"請選擇結束時間",Toast.LENGTH_LONG).show();
-                            break;
-                        }
+
 
                         TimelineBean timelineBean = new TimelineBean();
                         timelineBean.setMatchmakerId(blueToothHelper.getUserId());
-                        timelineBean.setStartDate(dateStart.getText().toString()+" "+timeStart.getText().toString());
-                        timelineBean.setEndDate(dateEnd.getText().toString()+" "+timeEnd.getText().toString());
-//                        timelineBean.setPlace(addEventLocation.getText().toString());
-                        timelineBean.setPlace("place");
+                        if (switchDay.isChecked()) {
+                            timelineBean.setStartDate(dateStart.getText().toString()+" 00:00");
+                            timelineBean.setEndDate(dateEnd.getText().toString()+" 23:59");
+                        }else{
+                            if(timeStart.getText() != null && timeStart.getText().equals("")){
+                                Toast.makeText(context,"請選擇開始時間",Toast.LENGTH_LONG).show();
+                                break;
+                            }
+                            if(timeEnd.getText() != null && timeEnd.getText().equals("")){
+                                Toast.makeText(context,"請選擇結束時間",Toast.LENGTH_LONG).show();
+                                break;
+                            }
+                            timelineBean.setStartDate(dateStart.getText().toString()+" "+timeStart.getText().toString());
+                            timelineBean.setEndDate(dateEnd.getText().toString()+" "+timeEnd.getText().toString());
+                        }
+                        timelineBean.setPlace(addLocation.getText().toString());
+//                        timelineBean.setPlace("place");
                         timelineBean.setTitle(title.getText().toString());
                         timelineBean.setTimelinePropertiesNo(1);
                         timelineBean.setRemark(addEventMemo.getText().toString());
@@ -156,6 +165,8 @@ public class EventCreateActivity extends AppCompatActivity {
                         AsyncTasKHelper.execute(addEvent,timelineBean);
                         Intent intent = new Intent();
                         intent.setClass(EventCreateActivity.this,SelfIntroductionActivity.class);
+                        startActivity(intent);
+                        finish();
                 }
                 return false;
             }
@@ -221,14 +232,14 @@ public class EventCreateActivity extends AppCompatActivity {
         });
 
         //Add Location
-        addLocation = (TextView) findViewById(R.id.add_event_location);
-        addLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), EventAddLocationActivity.class);
-                startActivity(i);
-            }
-        });
+        addLocation = findViewById(R.id.add_event_location);
+//        addLocation.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent i = new Intent(getApplicationContext(), EventAddLocationActivity.class);
+//                startActivity(i);
+//            }
+//        });
 
         //Add Participant
         addParticipant = (TextView) findViewById(R.id.add_event_participant);
@@ -394,6 +405,19 @@ public class EventCreateActivity extends AppCompatActivity {
 
         }
     }
+    public CompoundButton.OnCheckedChangeListener switchClickListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked){
+                timeEnd.setVisibility(View.GONE);
+                timeStart.setVisibility(View.GONE);
+            }else {
+                timeEnd.setVisibility(View.VISIBLE);
+                timeStart.setVisibility(View.VISIBLE);
+
+            }
+        }
+    };
 
     @Override
     protected void onDestroy() {

@@ -18,8 +18,8 @@ public class FriendServiceImpl {
         return FriendApi.search(friendBean);
     }
     @Nullable
-    public static Call<ResponseBody<List<FriendBean>>> searchInviteAvatar(FriendBean friendBean) {
-        return FriendApi.searchInviteAvatar(friendBean);
+    public static Call<ResponseBody<List<FriendBean>>> searchInviteList(FriendBean friendBean) {
+        return FriendApi.searchInviteList(friendBean);
     }
     @Nullable
     public static Call<ResponseBody<FriendBean>> add(FriendBean friendBean) {
