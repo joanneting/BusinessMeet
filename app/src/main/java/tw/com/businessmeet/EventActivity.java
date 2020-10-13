@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
@@ -24,6 +27,7 @@ import java.util.List;
 import retrofit2.Call;
 import tw.com.businessmeet.bean.ActivityInviteBean;
 import tw.com.businessmeet.bean.ActivityLabelBean;
+import tw.com.businessmeet.bean.Empty;
 import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.bean.TimelineBean;
 import tw.com.businessmeet.helper.AsyncTasKHelper;
@@ -37,8 +41,25 @@ public class EventActivity extends AppCompatActivity {
     private TextView event,eventDate,eventTime,eventLocation,eventParticipant,addEventMemo;
     private ChipGroup eventTag;
     private Boolean meet = true;
+    private String friendId;
     private ImageView participantAvatar,tagIcon,participantIcon;
     private AvatarHelper avatarHelper = new AvatarHelper();
+    private AsyncTasKHelper.OnResponseListener<Integer, Empty> deleteTimelineBeanOnResponseListener = new AsyncTasKHelper.OnResponseListener<Integer, Empty>() {
+        @Override
+        public Call<ResponseBody<Empty>> request(Integer... integers) {
+            return timelineService.delete(integers[0]);
+        }
+
+        @Override
+        public void onSuccess(Empty empty) {
+
+        }
+
+        @Override
+        public void onFail(int status, String message) {
+
+        }
+    };
     private AsyncTasKHelper.OnResponseListener<Integer, TimelineBean> timelineBeanOnResponseListener = new AsyncTasKHelper.OnResponseListener<Integer, TimelineBean>() {
         @Override
         public Call<ResponseBody<TimelineBean>> request(Integer... timelineNos) {
@@ -81,6 +102,7 @@ public class EventActivity extends AppCompatActivity {
                 }
                 eventParticipant.setText(inviteName);
             }else{
+                friendId = getIntent().getStringExtra("friendId");
                 tagIcon.setVisibility(View.GONE);
                 eventTag.setVisibility(View.GONE);
                 eventTime.setVisibility(View.GONE);
@@ -131,10 +153,27 @@ public class EventActivity extends AppCompatActivity {
 
                     switch (item.getItemId()){
                         case R.id.menu_toolbar_delete:
-//                            System.out.println(item);//偵測按下去的事件
-//                            Intent intent = new Intent();
-//                            intent.setClass(EventActivity.this,EditEventActivity.class);
-//                            startActivity(intent);
+                             new AlertDialog.Builder(EventActivity.this)
+                                .setTitle("刪除確認")
+                                     .setMessage("確定要刪除嗎?一但刪除便無法復原。")
+                                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        AsyncTasKHelper.execute(deleteTimelineBeanOnResponseListener,timelineNo);
+                                        Intent intent = new Intent();
+                                        if(meet) {
+                                            intent.setClass(EventActivity.this,FriendsTimelineActivity.class );
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("friendId",friendId);
+                                            intent.putExtras(bundle);
+                                        }else{
+                                            intent.setClass(EventActivity.this,SelfIntroductionActivity.class );
+                                        }
+                                        startActivity(intent);
+                                    }
+                                }).setNegativeButton("取消",null).create()
+                                .show();
+                             break;
                         case  R.id.menu_toolbar_search:
                             System.out.println(event.getText().toString());//偵測按下去的事件
                             Intent intent = new Intent();

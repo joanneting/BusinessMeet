@@ -203,6 +203,8 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         intent.setClass(this,EventActivity.class); //改到活動事件內容
         Bundle bundle = new Bundle();
         bundle.putString("timelineNo",friendsTimelineRecyclerViewAdapter.getTimelineBean(position).getTimelineNo().toString());
+        String friendId = getIntent().getStringExtra("friendId");
+        bundle.putString("friendId",friendId);
         intent.putExtras(bundle);
         startActivity(intent);
 
