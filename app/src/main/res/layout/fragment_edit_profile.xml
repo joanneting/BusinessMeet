@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".EditMemoFragment">
+    android:layout_height="match_parent">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -17,18 +16,17 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/addGroup_inputbox"
                     style="@style/addColumn_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="5"
                     android:hint="群組名稱"
-                    app:hintTextColor="@color/colorPrimary"
-                    app:layout_constraintStart_toStartOf="@id/addColumn_dialog_title"
-                    app:layout_constraintTop_toBottomOf="@id/addColumn_dialog_title">
+                    app:hintTextColor="@color/colorPrimary">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/addGroup_input"
@@ -37,7 +35,41 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/addGroup_comfirmButton"
+                    style="@style/confirmButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="0"
+                    android:text="新增群組"
+                    android:textColor="@color/colorPrimary" />
+
             </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chooseGroup_chipGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/addGroup_chip"
+                        style="@style/Widget.MaterialComponents.Chip.Action"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:closeIconEnabled="true"
+                        android:text="好友" />
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </HorizontalScrollView>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/addProfileContent_inputbox"
@@ -45,9 +77,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="輸入內容"
-                app:hintTextColor="@color/colorPrimary"
-                app:layout_constraintStart_toStartOf="@id/addColumn_dialog_title"
-                app:layout_constraintTop_toBottomOf="@id/addColumn_dialog_title">
+                app:hintTextColor="@color/colorPrimary">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/addProfileContent_input"
@@ -63,19 +93,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|right"
                 android:layout_marginTop="5dp"
-                android:text="@string/confirm" />
+                android:text="確認" />
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
-
-    <!--    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
-    <!--        android:id="@+id/memo_addColumn"-->
-    <!--        style="@style/floatingButton"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="新增群組"-->
-    <!--        tools:ignore="VectorDrawableCompat" />-->
-
 
 </FrameLayout>
