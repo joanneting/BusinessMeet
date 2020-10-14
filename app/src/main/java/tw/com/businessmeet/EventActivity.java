@@ -42,6 +42,7 @@ public class EventActivity extends AppCompatActivity {
     private ChipGroup eventTag;
     private Boolean meet = true;
     private String friendId;
+    private TimelineBean activityBean;
     private ImageView participantAvatar,tagIcon,participantIcon;
     private AvatarHelper avatarHelper = new AvatarHelper();
     private AsyncTasKHelper.OnResponseListener<Integer, Empty> deleteTimelineBeanOnResponseListener = new AsyncTasKHelper.OnResponseListener<Integer, Empty>() {
@@ -68,6 +69,7 @@ public class EventActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess(TimelineBean timelineBean) {
+
             System.out.println(timelineBean.getCreateDateStr());
             event.setText(timelineBean.getTitle());
             eventLocation.setText(timelineBean.getPlace());
@@ -75,6 +77,7 @@ public class EventActivity extends AppCompatActivity {
             addEventMemo.setText(timelineBean.getRemark());
             if(timelineBean.getTimelinePropertiesNo() == 1){
                 meet = false;
+                activityBean = timelineBean;
                 eventDate.setText(timelineBean.getStartDate());
                 eventTime.setText(timelineBean.getEndDate());
                 ActivityLabelBean activityLabelBean = timelineBean.getActivityLabelBean();
@@ -91,15 +94,17 @@ public class EventActivity extends AppCompatActivity {
 //                eventTag.setText(timelineBean.getActivityLabelBeanList().get(0).getContent());
 
                 List<ActivityInviteBean> activityInviteBeanList = timelineBean.getActivityInviteBeanList();
-                participantAvatar.setImageBitmap(avatarHelper.getImageResource(timelineBean.getActivityInviteBeanList().get(0).getAvatar()));
+//                participantAvatar.setImageBitmap(avatarHelper.getImageResource(timelineBean.getActivityInviteBeanList().get(0).getAvatar()));
                 String inviteName = "";
                 for (int i = 0; i < activityInviteBeanList.size(); i++) {
+                    activityInviteBeanList.get(i).setAvatar("");
                     if(i==0){
                         inviteName = activityInviteBeanList.get(i).getUserName();
                     }else{
                         inviteName +=","+ activityInviteBeanList.get(i).getUserName();
                     }
                 }
+                activityBean.setActivityInviteBeanList(activityInviteBeanList);
                 eventParticipant.setText(inviteName);
             }else{
                 friendId = getIntent().getStringExtra("friendId");
@@ -182,12 +187,14 @@ public class EventActivity extends AppCompatActivity {
                             bundle.putString("title", event.getText().toString());
                             bundle.putString("place", eventLocation.getText().toString());
                             bundle.putString("addEventMemo", addEventMemo.getText().toString());
-                            if(tagIcon.getVisibility() == View.GONE) {
+                            bundle.putString("timelineNo", timelineNo.toString());
+                            if(meet) {
                                 bundle.putString("action", "meet");
+                                bundle.putString("friendId",friendId);
                                 bundle.putString("eventDate", eventDate.getText().toString());
                             }else{
                                 bundle.putString("action", "activity");
-
+                                bundle.putParcelable("activityBean",activityBean);
 
                             }
                             intent.putExtras(bundle);
@@ -202,4 +209,5 @@ public class EventActivity extends AppCompatActivity {
 
 
     }
+
 }
