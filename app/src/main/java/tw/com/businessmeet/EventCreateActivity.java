@@ -67,6 +67,7 @@ public class EventCreateActivity extends AppCompatActivity {
     //chip
     private ChipGroup chipGroup,eventLabel;
     private String chipContent = "";
+    private String updateContent = "";
     private Button confirm,cancel;
     private AsyncTasKHelper.OnResponseListener<TimelineBean,TimelineBean> addEvent = new AsyncTasKHelper.OnResponseListener<TimelineBean, TimelineBean>() {
         @Override
@@ -308,6 +309,7 @@ public class EventCreateActivity extends AppCompatActivity {
     public View.OnClickListener dialogClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            updateContent = chipContent;
             LayoutInflater inflater = activity.getLayoutInflater();
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             View view = inflater.inflate(R.layout.event_add_label, null);
@@ -317,14 +319,35 @@ public class EventCreateActivity extends AppCompatActivity {
             addActivityLabel = (EditText) view.findViewById(R.id.addTag_dialog_Input);
 
             chipGroup = (ChipGroup) view.findViewById(R.id.addTag_dialog_selectedBox);
+            if(!updateContent.equals("")) {
+                String[] split = updateContent.split(",");
+                for (String nowChip : split) {
+                    Chip chip = new Chip(activity);
+                    ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(activity, null, 0, R.style.Widget_MaterialComponents_Chip_Action);
+                    chip.setChipDrawable(chipDrawable);
+                    chip.setText(nowChip);
+                    chip.setCloseIconVisible(true);
+                    chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            chipGroup.removeView(chip);
+                            updateContent = updateContent.replaceAll(chip.getText().toString() + ",", "");
+                            updateContent = updateContent.replaceAll("," + chip.getText().toString(), "");
+                            updateContent = updateContent.replaceAll(chip.getText().toString(), "");
+
+                        }
+                    });
+                    chipGroup.addView(chip);
+                }
+            }
             addActivityLabel.setOnKeyListener(new View.OnKeyListener() {
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
-                        if(chipContent==null || chipContent.equals("")){
-                            chipContent = addActivityLabel.getText().toString();
+                        if(updateContent==null || updateContent.equals("")){
+                            updateContent = addActivityLabel.getText().toString();
                         }else{
-                            chipContent = chipContent + "," + addActivityLabel.getText().toString();
+                            updateContent = updateContent + "," + addActivityLabel.getText().toString();
                         }
                         LayoutInflater chipInflater = LayoutInflater.from(activity);
                         Chip chip = new Chip(activity);
@@ -336,6 +359,9 @@ public class EventCreateActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 chipGroup.removeView(chip);
+                                updateContent = updateContent.replaceAll(chip.getText().toString()+",","");
+                                updateContent = updateContent.replaceAll(","+chip.getText().toString(),"");
+                                updateContent = updateContent.replaceAll(chip.getText().toString(), "");
                             }
                         });
                         chipGroup.addView(chip);
@@ -352,16 +378,18 @@ public class EventCreateActivity extends AppCompatActivity {
             confirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                        ActivityLabelBean activityLabelBean = new ActivityLabelBean();
-                        activityLabelBean.setContent(chipContent);
-                        if(chipContent.isEmpty()){
+
+                        if(updateContent.isEmpty()){
                             Toast.makeText(activity,"請輸入標籤內容，輸入完標籤內容，請先按下鍵盤輸入鍵",Toast.LENGTH_LONG).show();
                             return;
                         }
+                        chipContent = updateContent;
+                    ActivityLabelBean activityLabelBean = new ActivityLabelBean();
+                    activityLabelBean.setContent(chipContent);
+                    eventLabel.removeAllViews();
                         eventLabel.setVisibility(View.VISIBLE);
                     String[] contentArray= chipContent.split(",");
                     for (int i = 0; i < contentArray.length; i++) {
-                        System.out.println("contentArray[i] = " + contentArray[i]);
                         Chip chip = new Chip(activity);
                         ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(activity, null, 0, R.style.Widget_MaterialComponents_Chip_Action);
                         chip.setChipDrawable(chipDrawable);

@@ -1,11 +1,14 @@
 package tw.com.businessmeet.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 import java.util.List;
 
-public class TimelineBean {
+public class TimelineBean implements Parcelable {
     private static String[] column = new String[]{"timeline_no","matchmaker_id","friend_id",
             "place","title","remark","timeline_properties_no","color","create_date","modify_date"};
     private Integer timelineNo;
@@ -26,6 +29,93 @@ public class TimelineBean {
     private ActivityLabelBean activityLabelBean;
     private List<ActivityInviteBean> activityInviteBeanList;
     private Integer statusCode;
+
+    public TimelineBean() {
+    }
+
+
+    protected TimelineBean(Parcel in) {
+        if (in.readByte() == 0) {
+            timelineNo = null;
+        } else {
+            timelineNo = in.readInt();
+        }
+        matchmakerId = in.readString();
+        friendId = in.readString();
+        place = in.readString();
+        title = in.readString();
+        remark = in.readString();
+        if (in.readByte() == 0) {
+            timelinePropertiesNo = null;
+        } else {
+            timelinePropertiesNo = in.readInt();
+        }
+        color = in.readString();
+        activityDate = in.readString();
+        createDateStr = in.readString();
+        modifyDateStr = in.readString();
+        startDate = in.readString();
+        endDate = in.readString();
+        activityLabelBean = in.readParcelable(ActivityLabelBean.class.getClassLoader());
+        activityInviteBeanList = in.createTypedArrayList(ActivityInviteBean.CREATOR);
+        if (in.readByte() == 0) {
+            statusCode = null;
+        } else {
+            statusCode = in.readInt();
+        }
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (timelineNo == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(timelineNo);
+        }
+        dest.writeString(matchmakerId);
+        dest.writeString(friendId);
+        dest.writeString(place);
+        dest.writeString(title);
+        dest.writeString(remark);
+        if (timelinePropertiesNo == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(timelinePropertiesNo);
+        }
+        dest.writeString(color);
+        dest.writeString(activityDate);
+        dest.writeString(createDateStr);
+        dest.writeString(modifyDateStr);
+        dest.writeString(startDate);
+        dest.writeString(endDate);
+        dest.writeParcelable(activityLabelBean, flags);
+        dest.writeTypedList(activityInviteBeanList);
+        if (statusCode == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(statusCode);
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<TimelineBean> CREATOR = new Creator<TimelineBean>() {
+        @Override
+        public TimelineBean createFromParcel(Parcel in) {
+            return new TimelineBean(in);
+        }
+
+        @Override
+        public TimelineBean[] newArray(int size) {
+            return new TimelineBean[size];
+        }
+    };
 
     public static String[] getColumn() {
         return column;

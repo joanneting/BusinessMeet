@@ -32,7 +32,7 @@ public class EventAddParticipantActivity extends AppCompatActivity implements Ev
     private Activity activity = this;
     private EventAddParticipantRecyclerViewAdapter eventAddParticipantRecyclerViewAdapter;
     private List<ActivityInviteBean> activityInviteBeanList  = new ArrayList<>();
-    List<ActivityInviteBean> inviteList = new ArrayList<>();
+    private List<ActivityInviteBean> inviteList = new ArrayList<>();
     private FriendServiceImpl friendService = new FriendServiceImpl();
     private EditText searchView ;
     private Button confirmButton;
