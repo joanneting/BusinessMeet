@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginLeft="6dp"
+    android:layout_marginRight="6dp">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -12,45 +14,39 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center|left"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/addGroup_inputbox"
-                    style="@style/addColumn_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:hint="群組名稱"
-                    app:hintTextColor="@color/colorPrimary">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/addGroup_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/addGroup_comfirmButton"
-                    style="@style/confirmButton"
+                <TextView
+                    android:id="@+id/groupTitle"
+                    style="@style/friends_profile_information_basic_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_weight="0"
-                    android:text="新增群組"
-                    android:textColor="@color/colorPrimary" />
+                    android:text="目前群組"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/currentGroupTitleChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:text="好友"
+                    app:chipBackgroundColor="@color/lightPrimary"
+                    app:layout_constraintBottom_toBottomOf="@id/groupTitle"
+                    app:layout_constraintStart_toEndOf="@id/groupTitle"
+                    app:layout_constraintTop_toTopOf="@id/groupTitle" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="6dp"
                 android:layout_marginBottom="10dp">
 
                 <com.google.android.material.chip.ChipGroup
@@ -60,39 +56,81 @@
                     app:singleSelection="true">
 
                     <com.google.android.material.chip.Chip
-                        android:id="@+id/addGroup_chip"
-                        style="@style/Widget.MaterialComponents.Chip.Action"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:closeIconEnabled="true"
-                        android:text="好友" />
+                        android:text="新增群組"
+                        app:chipIcon="@drawable/ic_add_24px" />
+
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="客戶" />
+
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="廠商" />
+
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="家人" />
+
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="同事" />
+
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="同學" />
 
                 </com.google.android.material.chip.ChipGroup>
 
             </HorizontalScrollView>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/addProfileContent_inputbox"
-                style="@style/addColumn_input"
+            <TextView
+                style="@style/friends_profile_information_basic_title"
+                android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="備忘錄" />
+
+            <EditText
+                android:id="@+id/addProfileContent_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="輸入內容"
-                app:hintTextColor="@color/colorPrimary">
+                android:layout_marginTop="8dp"
+                android:inputType="textMultiLine"
+                android:overScrollMode="always"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"
+                android:scrollHorizontally="false" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/addProfileContent_input"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            <!--            <com.google.android.material.textfield.TextInputLayout-->
+            <!--                android:id="@+id/addProfileContent_inputbox"-->
+            <!--                style="@style/addColumn_input"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:hint="輸入內容"-->
+            <!--                app:hintTextColor="@color/colorPrimary">-->
+
+            <!--                <com.google.android.material.textfield.TextInputEditText-->
+            <!--                    android:id="@+id/addProfileContent_input"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content" />-->
+
+            <!--            </com.google.android.material.textfield.TextInputLayout>-->
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/addColumn_dialog_confirmButton"
                 style="@style/confirmButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|right"
-                android:layout_marginTop="5dp"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginTop="10dp"
                 android:text="確認" />
 
         </LinearLayout>
