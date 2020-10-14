@@ -67,7 +67,6 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
     public List<ActivityInviteBean> getInviteList(){
         List<ActivityInviteBean> inviteList = new ArrayList<>();
         for (ActivityInviteBean activityInviteBean : activityInviteBeanList) {
-            System.out.println("activityInviteBean.isInvite() = " + activityInviteBean.isInvite());
             if (activityInviteBean.isInvite()) {
                 inviteList.add(activityInviteBean);
             }
@@ -146,7 +145,6 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
                     for (int i = 0; i < activityInviteBeanList.size(); i++) {
                         ActivityInviteBean activityInviteBean = activityInviteBeanList.get(i);
                         String userName = activityInviteBean.getUserName();
-                        System.out.println("userName = " + userName);
                         //根據需求，新增過濾內容
                         if (userName.contains(filterString) || userName.toLowerCase().contains(filterString.toLowerCase()) || userName.toUpperCase().contains(filterString.toUpperCase())) {
                             RecyclerViewFilterBean<ActivityInviteBean> recyclerViewFilterBean = new RecyclerViewFilterBean<>();
