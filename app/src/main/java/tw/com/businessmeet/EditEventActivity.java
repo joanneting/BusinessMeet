@@ -442,7 +442,7 @@ public class EditEventActivity extends AppCompatActivity {
                         chipGroup.removeView(chip);
                         updateContent = updateContent.replaceAll(chip.getText().toString()+",","");
                         updateContent = updateContent.replaceAll(","+chip.getText().toString(),"");
-
+                        updateContent = updateContent.replaceAll(chip.getText().toString(), "");
                     }
                 });
                 chipGroup.addView(chip);
@@ -469,6 +469,7 @@ public class EditEventActivity extends AppCompatActivity {
                                 chipGroup.removeView(chip);
                                 updateContent = updateContent.replaceAll(chip.getText().toString()+",","");
                                 updateContent = updateContent.replaceAll(","+chip.getText().toString(),"");
+                                updateContent = updateContent.replaceAll(chip.getText().toString(), "");
                             }
                         });
                         chipGroup.addView(chip);
