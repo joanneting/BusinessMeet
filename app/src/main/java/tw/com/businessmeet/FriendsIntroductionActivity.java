@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import retrofit2.Call;
 import tw.com.businessmeet.adapter.FriendProfileListViewAdapter;
+import tw.com.businessmeet.bean.Empty;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
 import tw.com.businessmeet.bean.ResponseBody;
@@ -45,8 +46,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsIntroductionActivity extends AppCompatActivity {
-    private TextView userName, id, profession, gender, email, tel, remark;
-    private Button editButton;
+    private TextView userName, id, profession, gender, email, tel, remark, title, content;
+    private Button editButton,deleteButton;
     private ImageView avatar;
     private ListView listView;
     private String friendId;
@@ -56,6 +57,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
     private AvatarHelper avatarHelper = new AvatarHelper();
     private BlueToothHelper blueToothHelper;
     private FriendDAO friendDAO;
+    private FriendServiceImpl friendService = new FriendServiceImpl();
     private FriendBean friendBean = new FriendBean();
     private UserInformationServiceImpl userInformationService = new UserInformationServiceImpl();
     private FriendServiceImpl matchedService = new FriendServiceImpl();
@@ -145,6 +147,24 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         public void onFail(int status, String message) {
         }
     };
+    private AsyncTasKHelper.OnResponseListener<Integer, Empty> deleteFriendResponseListener = new AsyncTasKHelper.OnResponseListener<Integer, Empty>() {
+        @Override
+        public Call<ResponseBody<Empty>> request(Integer... integers) {
+            return friendService.delete(integers[0]);
+        }
+
+        @Override
+        public void onSuccess(Empty empty) {
+            Intent intent = new Intent();
+            intent.setClass(FriendsIntroductionActivity.this, FriendsActivity.class);
+            startActivity(intent);
+        }
+
+        @Override
+        public void onFail(int status, String message) {
+
+        }
+    };
 
     private static void setListViewHeight(ListView listView) {
         if (listView == null) {
@@ -190,7 +210,8 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         editButton = (Button) findViewById(R.id.friends_profile_information_edit);
         editButton.setOnClickListener(editMemoButton);
         listView = (ListView) findViewById(R.id.friends_profile_information_memo);
-
+        deleteButton = findViewById(R.id.friends_profile_information_delete);
+        deleteButton.setOnClickListener(deleteListener);
         //bottomNavigationView
         //Initialize And Assign Variable
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -228,6 +249,13 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             changeToFriendsEditIntroductionPage();
+        }
+    };
+    public View.OnClickListener deleteListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            System.out.println("friendNo = " + friendNo);
+            AsyncTasKHelper.execute(deleteFriendResponseListener,friendNo);
         }
     };
 

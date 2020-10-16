@@ -17,6 +17,7 @@ public class UserInformationBean {
     private String modifyDate;
     private Integer statusCode;
 
+
     public static String[] getColumn() {
         return column;
     }
