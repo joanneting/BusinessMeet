@@ -151,6 +151,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
         Intent intent = new Intent();
         intent.setClass(this, FriendsTimelineActivity.class);
         Bundle bundle = new Bundle();
+
         bundle.putString("friendId", friendsRecyclerViewAdapter.getUserInformation(position).getUserId());
         intent.putExtras(bundle);
         startActivity(intent);

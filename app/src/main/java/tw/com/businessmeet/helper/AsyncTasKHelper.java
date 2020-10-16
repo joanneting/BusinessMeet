@@ -37,10 +37,6 @@ public class AsyncTasKHelper<P, R> extends AsyncTask<P, Void, Response<ResponseB
     @Override
     protected void onPostExecute(Response<ResponseBody<R>> response) {
         super.onPostExecute(response);
-        System.out.println("response : " + response);
-        System.out.println("response.isSuccessful : " + response.isSuccessful());
-        System.out.println("response.message() = " + response.message());
-        System.out.println("response.code() : " + response.code());
         if (response != null && response.isSuccessful()) {
             ResponseBody<R> body = response.body();
             System.out.println("body.getMessage() : " + body.getMessage());

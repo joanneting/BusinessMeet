@@ -52,6 +52,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "matchmaker_id  varchar(100) not null references "+ _TableName[0] + "(user_id),  "+
                 "friend_id  varchar(100) not null references "+ _TableName[0] + "(user_id),"+
                 "remark nvarchar(2500),"+
+                "status int,"+
                 "create_date datetime not null,"+
                 "modify_date datetime"+
                 ");";

@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import java.util.List;
 
 import retrofit2.Call;
+import tw.com.businessmeet.bean.Empty;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.service.FriendService;
@@ -29,5 +30,10 @@ public class FriendServiceImpl {
     public static Call<ResponseBody<FriendBean>> update(FriendBean friendBean) {
         return FriendApi.update(friendBean);
     }
+    @Nullable
+    public static Call<ResponseBody<Empty>> delete(Integer friendNo) {
+        return FriendApi.delete(friendNo);
+    }
+
 
 }

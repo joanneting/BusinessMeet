@@ -53,7 +53,7 @@ public class EventActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess(Empty empty) {
-
+            
         }
 
         @Override
