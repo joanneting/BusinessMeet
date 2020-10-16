@@ -67,16 +67,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:scrollbars="none"
-            app:layout_constraintTop_toBottomOf="@id/addTag_dialog_InputBox"
-            app:layout_constraintBottom_toTopOf="@id/addColumn_dialog_confirmButton">
+            app:layout_constraintBottom_toTopOf="@id/addColumn_dialog_confirmButton"
+            app:layout_constraintTop_toBottomOf="@id/addTag_dialog_InputBox">
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/addTag_dialog_selectedBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/addTag_dialog_InputBox"
                 app:singleLine="true"
-                app:singleSelection="false"
-                app:layout_constraintTop_toBottomOf="@id/addTag_dialog_InputBox">
+                app:singleSelection="false">
 
             </com.google.android.material.chip.ChipGroup>
 
@@ -84,26 +84,24 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/addColumn_dialog_cancelButton"
+            style="@style/cancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="14dp"
             android:text="@string/cancel"
-            android:textColor="@color/colorAccent"
             app:layout_constraintEnd_toStartOf="@id/addColumn_dialog_confirmButton"
             app:layout_constraintTop_toBottomOf="@id/addColumn_dialog_InputBox"
-            app:layout_constraintTop_toTopOf="@id/addColumn_dialog_confirmButton"
-            app:strokeColor="@color/colorPrimary" />
+            app:layout_constraintTop_toTopOf="@id/addColumn_dialog_confirmButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/addColumn_dialog_confirmButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            style="@style/confirmButton"
             android:text="@string/confirm"
-            android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addTag_dialog_scrollView"
-            app:strokeColor="@color/colorPrimary" />
+            app:layout_constraintTop_toBottomOf="@id/addTag_dialog_scrollView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

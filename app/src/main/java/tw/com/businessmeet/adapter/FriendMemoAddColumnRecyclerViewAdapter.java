@@ -59,6 +59,7 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
                 ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(context, null, 0, R.style.Widget_MaterialComponents_Chip_Action);
                 chip.setChipDrawable(chipDrawable);
                 chip.setText(chipContent[j]);
+                chip.setCloseIconVisible(true);
                 holder.chipGroup.addView(chip);
             }
         }

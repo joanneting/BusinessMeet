@@ -46,11 +46,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsIntroductionActivity extends AppCompatActivity {
-    private TextView userName, id, profession, gender, email, tel, remark, title, content;
-    private Button editButton,deleteButton;
+    private TextView userName, id, profession, gender, email, tel, remark, title;
+    private Button editButton, deleteButton;
     private ImageView avatar;
     private ListView listView;
-    private String friendId;
+    private String friendId, content;
     private Integer friendNo;
     private UserInformationDAO userInformationDAO;
     private DBHelper DH;
@@ -103,8 +103,11 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess(List<FriendBean> friendBeanList) {
-            System.out.println(friendBeanList.get(0).getRemark() + "=============================");
-            System.out.println(friendBeanList.size() + "=============================");
+            if (friendBeanList.get(0).getRemark() != null) {
+                content = friendBeanList.get(0).getRemark();
+                remark.append(friendBeanList.get(0).getRemark());
+            }
+
             friendNo = friendBeanList.get(0).getFriendNo();
             FriendCustomizationBean fcb = new FriendCustomizationBean();
             fcb.setFriendNo(friendNo);
@@ -185,6 +188,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends_profile);
         openDB();
+        remark = (TextView) findViewById(R.id.firends_profile_information_remark);
         friendId = getIntent().getStringExtra("friendId");
         AsyncTasKHelper.execute(userInfoResponseListener, friendId);
         friendBean.setFriendId(friendId);
@@ -248,7 +252,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             System.out.println("friendNo = " + friendNo);
-            AsyncTasKHelper.execute(deleteFriendResponseListener,friendNo);
+            AsyncTasKHelper.execute(deleteFriendResponseListener, friendNo);
         }
     };
 
@@ -258,6 +262,9 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putString("friendId", getIntent().getStringExtra("friendId"));
         bundle.putInt("friendNo", friendNo);
+        bundle.putString("remark", content);
+        bundle.putString("matchmakerId", friendBean.getMatchmakerId());
+
         intent.putExtras(bundle);
         startActivity(intent);
     }

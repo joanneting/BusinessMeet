@@ -16,6 +16,7 @@
     <color name="timelineBlue">#CADDF0</color>
     <color name="timelineRed">#F4A8AC</color>
     <color name="timelineBrown">#B8ADAC</color>
+    <color name="lightPrimary">#C4E8E1</color>
 
     <!-- Grey -->
     <color name="grey_68">#707070</color>
