@@ -75,21 +75,19 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/friends_profile_information_edit"
-                    style="@style/button"
+                    style="@style/confirmButton"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="16dp"
                     android:text="@string/friends_profile_information_edit"
-                    android:textColor="@color/colorPrimary"
                     app:layout_constraintBottom_toBottomOf="@id/friends_profile_information_major"
                     app:layout_constraintStart_toStartOf="@id/friends_profile_information_idTitle"
                     app:layout_constraintTop_toBottomOf="@id/friends_profile_information_idTitle" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/friends_profile_information_delete"
-                    style="@style/button"
+                    style="@style/cancelButton"
                     android:layout_marginLeft="20dp"
                     android:text="@string/friends_profile_information_delete"
-                    android:textColor="@color/colorAccent"
                     app:layout_constraintStart_toEndOf="@id/friends_profile_information_edit"
                     app:layout_constraintTop_toTopOf="@id/friends_profile_information_edit" />
 
@@ -173,9 +171,25 @@
                     android:id="@+id/friends_profile_information_phone"
                     style="@style/input"
                     android:layout_marginBottom="16dp"
-                    app:layout_constraintBottom_toBottomOf="@id/friends_profile_information_basic"
                     app:layout_constraintStart_toStartOf="@id/friends_profile_information_genderTitle"
                     app:layout_constraintTop_toBottomOf="@id/friends_profile_information_phoneTitle" />
+
+                <TextView
+                    android:id="@+id/firends_profile_information_remarkTitle"
+                    style="@style/friends_profile_information_basic_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="備忘錄"
+                    app:layout_constraintStart_toStartOf="@id/friends_profile_information_genderTitle"
+                    app:layout_constraintTop_toBottomOf="@id/friends_profile_information_phone" />
+
+                <TextView
+                    android:id="@+id/firends_profile_information_remark"
+                    style="@style/input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@id/friends_profile_information_genderTitle"
+                    app:layout_constraintTop_toBottomOf="@id/firends_profile_information_remarkTitle" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -183,6 +197,7 @@
                 android:id="@+id/splitLine2"
                 android:layout_width="match_parent"
                 android:layout_height="16dp"
+                android:layout_marginTop="16dp"
                 android:background="@color/grey_96"
                 app:layout_constraintTop_toBottomOf="@id/friends_profile_information_basic" />
 

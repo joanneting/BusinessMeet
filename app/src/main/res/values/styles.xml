@@ -71,13 +71,28 @@
         <item name="android:background">@drawable/search_radius</item>
     </style>
 
-    <!-- Button. -->
-    <style name="button" parent="Widget.MaterialComponents.Button.OutlinedButton">
+    <!-- Confirm Button. -->
+    <style name="confirmButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:minWidth">0dp</item>
         <item name="android:minHeight">0dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/colorPrimary</item>
+    </style>
+
+    <!-- Cancel Button. -->
+    <style name="cancelButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/colorAccent</item>
     </style>
 
     <!-- Profile basic information title. -->
@@ -109,10 +124,13 @@
 
     <!-- edit friends profile floating button -->
     <style name="floatingButton" parent="Widget.MaterialComponents.ExtendedFloatingActionButton.Icon">
-        <item name="android:layout_margin">16dp</item>
+        <item name="android:layout_margin">8dp</item>
         <item name="android:layout_gravity">bottom|right</item>
         <item name="backgroundTint">@color/colorPrimary</item>
-        <item name="tint">@color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="iconTint">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="icon">@drawable/ic_add_24px</item>
     </style>
 
     <!-- dialog -->
