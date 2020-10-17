@@ -100,8 +100,10 @@ public class FriendInviteService extends Service {
                 PendingIntent.getBroadcast(this, 0, okIntent, 0);
         Intent deniedIntent = new Intent(this, FriendInviteBroadcastReceiver.class);
         deniedIntent.setAction(ACTION_DENIED);
+        deniedIntent.putExtra("matchmakerId", friendBean.getFriendId());
+        deniedIntent.putExtra("friendId", friendBean.getMatchmakerId());
         PendingIntent deniedPendingIntent =
-                PendingIntent.getBroadcast(this, 1, deniedIntent, 0);
+                PendingIntent.getBroadcast(this, 0, deniedIntent, 0);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NotificationHelper.CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.applogo)
                 .setContentTitle("好友確認")
@@ -124,13 +126,15 @@ public class FriendInviteService extends Service {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+            notificationManager.cancelAll();
             String action = intent.getAction();
             String matchmakerId = intent.getStringExtra("matchmakerId");
             String friendId = intent.getStringExtra("friendId");
             FriendBean friendBean = new FriendBean();
             friendBean.setFriendId(friendId);
             friendBean.setMatchmakerId(matchmakerId);
-            friendBean.setStatus(action.equals(ACTION_OK) ? 2 : 3);
+            friendBean.setStatus(action.equals(ACTION_OK) ? 2 : null);
             AsyncTaskHelper.execute(
                     () -> FriendServiceImpl.createInviteNotification(friendBean),
                     newFriendBean -> {
