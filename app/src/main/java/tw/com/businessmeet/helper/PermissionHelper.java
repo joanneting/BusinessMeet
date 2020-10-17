@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import tw.com.businessmeet.AddIntroductionActivity;
+import tw.com.businessmeet.LoginActivity;
 import tw.com.businessmeet.RequestCode;
 import tw.com.businessmeet.SelfIntroductionActivity;
 import tw.com.businessmeet.dao.UserInformationDAO;
@@ -54,6 +55,10 @@ public class PermissionHelper {
                         () -> UserInformationServiceImpl.getById(userId),
                         userInformationBean -> {
                             intent.setClass(activity, SelfIntroductionActivity.class);
+                            activity.startActivity(intent);
+                        },
+                        (status,message) ->{
+                            intent.setClass(activity, LoginActivity.class);
                             activity.startActivity(intent);
                         }
                 );

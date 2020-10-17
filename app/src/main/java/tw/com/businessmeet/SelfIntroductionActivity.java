@@ -89,8 +89,7 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
         TimelineBean timelineBean = new TimelineBean();
         timelineBean.setMatchmakerId(DeviceHelper.getUserId(this));
         AsyncTaskHelper.execute(() -> TimelineServiceImpl.searchList(timelineBean), timelineBeans -> {
-            Log.e("MatchedBean", "success");
-            for (TimelineBean searchBean : timelineBeanList) {
+            for (TimelineBean searchBean : timelineBeans) {
                 profileTimelineRecyclerViewAdapter.dataInsert(searchBean);
                 //Log.e("MatchedBean", String.valueOf(matchedBean.getBlueTooth()));
             }

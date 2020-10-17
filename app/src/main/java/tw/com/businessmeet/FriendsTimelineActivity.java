@@ -58,6 +58,7 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends_timeline);
         String friendId = getIntent().getStringExtra("friendId");
+        openDB();
         AsyncTaskHelper.execute(() -> UserInformationServiceImpl.getById(friendId), userInformationBean -> {
             userName.append(userInformationBean.getName());
             position.append(userInformationBean.getProfession());
@@ -70,7 +71,7 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         timelineBean.setMatchmakerId(DeviceHelper.getUserId(this, userInformationDAO));
         timelineBean.setFriendId(matchedBean.getFriendId());
         AsyncTaskHelper.execute(() -> TimelineServiceImpl.searchList(timelineBean), timelineBeans -> {
-            for (TimelineBean searchResult : timelineBeanList) {
+            for (TimelineBean searchResult : timelineBeans) {
                 friendsTimelineRecyclerViewAdapter.dataInsert(searchResult);
             }
         });
@@ -121,7 +122,7 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         //Set Home
         bottomNavigationView.setSelectedItemId(R.id.menu_friends);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
-        openDB();
+
         bottomNavigationView.setItemIconTintList(null);  //顯示頭像
         Menu BVMenu = bottomNavigationView.getMenu();
         AvatarHelper avatarHelper = new AvatarHelper();
