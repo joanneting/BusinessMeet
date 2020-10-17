@@ -12,14 +12,25 @@ import tw.com.businessmeet.bean.ResponseBody;
 
 public interface FriendService {
     String baseRoute = "friend/";
-    @POST(baseRoute+"search")
+
+    @POST(baseRoute + "search")
     Call<ResponseBody<List<FriendBean>>> search(@Body FriendBean friendBean);
-    @POST(baseRoute+"search/invitelist")
+
+    @POST(baseRoute + "search/invitelist")
     Call<ResponseBody<List<FriendBean>>> searchInviteList(@Body FriendBean friendBean);
-    @POST(baseRoute+"add")
+
+    @POST(baseRoute + "add")
     Call<ResponseBody<FriendBean>> add(@Body FriendBean friendBean);
-    @POST(baseRoute+"update")
-    Call<ResponseBody<FriendBean>> update (@Body FriendBean friendBean);
-    @POST(baseRoute+"delete/{friendNo}")
-    Call<ResponseBody<Empty>> delete (@Path("friendNo") Integer friendNo);
+
+    @POST(baseRoute + "update")
+    Call<ResponseBody<FriendBean>> update(@Body FriendBean friendBean);
+
+    @POST(baseRoute + "delete/{friendNo}")
+    Call<ResponseBody<Empty>> delete(@Path("friendNo") Integer friendNo);
+
+    @POST(baseRoute + "invite/notification")
+    Call<ResponseBody<List<FriendBean>>> searchInviteNotification();
+
+    @POST(baseRoute + "invite")
+    Call<ResponseBody<FriendBean>> createInviteNotification(@Body FriendBean friendBean);
 }
