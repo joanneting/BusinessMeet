@@ -23,7 +23,9 @@ public class ActivityInviteBean  implements Parcelable {
     private String avatar;
     private Integer status;
     private Boolean isInvite;
-
+    private String title;
+    private String place;
+    private String activityDate;
     public ActivityInviteBean() {
     }
 
@@ -181,5 +183,27 @@ public class ActivityInviteBean  implements Parcelable {
         isInvite = invite;
     }
 
+    public String getTitle() {
+        return title;
+    }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public String getActivityDate() {
+        return activityDate;
+    }
+
+    public void setActivityDate(String activityDate) {
+        this.activityDate = activityDate;
+    }
 }

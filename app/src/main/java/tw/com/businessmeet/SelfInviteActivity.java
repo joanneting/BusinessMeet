@@ -16,17 +16,28 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
 import tw.com.businessmeet.adapter.ProfileTimelineRecyclerViewAdapter;
 import tw.com.businessmeet.adapter.SelfInviteRecyclerViewAdapter;
+import tw.com.businessmeet.bean.ActivityInviteBean;
+import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.FriendDAO;
+import tw.com.businessmeet.helper.AsyncTasKHelper;
 import tw.com.businessmeet.helper.AvatarHelper;
 
 import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.helper.BlueToothHelper;
 import tw.com.businessmeet.helper.DBHelper;
+import tw.com.businessmeet.service.ActivityInviteService;
+import tw.com.businessmeet.service.Impl.ActivityInviteServiceImpl;
 
 
 public class SelfInviteActivity extends AppCompatActivity implements ProfileTimelineRecyclerViewAdapter.ClickListener {
@@ -34,13 +45,32 @@ public class SelfInviteActivity extends AppCompatActivity implements ProfileTime
     private BottomNavigationView menu;
     private ImageView avatar;
     private UserInformationDAO userInformationDAO;
+    private ActivityInviteServiceImpl activityInviteService = new ActivityInviteServiceImpl();
     private BlueToothHelper blueToothHelper;
     private DBHelper DH = null;
     private RecyclerView recyclerViewSelfInvite;
+    private List<ActivityInviteBean> activityInviteBeanList = new ArrayList<>();
     private SelfInviteRecyclerViewAdapter selfInviteRecyclerViewAdapter;
 
 
+    private AsyncTasKHelper.OnResponseListener<ActivityInviteBean, List<ActivityInviteBean>> searchResponseListener = new AsyncTasKHelper.OnResponseListener<ActivityInviteBean, List<ActivityInviteBean>>() {
+        @Override
+        public Call<ResponseBody<List<ActivityInviteBean>>> request(ActivityInviteBean... activityInviteBeans) {
+            return activityInviteService.search(activityInviteBeans[0]);
+        }
 
+        @Override
+        public void onSuccess(List<ActivityInviteBean> activityInviteBeanList) {
+            for (ActivityInviteBean activityInviteBean : activityInviteBeanList) {
+                selfInviteRecyclerViewAdapter.dataInsert(activityInviteBean);
+            }
+        }
+
+        @Override
+        public void onFail(int status, String message) {
+
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +78,10 @@ public class SelfInviteActivity extends AppCompatActivity implements ProfileTime
         menu = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         blueToothHelper = new BlueToothHelper(this);
         recyclerViewSelfInvite = findViewById(R.id.invite_view);
-
+        ActivityInviteBean activityInviteBean = new ActivityInviteBean();
+        activityInviteBean.setUserId(blueToothHelper.getUserId());
+        activityInviteBean.setStatus(1);
+        AsyncTasKHelper.execute(searchResponseListener,activityInviteBean);
         openDB();
         //toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -125,9 +158,10 @@ public class SelfInviteActivity extends AppCompatActivity implements ProfileTime
 
     private void createRecyclerViewSelfInvite() {
         recyclerViewSelfInvite.setLayoutManager(new LinearLayoutManager(this));
-        selfInviteRecyclerViewAdapter = new SelfInviteRecyclerViewAdapter(this);
+        selfInviteRecyclerViewAdapter = new SelfInviteRecyclerViewAdapter(this,activityInviteBeanList);
         recyclerViewSelfInvite.setAdapter(selfInviteRecyclerViewAdapter);
-
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewSelfInvite.getContext(), DividerItemDecoration.VERTICAL);
+        recyclerViewSelfInvite.addItemDecoration(dividerItemDecoration);
     }
 
 }
