@@ -80,7 +80,7 @@ private List<ActivityInviteBean> activityInviteBeanList;
     public View.OnClickListener accept = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            
+
         }
     };
     public View.OnClickListener decline =new View.OnClickListener() {
@@ -88,5 +88,5 @@ private List<ActivityInviteBean> activityInviteBeanList;
         public void onClick(View v) {
 
         }
-    }
+    };
 }
