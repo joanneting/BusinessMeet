@@ -141,6 +141,7 @@ public class FriendInviteService extends Service {
                         FriendInviteService.ACTIVE_NOTIFICATION = null;
                         Intent startActivityIntent = new Intent(context, FriendsIntroductionActivity.class);
                         startActivityIntent.putExtra("friendId", friendBean.getFriendId());
+                        startActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(startActivityIntent);
                     },
                     (status, message) -> FriendInviteService.ACTIVE_NOTIFICATION = null

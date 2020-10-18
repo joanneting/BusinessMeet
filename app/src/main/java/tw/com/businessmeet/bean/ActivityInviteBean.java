@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.Date;
@@ -16,7 +18,9 @@ public class ActivityInviteBean  implements Parcelable {
     private Integer activityInviteNo;
     private String userId;
     private Integer activityNo;
+    @SerializedName("createDateStr")
     private String createDate;
+    @SerializedName("modifyDateStr")
     private String modifyDate;
     private Integer statusCode;
     private String userName;

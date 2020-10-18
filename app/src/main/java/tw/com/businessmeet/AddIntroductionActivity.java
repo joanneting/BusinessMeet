@@ -45,11 +45,11 @@ public class AddIntroductionActivity extends AppCompatActivity {
         mail = findViewById(R.id.add_profile_mail);
         userId.setText("1");
         password.setText("1");
-        userName.setText("1");
-        gender.setText("1");
-        profession.setText("1");
-        tel.setText("1");
-        mail.setText("1");
+        userName.setText("名字");
+        gender.setText("女");
+        profession.setText("職業");
+        tel.setText("電話");
+        mail.setText("信箱");
         avatar = findViewById(R.id.add_photo_button);
         openDB();
 //        //啟動藍芽

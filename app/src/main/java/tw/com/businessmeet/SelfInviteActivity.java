@@ -50,7 +50,7 @@ public class SelfInviteActivity extends AppCompatActivity implements ProfileTime
         activityInviteBean.setUserId(DeviceHelper.getUserId(this));
         activityInviteBean.setStatus(1);
         AsyncTaskHelper.execute(() -> ActivityInviteServiceImpl.search(activityInviteBean), activityInviteBeans -> {
-            for (ActivityInviteBean searchBean : activityInviteBeanList) {
+            for (ActivityInviteBean searchBean : activityInviteBeans) {
                 selfInviteRecyclerViewAdapter.dataInsert(searchBean);
             }
         });

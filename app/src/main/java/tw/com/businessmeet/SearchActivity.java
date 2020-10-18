@@ -23,8 +23,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import tw.com.businessmeet.adapter.MatchedDeviceRecyclerViewAdapter;
 import tw.com.businessmeet.adapter.UnmatchedDeviceRecyclerViewAdapter;
@@ -130,10 +133,30 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
         Log.e("result", String.valueOf(result));
 
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
-        Bitmap myPhoto = avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
+        Bitmap myPhoto = AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
-
-
+        Boolean matched = false;
+        String userId = DeviceHelper.getUserId(this, userInformationDAO);
+        Timer timer = new Timer(true);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                for (UserInformationBean userInformationBean : unmatchedList) {
+                    FriendBean friendBean = new FriendBean();
+                    friendBean.setFriendId(userInformationBean.getUserId());
+                    friendBean.setMatchmakerId(userId);
+                    AsyncTaskHelper.execute(() -> FriendServiceImpl.search(friendBean), friendBeanList -> {
+                        if (friendBeanList.size() == 1 && friendBeanList.get(0).getStatus()!=null ) {
+                            Intent intent = new Intent(SearchActivity.this, FriendsIntroductionActivity.class);
+                            intent.putExtra("friendId", userInformationBean.getUserId());
+                            startActivity(intent);
+                            finish();
+                            timer.cancel();
+                        }
+                    });
+                }
+            }
+        }, 1_000, 1_000);
     }
 
     private void openDB() {
@@ -141,7 +164,6 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
         friendDAO = new FriendDAO(DH);
-
     }
 
     private void createRecyclerViewMatched() {
