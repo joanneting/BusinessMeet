@@ -1,14 +1,5 @@
 package tw.com.businessmeet;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-
-import tw.com.businessmeet.adapter.MatchedDeviceRecyclerViewAdapter;
-import tw.com.businessmeet.adapter.UnmatchedDeviceRecyclerViewAdapter;
-import tw.com.businessmeet.dao.UserInformationDAO;
-import tw.com.businessmeet.helper.BlueToothHelper;
-import tw.com.businessmeet.helper.DBHelper;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -16,10 +7,20 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+
+import tw.com.businessmeet.adapter.MatchedDeviceRecyclerViewAdapter;
+import tw.com.businessmeet.adapter.UnmatchedDeviceRecyclerViewAdapter;
+import tw.com.businessmeet.dao.UserInformationDAO;
+import tw.com.businessmeet.device.DeviceFinder;
+import tw.com.businessmeet.device.actionhandler.supplier.ForegroundActionHandlerSupplier;
+import tw.com.businessmeet.device.bluetooth.finder.ForegroundBluetoothDeviceFinder;
+import tw.com.businessmeet.helper.DBHelper;
+
 public class NotificationActivity extends AppCompatActivity {
 
     //Button btNotification;
-    private BlueToothHelper blueTooth;
     private UserInformationDAO userInformationDAO;
     private MatchedDeviceRecyclerViewAdapter matchedRecyclerViewAdapter;
     private UnmatchedDeviceRecyclerViewAdapter unmatchedRecyclerViewAdapter;
@@ -30,21 +31,22 @@ public class NotificationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notification);
         //search bluetooth
-        blueTooth = new BlueToothHelper(this);
-        blueTooth.searchBlueTooth(userInformationDAO,matchedRecyclerViewAdapter,unmatchedRecyclerViewAdapter);
+        DeviceFinder deviceFinder = new ForegroundBluetoothDeviceFinder(this);
+        deviceFinder.find(new ForegroundActionHandlerSupplier(this));
         sendMessage();
         openDB();
         //setting channel
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel =
-                    new NotificationChannel("MyNotifications","MyNotifications",NotificationManager.IMPORTANCE_DEFAULT);
+                    new NotificationChannel("MyNotifications", "MyNotifications", NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(channel);
 
         }
     }
-    private void openDB(){
-        Log.d("add","openDB");
+
+    private void openDB() {
+        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
     }
@@ -53,7 +55,7 @@ public class NotificationActivity extends AppCompatActivity {
 
         String message = "This is a notific.";
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                NotificationActivity.this,"MyNotifications"
+                NotificationActivity.this, "MyNotifications"
         )
                 .setSmallIcon(R.drawable.ic_insert_comment_black_24dp)
                 .setContentText("New Notification")
@@ -73,12 +75,12 @@ public class NotificationActivity extends AppCompatActivity {
         builder.setContentIntent(pendingIntent);*/
 
         //定義一個訊息管理者 和系統要 取得訊息管理者的物件
-        NotificationManager notificationManager = (NotificationManager)getSystemService(
+        NotificationManager notificationManager = (NotificationManager) getSystemService(
                 Context.NOTIFICATION_SERVICE
         );
 
         //要求傳送一個訊息
-        notificationManager.notify(0,builder.build());
+        notificationManager.notify(0, builder.build());
     }
 }
 

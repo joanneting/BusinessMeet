@@ -15,11 +15,8 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 
-import retrofit2.Call;
 import tw.com.businessmeet.R;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
-import tw.com.businessmeet.bean.ResponseBody;
-import tw.com.businessmeet.helper.AsyncTasKHelper;
 import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
 
 public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter<FriendMemoAddColumnRecyclerViewAdapter.ViewHolder> {
@@ -71,27 +68,6 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
     public int getItemCount() {
         return friendCustomizationBeanList.size();
     }
-
-    private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>> searchResponseListener = new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>>() {
-
-        @Override
-        public Call<ResponseBody<List<FriendCustomizationBean>>> request(FriendCustomizationBean... friendCustomizationBeans) {
-            return friendCustomizationServiceImpl.search(friendCustomizationBeans[0]);
-        }
-
-        @Override
-        public void onSuccess(List<FriendCustomizationBean> friendCustomizationBeans) {
-            if (friendCustomizationBeans.size() > 1 || (friendCustomizationBeans.size() == 1 && (friendCustomizationBeans.get(0).getCreateDate() != null && !friendCustomizationBeans.get(0).equals("")))) {
-                for (int i = 0; i < friendCustomizationBeans.size(); i++) {
-                    friendCustomizationBeanList.add(friendCustomizationBeans.get(i));
-                }
-            }
-        }
-
-        @Override
-        public void onFail(int status, String message) {
-        }
-    };
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView memoTitle;

@@ -17,7 +17,7 @@
         android:orientation="vertical"
         android:layout_weight="1">
         <TextView
-            android:id="@+id/invite_month"
+            android:id="@+id/invite_year"
             android:text="2月"
             android:gravity="center_vertical|center|bottom"
             android:layout_width="50dp"
@@ -92,6 +92,7 @@
                 android:orientation="horizontal">
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/self_invite_accept"
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="12dp"
