@@ -36,7 +36,7 @@ public class FriendInviteService extends Service {
 
     private static Notification ACTIVE_NOTIFICATION;
 
-    private final LinkedList<FriendBean> inviteRequestList = new LinkedList<>();
+    private static final LinkedList<FriendBean> inviteRequestList = new LinkedList<>();
     private final Timer timer = new Timer(true);
     private int notificationId = 0;
     private NotificationManagerCompat notificationManager;
@@ -77,7 +77,7 @@ public class FriendInviteService extends Service {
                 }
                 if (isLogin) {
                     if (ACTIVE_NOTIFICATION == null && !inviteRequestList.isEmpty()) {
-                        createNotification(inviteRequestList.removeFirst());
+                        createNotification(inviteRequestList.getFirst());
                     }
                     AsyncTaskHelper.execute(FriendServiceImpl::searchInviteNotification, friendBeans -> {
                         for (FriendBean friendBean : friendBeans) {
@@ -138,13 +138,17 @@ public class FriendInviteService extends Service {
             AsyncTaskHelper.execute(
                     () -> FriendServiceImpl.createInviteNotification(friendBean),
                     newFriendBean -> {
+                        inviteRequestList.removeFirst();
                         FriendInviteService.ACTIVE_NOTIFICATION = null;
                         Intent startActivityIntent = new Intent(context, FriendsIntroductionActivity.class);
                         startActivityIntent.putExtra("friendId", friendBean.getFriendId());
                         startActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(startActivityIntent);
                     },
-                    (status, message) -> FriendInviteService.ACTIVE_NOTIFICATION = null
+                    (status, message) -> {
+                        inviteRequestList.removeFirst();
+                        FriendInviteService.ACTIVE_NOTIFICATION = null;
+                    }
             );
         }
     }

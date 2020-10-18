@@ -1,8 +1,13 @@
 package tw.com.businessmeet.bean;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.Date;
 
 public class FriendBean {
+
+
     private static String[] column = new String[]{"friend_no","matchmaker_id","friend_id","remark","status","create_date","modify_date"};
     private Integer friendNo;
     private String matchmakerId;
@@ -98,5 +103,42 @@ public class FriendBean {
 
     public void setStatusCode(Integer statusCode) {
         this.statusCode = statusCode;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FriendBean that = (FriendBean) o;
+
+        return new EqualsBuilder()
+                .append(friendNo, that.friendNo)
+                .append(matchmakerId, that.matchmakerId)
+                .append(friendId, that.friendId)
+                .append(friendName, that.friendName)
+                .append(friendAvatar, that.friendAvatar)
+                .append(remark, that.remark)
+                .append(status, that.status)
+                .append(createDate, that.createDate)
+                .append(modifyDate, that.modifyDate)
+                .append(statusCode, that.statusCode)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(friendNo)
+                .append(matchmakerId)
+                .append(friendId)
+                .append(friendName)
+                .append(friendAvatar)
+                .append(remark)
+                .append(status)
+                .append(createDate)
+                .append(modifyDate)
+                .append(statusCode)
+                .toHashCode();
     }
 }
