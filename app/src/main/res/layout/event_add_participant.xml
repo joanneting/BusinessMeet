@@ -14,6 +14,7 @@
         android:theme="@style/AppTheme.ToolBarStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:contentInsetStartWithNavigation="0dp"
         app:popupTheme="@style/AppTheme.PopupOverlay">
 
         <LinearLayout
@@ -23,11 +24,7 @@
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/participantSearch_toolbar_backIcon"
-                style="@style/search_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="wrap_content"

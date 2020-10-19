@@ -1,19 +1,5 @@
 package tw.com.businessmeet;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import retrofit2.Call;
-import tw.com.businessmeet.adapter.EventAddParticipantRecyclerViewAdapter;
-import tw.com.businessmeet.bean.ActivityInviteBean;
-import tw.com.businessmeet.bean.FriendBean;
-import tw.com.businessmeet.bean.ResponseBody;
-import tw.com.businessmeet.helper.AsyncTasKHelper;
-import tw.com.businessmeet.helper.BlueToothHelper;
-import tw.com.businessmeet.service.Impl.FriendServiceImpl;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,10 +12,25 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import tw.com.businessmeet.adapter.EventAddParticipantRecyclerViewAdapter;
+import tw.com.businessmeet.bean.ActivityInviteBean;
+import tw.com.businessmeet.bean.FriendBean;
+import tw.com.businessmeet.bean.ResponseBody;
+import tw.com.businessmeet.helper.AsyncTasKHelper;
+import tw.com.businessmeet.helper.BlueToothHelper;
+import tw.com.businessmeet.service.Impl.FriendServiceImpl;
+
 public class EventAddParticipantActivity extends AppCompatActivity implements EventAddParticipantRecyclerViewAdapter.ClickListener  {
 
     private RecyclerView recyclerViewEventAddParticipant;
     private Activity activity = this;
+    private Toolbar toolbar;
     private EventAddParticipantRecyclerViewAdapter eventAddParticipantRecyclerViewAdapter;
     private List<ActivityInviteBean> activityInviteBeanList  = new ArrayList<>();
     List<ActivityInviteBean> inviteList = new ArrayList<>();
@@ -91,6 +92,21 @@ public class EventAddParticipantActivity extends AppCompatActivity implements Ev
         confirmButton = (Button) findViewById(R.id.confirm_button);
         confirmButton.setOnClickListener(addParticipant);
         inviteList= ActivityInviteBean.inviteBean ;
+
+        //toolbar
+        toolbar = (Toolbar) findViewById(R.id.participantSearch_toolbar);
+        toolbar.inflateMenu(R.menu.event_create_toolbarmenu);
+        setSupportActionBar(toolbar); getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_back_16dp));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //What to do on back clicked
+                onBackPressed();
+            }
+        });
     }
     private void eventAddParticipantRecyclerViewAdapter() {
         recyclerViewEventAddParticipant.setLayoutManager(new LinearLayoutManager(this));
