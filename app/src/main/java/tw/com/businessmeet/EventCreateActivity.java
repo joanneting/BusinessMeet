@@ -1,8 +1,5 @@
 package tw.com.businessmeet;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,7 +7,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.KeyEvent;
@@ -30,13 +26,13 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import retrofit2.Call;
 import tw.com.businessmeet.bean.ActivityInviteBean;
 import tw.com.businessmeet.bean.ActivityLabelBean;
@@ -281,6 +277,8 @@ public class EventCreateActivity extends AppCompatActivity {
                 timePickerDialog.updateTime(timerHour,timerMinute);
                 //Show dialog
                 timePickerDialog.show();
+                timePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setTextColor(R.style.AppTheme);
+                timePickerDialog.getButton(TimePickerDialog.BUTTON_NEGATIVE).setTextColor(R.style.AppTheme);
 
             }
         });
@@ -308,7 +306,8 @@ public class EventCreateActivity extends AppCompatActivity {
                 timePickerDialog.updateTime(timerHour,timerMinute);
                 //Show dialog
                 timePickerDialog.show();
-
+                timePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setTextColor(R.style.AppTheme);
+                timePickerDialog.getButton(TimePickerDialog.BUTTON_NEGATIVE).setTextColor(R.style.AppTheme);
             }
         });
 
