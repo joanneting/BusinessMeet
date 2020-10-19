@@ -48,7 +48,7 @@ public class PermissionHelper {
             String userId = DeviceHelper.getUserId(activity, userInformationDAO);
             Intent intent = new Intent();
             if (userId == "" || userId == null) {
-                intent.setClass(activity, AddIntroductionActivity.class);
+                intent.setClass(activity, LoginActivity.class);
                 activity.startActivity(intent);
             } else {
                 AsyncTaskHelper.execute(

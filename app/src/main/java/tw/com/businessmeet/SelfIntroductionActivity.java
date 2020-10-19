@@ -197,7 +197,7 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
                         case R.id.menu_friends:
                             //menuItem.setIcon(R.drawable.ic_people_blue_24dp);
                             startActivity(new Intent(getApplicationContext()
-                                    , FriendsActivity.class));
+                                    , FriendSearchActivity.class));
                             overridePendingTransition(0, 0);
                             return true;
                     }

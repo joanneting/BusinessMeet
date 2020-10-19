@@ -22,7 +22,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.DBHelper;
 
-public class FriendsSearchActivity extends AppCompatActivity {
+public class OpenActivityFriendsSearchActivity extends AppCompatActivity {
     private TextView searchbar;
     private ImageButton back;
     private ImageButton filter;
@@ -31,7 +31,7 @@ public class FriendsSearchActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.friends_search);
+        setContentView(R.layout.open_activity_friends_search);
         openDB();
         back = (ImageButton) findViewById(R.id.friendsSearch_toolbar_backIcon);
         back.setOnClickListener(backFriendsClick);
@@ -67,7 +67,7 @@ public class FriendsSearchActivity extends AppCompatActivity {
 
     public void changeToFriendsActivityPage() {
         Intent intent = new Intent();
-        intent.setClass(FriendsSearchActivity.this, FriendsActivity.class);
+        intent.setClass(OpenActivityFriendsSearchActivity.this, FriendsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("blueToothAddress", getIntent().getStringExtra("blueToothAddress"));
         intent.putExtras(bundle);
@@ -83,7 +83,7 @@ public class FriendsSearchActivity extends AppCompatActivity {
 
     public void changeToFriendsFilterActivityPage() {
         Intent intent = new Intent();
-        intent.setClass(FriendsSearchActivity.this, FriendsFilterActivity.class);
+        intent.setClass(OpenActivityFriendsSearchActivity.this, FriendsFilterActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("blueToothAddress", getIntent().getStringExtra("blueToothAddress"));
         intent.putExtras(bundle);
