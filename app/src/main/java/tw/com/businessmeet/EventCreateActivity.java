@@ -217,10 +217,13 @@ public class EventCreateActivity extends AppCompatActivity {
                         calendar.set(year,month,day);
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         dateEnd.setText(simpleDateFormat.format(calendar.getTime()));
+
                     }
                 },year,month,day);
                 datePickerDialog.updateDate(year,month,day);
                 datePickerDialog.show();
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(R.style.AppTheme);
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(R.style.AppTheme);
             }
         });
 
