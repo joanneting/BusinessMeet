@@ -32,4 +32,9 @@ public class FriendGroupServiceImpl implements FriendGroupService{
     public Call<ResponseBody<Empty>> delete(Integer friendGroupNo) {
         return FriendGroupApi.delete(friendGroupNo);
     }
+
+    @Override
+    public Call<ResponseBody<List<FriendGroupBean>>> searchCount() {
+        return FriendGroupApi.searchCount();
+    }
 }
