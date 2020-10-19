@@ -39,7 +39,9 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+
+            >
 
             <EditText
                 android:id="@+id/add_event"
@@ -208,7 +210,6 @@
                 tools:ignore="MissingConstraints" />
 
 
-
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/event_label"
                 android:layout_width="wrap_content"
@@ -230,6 +231,7 @@
                 android:paddingRight="10dp"
                 android:paddingBottom="3dp"
                 android:text="更多標籤"
+                android:textColor="@color/grey_60"
                 android:textSize="14dp"
                 app:layout_constraintStart_toStartOf="@+id/date_end"
                 app:layout_constraintTop_toBottomOf="@+id/event_label"
