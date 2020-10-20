@@ -13,6 +13,7 @@ public class FriendGroupBean {
     private String createDate;
     private String modifyDate;
     private Integer statusCode;
+    private FriendBean friendBean;
 
     public static String[] getColumn() {
         return column;
@@ -80,5 +81,13 @@ public class FriendGroupBean {
 
     public void setStatusCode(Integer statusCode) {
         this.statusCode = statusCode;
+    }
+
+    public FriendBean getFriendBean() {
+        return friendBean;
+    }
+
+    public void setFriendBean(FriendBean friendBean) {
+        this.friendBean = friendBean;
     }
 }

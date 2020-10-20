@@ -24,12 +24,14 @@ import java.util.List;
 
 import tw.com.businessmeet.adapter.FriendsRecyclerViewAdapter;
 import tw.com.businessmeet.bean.FriendBean;
+import tw.com.businessmeet.bean.FriendGroupBean;
 import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.helper.DeviceHelper;
+import tw.com.businessmeet.service.Impl.FriendGroupServiceImpl;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 
@@ -40,7 +42,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
     private RecyclerView recyclerViewFriends;
     private FriendsRecyclerViewAdapter friendsRecyclerViewAdapter;
     private List<UserInformationBean> userInformationBeanList = new ArrayList<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +52,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
         //bottomNavigationView
         //Initialize And Assign Variable
         openDB();
+        Integer groupNo = Integer.parseInt(getIntent().getStringExtra("groupNo"));
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         //Set Home
         bottomNavigationView.setSelectedItemId(R.id.menu_friends);
@@ -66,17 +68,16 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
         Bitmap myPhoto = avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
         createRecyclerViewFriends();
-        FriendBean friendBean = new FriendBean();
-        friendBean.setMatchmakerId(DeviceHelper.getUserId(this, userInformationDAO));
-        AsyncTaskHelper.execute(() -> FriendServiceImpl.search(friendBean), friendBeanList -> {
+        AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.searchFriendByGroup(groupNo), friendGroupBeanList -> {
             Log.e("FriendBean", "success");
-            if (friendBeanList.size() > 1 || (friendBeanList.size() == 1 && (friendBeanList.get(0).getCreateDate() != null && !friendBeanList.get(0).equals("")))) {
-                for (FriendBean searchBean : friendBeanList) {
-                    AsyncTaskHelper.execute(
-                            () -> UserInformationServiceImpl.getById(searchBean.getFriendId()),
-                            friendsRecyclerViewAdapter::dataInsert
-                    );
-                    Log.e("FriendBean", String.valueOf(searchBean));
+            if(friendGroupBeanList.size()>0){
+                for (FriendGroupBean friendGroupBean : friendGroupBeanList) {
+                    UserInformationBean userInformationBean = new UserInformationBean();
+                    FriendBean friendBean = friendGroupBean.getFriendBean();
+                    userInformationBean.setAvatar(friendBean.getFriendAvatar());
+                    userInformationBean.setProfession(friendBean.getFriendProfession());
+                    userInformationBean.setName(friendBean.getFriendName());
+                    friendsRecyclerViewAdapter.dataInsert(userInformationBean);
                 }
             }
         });

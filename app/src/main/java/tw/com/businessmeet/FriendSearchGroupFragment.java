@@ -1,5 +1,6 @@
 package tw.com.businessmeet;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,6 +55,12 @@ public class FriendSearchGroupFragment extends Fragment implements FriendGroupRe
 
     @Override
     public void onClick(View view, int position) {
+        Intent intent = new Intent();
+        intent.setClass(getActivity(),FriendsActivity.class);
+        Bundle bundle = new Bundle();
 
+        bundle.putString("groupNo",friendGroupRecyclerViewAdapter.getFriendGroupBean(position).getGroupNo().toString());
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

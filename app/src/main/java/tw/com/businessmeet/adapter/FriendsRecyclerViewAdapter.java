@@ -85,7 +85,6 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
         this.clickLinster = clickLinster;
     }
     public void dataInsert(UserInformationBean userInformationBean){
-        Log.d("resultDataInsert",userInformationBean.getIdentifier());
         userInformationBeanList.add(userInformationBean);
         notifyItemInserted(getItemCount());
     }

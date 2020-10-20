@@ -34,7 +34,7 @@ public class FriendGroupRecyclerViewAdapter extends RecyclerView.Adapter<FriendG
     @NonNull
     @Override
     public FriendGroupRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.recycler_view_row_friend, parent, false);
+        View view = layoutInflater.inflate(R.layout.recycler_view_row_friend_group, parent, false);
         return new ViewHolder(view);
     }
 
