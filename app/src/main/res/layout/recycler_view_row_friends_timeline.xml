@@ -45,9 +45,8 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/friends_place"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:id="@+id/profile_event_place"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="6dp"
@@ -57,7 +56,11 @@
             android:padding="8dp"
             android:text="八大電視台"
             android:textColor="@color/colorAlmostBlack"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+            android:maxEms="15"
+            android:singleLine="true"
+            android:ellipsize="end"
+            />
 
     </LinearLayout>
 
