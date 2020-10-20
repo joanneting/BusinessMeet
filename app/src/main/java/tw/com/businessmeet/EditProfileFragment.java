@@ -1,33 +1,31 @@
 package tw.com.businessmeet;
 
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-import java.util.List;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
+import com.google.android.material.chip.ChipGroup;
+
 
 import retrofit2.Call;
 import tw.com.businessmeet.bean.FriendBean;
-import tw.com.businessmeet.bean.FriendCustomizationBean;
+import tw.com.businessmeet.bean.GroupsBean;
 import tw.com.businessmeet.bean.ResponseBody;
-import tw.com.businessmeet.bean.UserInformationBean;
-import tw.com.businessmeet.dao.FriendDAO;
 import tw.com.businessmeet.helper.AsyncTasKHelper;
-import tw.com.businessmeet.helper.BlueToothHelper;
-import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
-
+import tw.com.businessmeet.service.Impl.GroupsServiceImpl;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,13 +43,30 @@ public class EditProfileFragment extends Fragment {
     private String mParam2;
 
     private View view;
-    private EditText addProfileContent;
+    private EditText addProfileContent, editGroupDialogInput;
     private String friendNo, remark, matchMakerId, friendId;
-    private Button confirmButton;
+    private Button confirmButton, confirmDialogButton, cancelDialogButton;
+    private Chip addGroupButton;
+    private ChipGroup chipGroup;
     private FriendBean fb = new FriendBean();
-    private FriendDAO friendDAO;
-    private DBHelper dbHelper;
+    private GroupsBean gb = new GroupsBean();
     private FriendServiceImpl friendServiceImpl = new FriendServiceImpl();
+    private GroupsServiceImpl groupsServiceImpl = new GroupsServiceImpl();
+
+    private AsyncTasKHelper.OnResponseListener<GroupsBean, GroupsBean> addResponseListener = new AsyncTasKHelper.OnResponseListener<GroupsBean, GroupsBean>() {
+        @Override
+        public Call<ResponseBody<GroupsBean>> request(GroupsBean... groupsBeans) {
+            return groupsServiceImpl.add(groupsBeans[0]);
+        }
+
+        @Override
+        public void onSuccess(GroupsBean groupsBean) {
+        }
+
+        @Override
+        public void onFail(int status, String message) {
+        }
+    };
 
     private AsyncTasKHelper.OnResponseListener<FriendBean, FriendBean> addRemarkResponseListener = new AsyncTasKHelper.OnResponseListener<FriendBean, FriendBean>() {
 
@@ -62,6 +77,7 @@ public class EditProfileFragment extends Fragment {
 
         @Override
         public void onSuccess(FriendBean friendBean) {
+
             changeToSelfIntroductionPage();
         }
 
@@ -104,6 +120,55 @@ public class EditProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+        chipGroup = (ChipGroup) view.findViewById(R.id.chooseGroup_chipGroup);
+        addGroupButton = (Chip) view.findViewById(R.id.addGroupButton);
+        addGroupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View view = inflater.inflate(R.layout.friend_edit_group, null);
+                builder.setView(view);
+                builder.create();
+                AlertDialog alertDialog = builder.show();
+
+                editGroupDialogInput = (EditText) view.findViewById(R.id.editGroup_dialog_Input);
+                confirmDialogButton = (Button) view.findViewById(R.id.editGroup_dialog_confirmButton);
+                confirmDialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (editGroupDialogInput.getText().toString() != null || !editGroupDialogInput.getText().toString().equals("")) {
+                            gb.setName(editGroupDialogInput.getText().toString());
+                            gb.setUserId(getActivity().getIntent().getStringExtra("userId"));
+                            System.out.println("gb.getName() = " + gb.getName());
+                            System.out.println("gb.getUserId() = " + gb.getUserId());
+                            AsyncTasKHelper.execute(addResponseListener, gb);
+                            if (alertDialog.isShowing()) {
+                                alertDialog.dismiss();
+                            }
+                            LayoutInflater chipInflater = LayoutInflater.from(getActivity());
+                            Chip chip = new Chip(getActivity());
+                            ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(getActivity(), null, 0, R.style.Widget_MaterialComponents_Chip_Action);
+                            chip.setChipDrawable(chipDrawable);
+                            chip.setText(gb.getName());
+                            chipGroup.addView(chip);
+                        } else {
+                            Toast.makeText(getContext(), "未輸入群組名稱", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                cancelDialogButton = (Button) view.findViewById(R.id.editGroup_dialog_cancelButton);
+                cancelDialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (alertDialog.isShowing()) {
+                            alertDialog.dismiss();
+                        }
+                    }
+                });
+
+            }
+        });
         addProfileContent = (EditText) view.findViewById(R.id.addProfileContent_input);
         remark = getActivity().getIntent().getStringExtra("remark");
         if (remark != null && remark != "") {
@@ -113,8 +178,6 @@ public class EditProfileFragment extends Fragment {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                openDB();
-//                friendDAO.update(fb);
                 fb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
                 fb.setMatchmakerId(getActivity().getIntent().getStringExtra("matchmakerId"));
                 fb.setFriendId(getActivity().getIntent().getStringExtra("friendId"));
@@ -124,51 +187,6 @@ public class EditProfileFragment extends Fragment {
         });
         return view;
     }
-
-//    private void openDB() {
-//        dbHelper = new DBHelper(getContext());
-//        friendDAO = new FriendDAO(dbHelper);
-//        SQLiteDatabase db = dbHelper.getWritableDatabase();
-//        fb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
-//        System.out.println("fb.getFriendNo() = " + fb.getFriendNo());
-//        fb.setMatchmakerId(getActivity().getIntent().getStringExtra("matchmakerId"));
-//        System.out.println("fb.getMatchmakerId() = " + fb.getMatchmakerId());
-//        fb.setFriendId(getActivity().getIntent().getStringExtra("friendId"));
-//        System.out.println("fb.getFriendId() = " + fb.getFriendId());
-//        fb.setRemark(addProfileContent.getText().toString());
-//        System.out.println("fb.getRemark() = " + fb.getRemark());
-//        Cursor cursor = friendDAO.search(fb);
-//        if (cursor.moveToFirst()) {
-//            do {
-//                friendNo = cursor.getString(cursor.getColumnIndex("friend_no"));
-//                matchMakerId = cursor.getString(cursor.getColumnIndex("matchmaker_id"));
-//                friendId = cursor.getString(cursor.getColumnIndex("friend_id"));
-//                remark = cursor.getString(cursor.getColumnIndex("remark"));
-//            } while (cursor.moveToNext());
-//        }
-//    }
-
-//    public void searchUserInformation() {
-//        SQLiteDatabase db = DH.getWritableDatabase();
-//        UserInformationBean ufb = new UserInformationBean();
-//        blueToothHelper = new BlueToothHelper(this);
-//        blueToothHelper.startBuleTooth();
-//        ufb.setUserId(blueToothHelper.getUserId());
-//        Cursor cursor = userInformationDAO.searchAll(ufb);
-//
-//        if (cursor.moveToFirst()) {
-//            do {
-//                name = cursor.getString(cursor.getColumnIndex("name"));
-//                Log.d("edit", name);
-//                pro = cursor.getString(cursor.getColumnIndex("profession"));
-//                gen = cursor.getString(cursor.getColumnIndex("gender"));
-//                mail = cursor.getString(cursor.getColumnIndex("mail"));
-//                phone = cursor.getString(cursor.getColumnIndex("tel"));
-//                avatar.setImageBitmap(avatarHelper.getImageResource(cursor.getString(cursor.getColumnIndex("avatar"))));
-//            } while (cursor.moveToNext());
-//        }
-//        cursor.close();
-//    }
 
     private void changeToSelfIntroductionPage() {
         Intent intent = new Intent();

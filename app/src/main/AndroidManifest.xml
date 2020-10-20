@@ -39,6 +39,7 @@
         <activity android:name=".SelfIntroductionActivity" />
         <activity android:name=".AddIntroductionActivity" />
         <activity android:name=".SearchActivity" />
+        <activity android:name=".EditFriendMemoActivity" />
         <activity android:name=".EditFriendsProfileActivity" />
         <activity android:name=".SelfInformationActivity" />
         <activity android:name=".MainActivity">

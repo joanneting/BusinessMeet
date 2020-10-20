@@ -9,11 +9,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.Spanned;
-import android.text.TextWatcher;
-import android.text.style.ImageSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +16,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +41,7 @@ import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
  * Use the {@link EditMemoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EditMemoFragment extends Fragment {
+public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRecyclerViewAdapter.ClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -63,7 +58,8 @@ public class EditMemoFragment extends Fragment {
 
     //chip
     private ChipGroup chipGroup;
-    private String chipContent;
+    private String originalChipContent, updateChipContent, deleteChipContent;
+    private String[] originalChipConetentSplit, updateChipContentSplit, deleteChipContentSplit;
 
     //edit
     private ImageButton editButton;
@@ -76,11 +72,11 @@ public class EditMemoFragment extends Fragment {
 
     // dialog
     private Button confirm, cancel;
-    private EditText addColumnMemo;
-    private EditText addChipMemo;
+    private EditText addColumnMemo, addChipMemo;
     private FriendCustomizationDAO friendCustomizationDAO;
     private DBHelper dh = null;
     private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
+
     private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean> addResponseListener =
             new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean>() {
                 @Override
@@ -90,13 +86,20 @@ public class EditMemoFragment extends Fragment {
 
                 @Override
                 public void onSuccess(FriendCustomizationBean friendCustomizationBean) {
-                    AsyncTasKHelper.execute(searchResponseListener, fcb);
+//                    openDB();
+//                    friendCustomizationDAO.add(friendCustomizationBean);
+                    AsyncTasKHelper.execute(searchResponseListener, friendCustomizationBean);
                 }
 
                 @Override
                 public void onFail(int status, String message) {
                 }
             };
+
+    private void openDB() {
+        dh = new DBHelper(getContext());
+        friendCustomizationDAO = new FriendCustomizationDAO(dh);
+    }
 
     private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>> searchResponseListener = new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>>() {
 
@@ -159,6 +162,7 @@ public class EditMemoFragment extends Fragment {
 
         // recyclerView
         recyclerViewMemo = (RecyclerView) view.findViewById(R.id.friends_edit_profile_memo_recycleView);
+
         initMemoRecyclerView();
 
         // floating button
@@ -168,23 +172,18 @@ public class EditMemoFragment extends Fragment {
         return view;
     }
 
-    private void openDB() {
-        dh = new DBHelper(getContext());
-        friendCustomizationDAO = new FriendCustomizationDAO(dh);
-    }
-
     private void initMemoRecyclerView() {
         // 創建adapter
-        friendMemoAddColumnRecyclerViewAdapter = new FriendMemoAddColumnRecyclerViewAdapter(getContext(), friendCustomizationBeanList);
+        friendMemoAddColumnRecyclerViewAdapter = new FriendMemoAddColumnRecyclerViewAdapter(getContext(), friendCustomizationBeanList, this);
         // recycleView設置adapter
         recyclerViewMemo.setAdapter(friendMemoAddColumnRecyclerViewAdapter);
+        // 點擊後編輯
+        friendMemoAddColumnRecyclerViewAdapter.setClickListener(this::onClick);
         // 設置layoutManager，可以設置顯示效果(線性布局、grid布局、瀑布流布局)
         // 參數:上下文、列表方向(垂直Vertical/水平Horizontal)、是否倒敘
         recyclerViewMemo.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         // 設置item的分割線
         recyclerViewMemo.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-        //點擊進入編輯
-        recyclerViewMemo.setOnClickListener(dialogClick);
     }
 
     public View.OnClickListener dialogClick = new View.OnClickListener() {
@@ -203,7 +202,7 @@ public class EditMemoFragment extends Fragment {
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
-                        chipContent = chipContent + "," + addChipMemo.getText().toString();
+                        originalChipContent = originalChipContent + "," + addChipMemo.getText().toString();
                         LayoutInflater chipInflater = LayoutInflater.from(getContext());
                         Chip chip = new Chip(getContext());
                         ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(getContext(), null, 0, R.style.Widget_MaterialComponents_Chip_Action);
@@ -213,6 +212,7 @@ public class EditMemoFragment extends Fragment {
                         chip.setOnCloseIconClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                System.out.println("chip.getText() = " + chip.getText());
                                 chipGroup.removeView(chip);
                             }
                         });
@@ -230,18 +230,19 @@ public class EditMemoFragment extends Fragment {
             confirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    fcb.setName(addColumnMemo.getText().toString());
                     fcb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
-                    fcb.setContent(chipContent);
-                    chipContent = "";
-                    openDB();
-                    friendCustomizationDAO.add(fcb);
-                    AsyncTasKHelper.execute(addResponseListener, fcb);
-                    if (alertDialog.isShowing()) {
-                        alertDialog.dismiss();
+                    fcb.setName(addColumnMemo.getText().toString());
+                    fcb.setContent(originalChipContent);
+                    if (checkData(fcb)) {
+                        AsyncTasKHelper.execute(addResponseListener, fcb);
+                        if (alertDialog.isShowing()) {
+                            alertDialog.dismiss();
+                        }
                     }
+
                 }
             });
+
             cancel = (Button) view.findViewById(R.id.addColumn_dialog_cancelButton);
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -251,6 +252,36 @@ public class EditMemoFragment extends Fragment {
                     }
                 }
             });
+
+
         }
     };
+
+    private boolean checkData(FriendCustomizationBean friendCustomizationBean) {
+        if (fcb.getName() == null || fcb.getName().equals("")) { //輸入欄位名稱不可為空
+            Toast.makeText(getContext(), "未輸入欄位名稱", Toast.LENGTH_LONG).show();
+        } else if ((fcb.getContent() == null || fcb.getContent().equals("")) && (addChipMemo == null || addChipMemo.getText().toString().equals(""))) { //輸入備註和chip皆不可為空
+            Toast.makeText(getContext(), "未輸入備註", Toast.LENGTH_LONG).show();
+        } else if (addChipMemo.getText().toString().length() >= 1) {
+            Toast.makeText(getContext(), "備註輸入完請按Enter確認變成標籤後，才能夠新增備註", Toast.LENGTH_LONG).show();
+        } else if (addChipMemo.getText().toString().equals("")) {
+            return true;
+        } else {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        Intent intent = new Intent(getActivity(), EditFriendMemoActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("friendCustomizationNo", friendMemoAddColumnRecyclerViewAdapter.getFriendMemo(position).getFriendCustomizationNo());
+        bundle.putInt("friendNo", friendMemoAddColumnRecyclerViewAdapter.getFriendMemo(position).getFriendNo());
+        bundle.putString("friendId", getActivity().getIntent().getStringExtra("friendId"));
+        bundle.putString("name", friendMemoAddColumnRecyclerViewAdapter.getFriendMemo(position).getName());
+        bundle.putString("content", friendMemoAddColumnRecyclerViewAdapter.getFriendMemo(position).getContent());
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
 }
