@@ -60,6 +60,7 @@ public class FriendSearchGroupFragment extends Fragment implements FriendGroupRe
         Bundle bundle = new Bundle();
 
         bundle.putString("groupNo",friendGroupRecyclerViewAdapter.getFriendGroupBean(position).getGroupNo().toString());
+        bundle.putString("groupName",friendGroupRecyclerViewAdapter.getFriendGroupBean(position).getGroupName());
         intent.putExtras(bundle);
         startActivity(intent);
     }

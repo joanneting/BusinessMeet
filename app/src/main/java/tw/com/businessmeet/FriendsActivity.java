@@ -38,7 +38,7 @@ import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 public class FriendsActivity extends AppCompatActivity implements FriendsRecyclerViewAdapter.ClickListener {
     private UserInformationDAO userInformationDAO;
     private DBHelper DH = null;
-    private TextView searchbar;
+    private TextView searchbar,friendsToolbarTitle;
     private RecyclerView recyclerViewFriends;
     private FriendsRecyclerViewAdapter friendsRecyclerViewAdapter;
     private List<UserInformationBean> userInformationBeanList = new ArrayList<>();
@@ -49,10 +49,14 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
         recyclerViewFriends = findViewById(R.id.friendsView);
         searchbar = findViewById(R.id.event_searchbar);
         searchbar.setOnClickListener(searchbarClick);
+        friendsToolbarTitle = findViewById(R.id.friends_toolbar_title);
+
         //bottomNavigationView
         //Initialize And Assign Variable
         openDB();
         Integer groupNo = Integer.parseInt(getIntent().getStringExtra("groupNo"));
+        String groupName = getIntent().getStringExtra("groupName");
+        friendsToolbarTitle.setText(groupName);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         //Set Home
         bottomNavigationView.setSelectedItemId(R.id.menu_friends);
@@ -77,6 +81,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
                     userInformationBean.setAvatar(friendBean.getFriendAvatar());
                     userInformationBean.setProfession(friendBean.getFriendProfession());
                     userInformationBean.setName(friendBean.getFriendName());
+                    userInformationBean.setUserId(friendBean.getFriendId());
                     friendsRecyclerViewAdapter.dataInsert(userInformationBean);
                 }
             }
