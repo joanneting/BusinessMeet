@@ -6,12 +6,15 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,7 +42,7 @@ import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 public class FriendSearchAllFragment extends Fragment implements FriendsRecyclerViewAdapter.ClickListener {
     private UserInformationDAO userInformationDAO;
     private DBHelper DH = null;
-    private TextView searchbar;
+    private EditText searchbar;
     private RecyclerView recyclerViewFriends;
     private FriendsRecyclerViewAdapter friendsRecyclerViewAdapter;
     private List<UserInformationBean> userInformationBeanList = new ArrayList<>();
@@ -49,7 +52,8 @@ public class FriendSearchAllFragment extends Fragment implements FriendsRecycler
         View view = inflater.inflate(R.layout.fragment_friend_search_all, container, false);
 
         recyclerViewFriends = view.findViewById(R.id.friends_edit_profile_memo_recycleView);
-        searchbar = view.findViewById(R.id.event_searchbar);
+        searchbar = view.findViewById(R.id.friendsSearch_searchbar);
+        searchbar.addTextChangedListener(textWatcher);
         //bottomNavigationView
         //Initialize And Assign Variable
         openDB();
@@ -116,7 +120,22 @@ public class FriendSearchAllFragment extends Fragment implements FriendsRecycler
     }
 
 
+    public TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            friendsRecyclerViewAdapter.getFilter().filter(s);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 
 
 

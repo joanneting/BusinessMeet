@@ -2,6 +2,8 @@ package tw.com.businessmeet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,7 @@ public class FriendSearchGroupFragment extends Fragment implements FriendGroupRe
         View view = inflater.inflate(R.layout.fragment_friend_search_group, container, false);
         recyclerViewFriendsGroup = view.findViewById(R.id.friends_group_recycleView);
         searchbar = view.findViewById(R.id.friendsSearch_searchbar);
+        searchbar.addTextChangedListener(textWatcher);
         createRecyclerViewFriendsGroup();
         AsyncTaskHelper.execute(()-> friendGroupService.searchCount(),friendGroupBeans -> {
             for (FriendGroupBean friendGroupBean : friendGroupBeans) {
@@ -64,4 +67,20 @@ public class FriendSearchGroupFragment extends Fragment implements FriendGroupRe
         intent.putExtras(bundle);
         startActivity(intent);
     }
+    public TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            friendGroupRecyclerViewAdapter.getFilter().filter(s);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 }

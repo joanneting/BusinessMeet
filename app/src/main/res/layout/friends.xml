@@ -27,7 +27,7 @@
             tools:ignore="MissingConstraints" />
     </androidx.appcompat.widget.Toolbar>
 
-    <TextView
+    <EditText
         android:id="@+id/event_searchbar"
         style="@style/searchBar"
         android:layout_width="match_parent"
