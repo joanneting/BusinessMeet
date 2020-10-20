@@ -205,7 +205,7 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
                             return true;
                         case R.id.menu_friends:
                             startActivity(new Intent(getApplicationContext()
-                                    , FriendsActivity.class));
+                                    , FriendSearchActivity.class));
                             overridePendingTransition(0, 0);
                             return true;
                     }

@@ -5,10 +5,13 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,6 +27,7 @@ import java.util.List;
 
 import tw.com.businessmeet.adapter.FriendsRecyclerViewAdapter;
 import tw.com.businessmeet.bean.FriendBean;
+import tw.com.businessmeet.bean.FriendGroupBean;
 import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
@@ -31,13 +35,13 @@ import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.BluetoothHelper;
 import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.helper.DeviceHelper;
-import tw.com.businessmeet.service.Impl.FriendServiceImpl;
-import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
+import tw.com.businessmeet.service.Impl.FriendGroupServiceImpl;
 
 public class FriendsActivity extends AppCompatActivity implements FriendsRecyclerViewAdapter.ClickListener {
     private UserInformationDAO userInformationDAO;
     private DBHelper DH = null;
-    private TextView searchbar;
+    private TextView friendsToolbarTitle;
+    private EditText eventSearchbar;
     private RecyclerView recyclerViewFriends;
     private BluetoothHelper bluetoothHelper;
     private FriendsRecyclerViewAdapter friendsRecyclerViewAdapter;
@@ -48,11 +52,16 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends);
         recyclerViewFriends = findViewById(R.id.friendsView);
-        searchbar = findViewById(R.id.event_searchbar);
-        searchbar.setOnClickListener(searchbarClick);
+        eventSearchbar = findViewById(R.id.event_searchbar);
+        eventSearchbar.addTextChangedListener(textWatcher);
+        friendsToolbarTitle = findViewById(R.id.friends_toolbar_title);
+
         //bottomNavigationView
         //Initialize And Assign Variable
         openDB();
+        Integer groupNo = Integer.parseInt(getIntent().getStringExtra("groupNo"));
+        String groupName = getIntent().getStringExtra("groupName");
+        friendsToolbarTitle.setText(groupName);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         //Set Home
         bottomNavigationView.setSelectedItemId(R.id.menu_friends);
@@ -61,6 +70,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
         Menu BVMenu = bottomNavigationView.getMenu();
         AvatarHelper avatarHelper = new AvatarHelper();
         UserInformationBean ufb = new UserInformationBean();
+        ufb.setUserId(DeviceHelper.getUserId(this));
         Cursor result = userInformationDAO.searchAll(ufb);
         Log.e("result", String.valueOf(result));
 
@@ -68,17 +78,17 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
         Bitmap myPhoto = avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
         createRecyclerViewFriends();
-        FriendBean friendBean = new FriendBean();
-        friendBean.setMatchmakerId(DeviceHelper.getUserId(this, userInformationDAO));
-        AsyncTaskHelper.execute(() -> FriendServiceImpl.search(friendBean), friendBeanList -> {
+        AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.searchFriendByGroup(groupNo), friendGroupBeanList -> {
             Log.e("FriendBean", "success");
-            if (friendBeanList.size() > 1 || (friendBeanList.size() == 1 && (friendBeanList.get(0).getCreateDate() != null && !friendBeanList.get(0).equals("")))) {
-                for (FriendBean searchBean : friendBeanList) {
-                    AsyncTaskHelper.execute(
-                            () -> UserInformationServiceImpl.getById(searchBean.getFriendId()),
-                            friendsRecyclerViewAdapter::dataInsert
-                    );
-                    Log.e("FriendBean", String.valueOf(searchBean));
+            if (friendGroupBeanList.size() > 0) {
+                for (FriendGroupBean friendGroupBean : friendGroupBeanList) {
+                    UserInformationBean userInformationBean = new UserInformationBean();
+                    FriendBean friendBean = friendGroupBean.getFriendBean();
+                    userInformationBean.setAvatar(friendBean.getFriendAvatar());
+                    userInformationBean.setProfession(friendBean.getFriendProfession());
+                    userInformationBean.setName(friendBean.getFriendName());
+                    userInformationBean.setUserId(friendBean.getFriendId());
+                    friendsRecyclerViewAdapter.dataInsert(userInformationBean);
                 }
             }
         });
@@ -133,7 +143,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
 
     public void changeToFriendsSearchActivityPage() {
         Intent intent = new Intent();
-        intent.setClass(FriendsActivity.this, FriendsSearchActivity.class);
+        intent.setClass(FriendsActivity.this, OpenActivityFriendsSearchActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("userId", DeviceHelper.getUserId(this));
         bundle.putString("blueToothAddress", getIntent().getStringExtra("blueToothAddress"));
@@ -163,6 +173,21 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
                     return false;
                 }
             });
+    public TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            friendsRecyclerViewAdapter.getFilter().filter(s);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 
 }

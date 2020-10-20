@@ -7,10 +7,13 @@ public class FriendGroupBean {
     private static String[] column = new String[]{"friend_group_no","group_no","friend_no","create_date","modify_date"};
     private Integer friendGroupNo;
     private Integer groupNo;
+    private String groupName;
+    private Integer count;
     private Integer friendNo;
     private String createDate;
     private String modifyDate;
     private Integer statusCode;
+    private FriendBean friendBean;
 
     public static String[] getColumn() {
         return column;
@@ -30,6 +33,22 @@ public class FriendGroupBean {
 
     public void setGroupNo(Integer groupNo) {
         this.groupNo = groupNo;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 
     public Integer getFriendNo() {
@@ -62,5 +81,13 @@ public class FriendGroupBean {
 
     public void setStatusCode(Integer statusCode) {
         this.statusCode = statusCode;
+    }
+
+    public FriendBean getFriendBean() {
+        return friendBean;
+    }
+
+    public void setFriendBean(FriendBean friendBean) {
+        this.friendBean = friendBean;
     }
 }

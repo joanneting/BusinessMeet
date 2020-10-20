@@ -283,10 +283,14 @@ public class EventCreateActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             chipGroup.removeView(chip);
-                            updateContent = updateContent.replaceAll(chip.getText().toString() + ",", "");
-                            updateContent = updateContent.replaceAll("," + chip.getText().toString(), "");
-                            updateContent = updateContent.replaceAll(chip.getText().toString(), "");
-
+                            String[] contentString = updateContent.split(",");
+                            String deleteContent = "";
+                            for (String s : contentString) {
+                                if(!chip.getText().equals(s)){
+                                    deleteContent += deleteContent.equals("")?s:","+s;
+                                }
+                            }
+                            updateContent = deleteContent;
                         }
                     });
                     chipGroup.addView(chip);
@@ -311,9 +315,14 @@ public class EventCreateActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 chipGroup.removeView(chip);
-                                updateContent = updateContent.replaceAll(chip.getText().toString() + ",", "");
-                                updateContent = updateContent.replaceAll("," + chip.getText().toString(), "");
-                                updateContent = updateContent.replaceAll(chip.getText().toString(), "");
+                                String[] contentString = updateContent.split(",");
+                                String deleteContent = "";
+                                for (String s : contentString) {
+                                    if(!chip.getText().equals(s)){
+                                        deleteContent += deleteContent.equals("")?s:","+s;
+                                    }
+                                }
+                                updateContent = deleteContent;
                             }
                         });
                         chipGroup.addView(chip);

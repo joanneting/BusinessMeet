@@ -171,7 +171,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
             System.out.println("friendNo = " + friendNo);
             AsyncTaskHelper.execute(() -> FriendServiceImpl.delete(friendNo), empty -> {
                 Intent intent = new Intent();
-                intent.setClass(FriendsIntroductionActivity.this, FriendsActivity.class);
+                intent.setClass(FriendsIntroductionActivity.this, FriendSearchActivity.class);
                 startActivity(intent);
             });
         }
@@ -209,7 +209,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
                             return true;
                         case R.id.menu_friends:
                             startActivity(new Intent(getApplicationContext()
-                                    , FriendsActivity.class));
+                                    , FriendSearchActivity.class));
                             overridePendingTransition(0, 0);
                             return true;
                     }
