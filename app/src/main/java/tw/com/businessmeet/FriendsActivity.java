@@ -143,6 +143,8 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
         Intent intent = new Intent();
         intent.setClass(FriendsActivity.this, OpenActivityFriendsSearchActivity.class);
         Bundle bundle = new Bundle();
+        bundle.putString("userId", blueToothHelper.getUserId());
+        System.out.println("blueToothHelper.getUserId() = " + blueToothHelper.getUserId());
         bundle.putString("blueToothAddress", getIntent().getStringExtra("blueToothAddress"));
         intent.putExtras(bundle);
         startActivity(intent);

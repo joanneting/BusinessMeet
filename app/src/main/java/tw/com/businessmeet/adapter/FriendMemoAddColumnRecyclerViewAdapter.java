@@ -1,10 +1,13 @@
 package tw.com.businessmeet.adapter;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +19,7 @@ import com.google.android.material.chip.ChipGroup;
 import java.util.List;
 
 import tw.com.businessmeet.R;
+import tw.com.businessmeet.bean.Empty;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
 import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
 
@@ -23,13 +27,33 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
 
     private LayoutInflater layoutInflater;
     private Context context;
+    private ClickListener clickListener;
+    private Integer friendCustomizationNo;
     private List<FriendCustomizationBean> friendCustomizationBeanList;
     private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
 
+    private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, Empty> deleteResponseListener = new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, Empty>() {
+        @Override
+        public Call<ResponseBody<Empty>> request(FriendCustomizationBean... friendCustomizationBeans) {
+            return friendCustomizationServiceImpl.delete(friendCustomizationNo);
+        }
+
+        @Override
+        public void onSuccess(Empty empty) {
+
+        }
+
+        @Override
+        public void onFail(int status, String message) {
+
+        }
+    };
+
     //創建構造函數
-    public FriendMemoAddColumnRecyclerViewAdapter(Context context, List<FriendCustomizationBean> friendCustomizationBeanList) {
+    public FriendMemoAddColumnRecyclerViewAdapter(Context context, List<FriendCustomizationBean> friendCustomizationBeanList, ClickListener clickListener) {
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
+        this.clickListener = clickListener;
         this.friendCustomizationBeanList = friendCustomizationBeanList;
     }
 
@@ -38,13 +62,20 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
     public FriendMemoAddColumnRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // 創建自定義布局
         View view = layoutInflater.inflate(R.layout.recycler_view_addcolumn_memo, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, clickListener);
+    }
+
+    // 得到總條數
+    @Override
+    public int getItemCount() {
+        return friendCustomizationBeanList.size();
     }
 
     @Override
     public void onBindViewHolder(@NonNull FriendMemoAddColumnRecyclerViewAdapter.ViewHolder holder, int position) {
         FriendCustomizationBean data = friendCustomizationBeanList.get(position);
         holder.memoTitle.setText(data.getName());
+        friendCustomizationNo = data.getFriendCustomizationNo();
         String content = data.getContent();
         if (content != null) {
             int contentLength = 0;
@@ -60,23 +91,47 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
                 holder.chipGroup.addView(chip);
             }
         }
-
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AsyncTasKHelper.execute(deleteResponseListener);
+            }
+        });
     }
 
-    // 得到總條數
-    @Override
-    public int getItemCount() {
-        return friendCustomizationBeanList.size();
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView memoTitle;
         private ChipGroup chipGroup;
+        private ImageButton deleteButton;
+        private ClickListener clickListener;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, ClickListener clickListener) {
             super(itemView);
+            this.clickListener = clickListener;
             memoTitle = (TextView) itemView.findViewById(R.id.friends_edit_profile_memo_recycleView_column_title);
             chipGroup = (ChipGroup) itemView.findViewById(R.id.friends_edit_profile_memo_chip_group);
+            deleteButton = (ImageButton) itemView.findViewById(R.id.friends_edit_profile_memo_recycleView_column_removeColumn);
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            clickListener.onClick(v, getAdapterPosition());
+            if (clickListener != null) {
+                clickListener.onClick(v, getAdapterPosition());
+            }
+        }
+    }
+
+    public void setClickListener(ClickListener clickLinster) {
+        this.clickListener = clickListener;
+    }
+
+    public interface ClickListener {
+        void onClick(View view, int position);
+    }
+
+    public FriendCustomizationBean getFriendMemo(int position) {
+        return friendCustomizationBeanList.get(position);
     }
 }
