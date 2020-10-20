@@ -48,6 +48,7 @@ public class EditFriendsProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setClass(EditFriendsProfileActivity.this, FriendsIntroductionActivity.class);
                 Bundle bundle = new Bundle();
+                bundle.putString("userId", getIntent().getStringExtra("userId"));
                 bundle.putString("friendId", getIntent().getStringExtra("friendId"));
                 bundle.putInt("friendNo", getIntent().getIntExtra("friendNo", 0));
                 intent.putExtras(bundle);
