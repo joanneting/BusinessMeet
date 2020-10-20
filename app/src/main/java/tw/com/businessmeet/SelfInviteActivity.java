@@ -20,11 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import tw.com.businessmeet.adapter.ProfileTimelineRecyclerViewAdapter;
 import tw.com.businessmeet.adapter.SelfInviteRecyclerViewAdapter;
-import tw.com.businessmeet.bean.UserInformationBean;
-import tw.com.businessmeet.dao.FriendDAO;
-import tw.com.businessmeet.helper.AvatarHelper;
-
 import tw.com.businessmeet.dao.UserInformationDAO;
+import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.BlueToothHelper;
 import tw.com.businessmeet.helper.DBHelper;
 
@@ -53,14 +50,13 @@ public class SelfInviteActivity extends AppCompatActivity implements ProfileTime
         //toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbarMenu
-        toolbar.inflateMenu(R.menu.toolbarmenu);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_ios_24px);  //back
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                return false;
+            public void onClick(View view) {
+                //do back
+                onBackPressed();
             }
-
         });
 
         //bottomNavigationView
