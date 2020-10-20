@@ -22,7 +22,7 @@ import java.util.List;
 import retrofit2.Call;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
 import tw.com.businessmeet.bean.ResponseBody;
-import tw.com.businessmeet.helper.AsyncTasKHelper;
+import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
 
 public class EditFriendMemoActivity extends AppCompatActivity {
@@ -37,22 +37,22 @@ public class EditFriendMemoActivity extends AppCompatActivity {
     private FriendCustomizationBean friendCustomizationBean = new FriendCustomizationBean();
     private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
 
-    private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean> editResponseListener = new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean>() {
-
-        @Override
-        public Call<ResponseBody<FriendCustomizationBean>> request(FriendCustomizationBean... friendCustomizationBeans) {
-            return friendCustomizationServiceImpl.update(friendCustomizationBeans[0]);
-        }
-
-        @Override
-        public void onSuccess(FriendCustomizationBean friendCustomizationBeans) {
-            changeToAnotherPage();
-        }
-
-        @Override
-        public void onFail(int status, String message) {
-        }
-    };
+//    private AsyncTaskHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean> editResponseListener = new AsyncTaskHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean>() {
+//
+//        @Override
+//        public Call<ResponseBody<FriendCustomizationBean>> request(FriendCustomizationBean... friendCustomizationBeans) {
+//            return friendCustomizationServiceImpl.update(friendCustomizationBeans[0]);
+//        }
+//
+//        @Override
+//        public void onSuccess(FriendCustomizationBean friendCustomizationBeans) {
+//            changeToAnotherPage();
+//        }
+//
+//        @Override
+//        public void onFail(int status, String message) {
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +120,7 @@ public class EditFriendMemoActivity extends AppCompatActivity {
                 for (int i = 1; i < originalChipContentSplit.length; i++) {
                     for (int j = 1; j < deleteChipContentSplit.length; j++) {
                         System.out.println("original = " + originalChipContentSplit[i] + "   delete = " + deleteChipContentSplit[j]);
-                        if (originalChipContentSplit[i].equals(deleteChipContentSplit[j])){
+                        if (originalChipContentSplit[i].equals(deleteChipContentSplit[j])) {
                             break;
                         }
                         updateChipContent = updateChipContent + "," + originalChipContentSplit[i];
@@ -136,7 +136,9 @@ public class EditFriendMemoActivity extends AppCompatActivity {
                     System.out.println("fcb.getFriendNo() = " + fcb.getFriendNo());
                     System.out.println("fcb.getName() = " + fcb.getName());
                     System.out.println("fcb.getContent() = " + fcb.getContent());
-                    AsyncTasKHelper.execute(editResponseListener, fcb);
+                    AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.update(fcb), friendCustomizationBean -> {
+                        changeToAnotherPage();
+                    });
                     originalChipContent = "";
                     deleteChipContent = "";
                     updateChipContent = "";
