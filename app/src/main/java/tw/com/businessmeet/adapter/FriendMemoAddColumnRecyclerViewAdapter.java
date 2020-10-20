@@ -21,7 +21,9 @@ import java.util.List;
 import tw.com.businessmeet.R;
 import tw.com.businessmeet.bean.Empty;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
+import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
+import tw.com.businessmeet.service.Impl.FriendGroupServiceImpl;
 
 public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter<FriendMemoAddColumnRecyclerViewAdapter.ViewHolder> {
 
@@ -32,22 +34,22 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
     private List<FriendCustomizationBean> friendCustomizationBeanList;
     private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
 
-    private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, Empty> deleteResponseListener = new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, Empty>() {
-        @Override
-        public Call<ResponseBody<Empty>> request(FriendCustomizationBean... friendCustomizationBeans) {
-            return friendCustomizationServiceImpl.delete(friendCustomizationNo);
-        }
-
-        @Override
-        public void onSuccess(Empty empty) {
-
-        }
-
-        @Override
-        public void onFail(int status, String message) {
-
-        }
-    };
+//    private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, Empty> deleteResponseListener = new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, Empty>() {
+//        @Override
+//        public Call<ResponseBody<Empty>> request(FriendCustomizationBean... friendCustomizationBeans) {
+//            return friendCustomizationServiceImpl.delete(friendCustomizationNo);
+//        }
+//
+//        @Override
+//        public void onSuccess(Empty empty) {
+//
+//        }
+//
+//        @Override
+//        public void onFail(int status, String message) {
+//
+//        }
+//    };
 
     //創建構造函數
     public FriendMemoAddColumnRecyclerViewAdapter(Context context, List<FriendCustomizationBean> friendCustomizationBeanList, ClickListener clickListener) {
@@ -94,7 +96,7 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AsyncTasKHelper.execute(deleteResponseListener);
+                AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.delete(friendCustomizationNo));
             }
         });
     }

@@ -28,6 +28,7 @@ import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.helper.AvatarHelper;
+import tw.com.businessmeet.helper.BluetoothHelper;
 import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.helper.DeviceHelper;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
@@ -38,6 +39,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
     private DBHelper DH = null;
     private TextView searchbar;
     private RecyclerView recyclerViewFriends;
+    private BluetoothHelper bluetoothHelper;
     private FriendsRecyclerViewAdapter friendsRecyclerViewAdapter;
     private List<UserInformationBean> userInformationBeanList = new ArrayList<>();
 
@@ -133,8 +135,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
         Intent intent = new Intent();
         intent.setClass(FriendsActivity.this, FriendsSearchActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("userId", blueToothHelper.getUserId());
-        System.out.println("blueToothHelper.getUserId() = " + blueToothHelper.getUserId());
+        bundle.putString("userId", DeviceHelper.getUserId(this));
         bundle.putString("blueToothAddress", getIntent().getStringExtra("blueToothAddress"));
         intent.putExtras(bundle);
         startActivity(intent);

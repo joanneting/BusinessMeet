@@ -1,6 +1,7 @@
 package tw.com.businessmeet;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -73,50 +74,50 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
     private DBHelper dh = null;
     private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
 
-    private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean> addResponseListener =
-            new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean>() {
-                @Override
-                public Call<ResponseBody<FriendCustomizationBean>> request(FriendCustomizationBean... friendCustomizationBean) {
-                    return friendCustomizationServiceImpl.add(friendCustomizationBean[0]);
-                }
-
-                @Override
-                public void onSuccess(FriendCustomizationBean friendCustomizationBean) {
-//                    openDB();
-//                    friendCustomizationDAO.add(friendCustomizationBean);
-                    AsyncTasKHelper.execute(searchResponseListener, friendCustomizationBean);
-                }
-
-                @Override
-                public void onFail(int status, String message) {
-                }
-            };
+//    private AsyncTaskHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean> addResponseListener =
+//            new AsyncTaskHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean>() {
+//                @Override
+//                public Call<ResponseBody<FriendCustomizationBean>> request(FriendCustomizationBean... friendCustomizationBean) {
+//                    return friendCustomizationServiceImpl.add(friendCustomizationBean[0]);
+//                }
+//
+//                @Override
+//                public void onSuccess(FriendCustomizationBean friendCustomizationBean) {
+////                    openDB();
+////                    friendCustomizationDAO.add(friendCustomizationBean);
+//                    AsyncTaskHelper.execute(searchResponseListener, friendCustomizationBean);
+//                }
+//
+//                @Override
+//                public void onFail(int status, String message) {
+//                }
+//            };
 
     private void openDB() {
         dh = new DBHelper(getContext());
         friendCustomizationDAO = new FriendCustomizationDAO(dh);
     }
 
-    private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>> searchResponseListener = new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>>() {
-
-        @Override
-        public Call<ResponseBody<List<FriendCustomizationBean>>> request(FriendCustomizationBean... friendCustomizationBeans) {
-            return friendCustomizationServiceImpl.search(friendCustomizationBeans[0]);
-        }
-
-        @Override
-        public void onSuccess(List<FriendCustomizationBean> friendCustomizationBeans) {
-            if (friendCustomizationBeans.size() > 1 || (friendCustomizationBeans.size() == 1 && (friendCustomizationBeans.get(0).getCreateDate() != null && !friendCustomizationBeans.get(0).equals("")))) {
-                for (int i = 0; i < friendCustomizationBeans.size(); i++) {
-                    friendCustomizationBeanList.add(friendCustomizationBeans.get(i));
-                }
-            }
-        }
-
-        @Override
-        public void onFail(int status, String message) {
-        }
-    };
+//    private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>> searchResponseListener = new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>>() {
+//
+//        @Override
+//        public Call<ResponseBody<List<FriendCustomizationBean>>> request(FriendCustomizationBean... friendCustomizationBeans) {
+//            return friendCustomizationServiceImpl.search(friendCustomizationBeans[0]);
+//        }
+//
+//        @Override
+//        public void onSuccess(List<FriendCustomizationBean> friendCustomizationBeans) {
+//            if (friendCustomizationBeans.size() > 1 || (friendCustomizationBeans.size() == 1 && (friendCustomizationBeans.get(0).getCreateDate() != null && !friendCustomizationBeans.get(0).equals("")))) {
+//                for (int i = 0; i < friendCustomizationBeans.size(); i++) {
+//                    friendCustomizationBeanList.add(friendCustomizationBeans.get(i));
+//                }
+//            }
+//        }
+//
+//        @Override
+//        public void onFail(int status, String message) {
+//        }
+//    };
 
     public EditMemoFragment() {
         // Required empty public constructor
@@ -216,7 +217,6 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
                     }
                     return false;
                 }
-                return false;
             });
 
             confirm = (Button) view.findViewById(R.id.addColumn_dialog_confirmButton);
@@ -227,7 +227,13 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
                     fcb.setName(addColumnMemo.getText().toString());
                     fcb.setContent(originalChipContent);
                     if (checkData(fcb)) {
-                        AsyncTasKHelper.execute(addResponseListener, fcb);
+                        AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.add(fcb), friendCustomizationBean -> {
+                            AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.search(fcb), friendCustomizationBeanList -> {
+                                if (friendCustomizationBeanList.size() > 1 || (friendCustomizationBeanList.size() == 1 && friendCustomizationBeanList.get(0).getCreateDate() != null)) {
+                                    EditMemoFragment.this.friendCustomizationBeanList.addAll(friendCustomizationBeanList);
+                                }
+                            });
+                        });
                         if (alertDialog.isShowing()) {
                             alertDialog.dismiss();
                         }

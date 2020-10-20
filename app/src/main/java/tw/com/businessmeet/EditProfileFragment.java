@@ -23,7 +23,8 @@ import retrofit2.Call;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.GroupsBean;
 import tw.com.businessmeet.bean.ResponseBody;
-import tw.com.businessmeet.helper.AsyncTasKHelper;
+import tw.com.businessmeet.helper.AsyncTaskHelper;
+import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 import tw.com.businessmeet.service.Impl.GroupsServiceImpl;
 
@@ -50,41 +51,43 @@ public class EditProfileFragment extends Fragment {
     private ChipGroup chipGroup;
     private FriendBean fb = new FriendBean();
     private GroupsBean gb = new GroupsBean();
-    private FriendServiceImpl friendServiceImpl = new FriendServiceImpl();
-    private GroupsServiceImpl groupsServiceImpl = new GroupsServiceImpl();
-
-    private AsyncTasKHelper.OnResponseListener<GroupsBean, GroupsBean> addResponseListener = new AsyncTasKHelper.OnResponseListener<GroupsBean, GroupsBean>() {
-        @Override
-        public Call<ResponseBody<GroupsBean>> request(GroupsBean... groupsBeans) {
-            return groupsServiceImpl.add(groupsBeans[0]);
-        }
-
-        @Override
-        public void onSuccess(GroupsBean groupsBean) {
-        }
-
-        @Override
-        public void onFail(int status, String message) {
-        }
-    };
-
-    private AsyncTasKHelper.OnResponseListener<FriendBean, FriendBean> addRemarkResponseListener = new AsyncTasKHelper.OnResponseListener<FriendBean, FriendBean>() {
-
-        @Override
-        public Call<ResponseBody<FriendBean>> request(FriendBean... friendBeans) {
-            return friendServiceImpl.update(friendBeans[0]);
-        }
-
-        @Override
-        public void onSuccess(FriendBean friendBean) {
-
-            changeToSelfIntroductionPage();
-        }
-
-        @Override
-        public void onFail(int status, String message) {
-        }
-    };
+    private FriendBean friendBean = new FriendBean();
+    private GroupsBean groupsBean = new GroupsBean();
+//    private FriendServiceImpl friendServiceImpl = new FriendServiceImpl();
+//    private GroupsServiceImpl groupsServiceImpl = new GroupsServiceImpl();
+//
+//    private AsyncTaskHelper.OnResponseListener<GroupsBean, GroupsBean> addResponseListener = new AsyncTaskHelper.OnResponseListener<GroupsBean, GroupsBean>() {
+//        @Override
+//        public Call<ResponseBody<GroupsBean>> request(GroupsBean... groupsBeans) {
+//            return groupsServiceImpl.add(groupsBeans[0]);
+//        }
+//
+//        @Override
+//        public void onSuccess(GroupsBean groupsBean) {
+//        }
+//
+//        @Override
+//        public void onFail(int status, String message) {
+//        }
+//    };
+//
+//    private AsyncTaskHelper.OnResponseListener<FriendBean, FriendBean> addRemarkResponseListener = new AsyncTaskHelper.OnResponseListener<FriendBean, FriendBean>() {
+//
+//        @Override
+//        public Call<ResponseBody<FriendBean>> request(FriendBean... friendBeans) {
+//            return friendServiceImpl.update(friendBeans[0]);
+//        }
+//
+//        @Override
+//        public void onSuccess(FriendBean friendBean) {
+//
+//            changeToSelfIntroductionPage();
+//        }
+//
+//        @Override
+//        public void onFail(int status, String message) {
+//        }
+//    };
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -133,7 +136,8 @@ public class EditProfileFragment extends Fragment {
                             gb.setUserId(getActivity().getIntent().getStringExtra("userId"));
                             System.out.println("gb.getName() = " + gb.getName());
                             System.out.println("gb.getUserId() = " + gb.getUserId());
-                            AsyncTasKHelper.execute(addResponseListener, gb);
+                            AsyncTaskHelper.execute(() -> GroupsServiceImpl.add(gb), groupsBean -> {
+                            });
                             if (alertDialog.isShowing()) {
                                 alertDialog.dismiss();
                             }
@@ -173,7 +177,9 @@ public class EditProfileFragment extends Fragment {
                 fb.setMatchmakerId(getActivity().getIntent().getStringExtra("matchmakerId"));
                 fb.setFriendId(getActivity().getIntent().getStringExtra("friendId"));
                 fb.setRemark(addProfileContent.getText().toString());
-                AsyncTasKHelper.execute(addRemarkResponseListener, fb);
+                AsyncTaskHelper.execute(() -> FriendServiceImpl.update(fb), friendBean -> {
+                    changeToSelfIntroductionPage();
+                });
             }
         });
         return view;
