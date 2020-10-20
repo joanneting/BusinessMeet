@@ -58,14 +58,13 @@ public class SelfInviteActivity extends AppCompatActivity implements ProfileTime
         //toolbar
         toolbar = findViewById(R.id.toolbar);
         //toolbarMenu
-        toolbar.inflateMenu(R.menu.toolbarmenu);
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_ios_24px);  //back
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                return false;
+            public void onClick(View view) {
+                //do back
+                onBackPressed();
             }
-
         });
 
         //bottomNavigationView
