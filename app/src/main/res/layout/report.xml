@@ -51,7 +51,6 @@
                 android:textColor="@color/colorAlmostBlack"
                 android:textSize="18dp"
                 android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="pa"
                 tools:ignore="MissingConstraints" />
 
             <EditText
