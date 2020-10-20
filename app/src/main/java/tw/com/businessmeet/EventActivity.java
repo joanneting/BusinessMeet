@@ -22,7 +22,9 @@ import java.util.List;
 import tw.com.businessmeet.bean.ActivityInviteBean;
 import tw.com.businessmeet.bean.ActivityLabelBean;
 import tw.com.businessmeet.bean.TimelineBean;
+import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
+import tw.com.businessmeet.helper.DeviceHelper;
 import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 
 public class EventActivity extends AppCompatActivity {
@@ -34,6 +36,7 @@ public class EventActivity extends AppCompatActivity {
     private String friendId;
     private TimelineBean activityBean;
     private ImageView participantAvatar, tagIcon, participantIcon;
+    private UserInformationDAO userInformationDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,13 @@ public class EventActivity extends AppCompatActivity {
                     activityInviteBeanList.get(i).setAvatar("");
                     if (i == 0) {
                         inviteName = activityInviteBeanList.get(i).getUserName();
+                        String userId = DeviceHelper.getUserId(this);
+                        if (!inviteName.equals(userId)) {
+                            View delete = toolbar.findViewById(R.id.menu_toolbar_delete);
+                            View search = toolbar.findViewById(R.id.menu_toolbar_search);
+                            delete.setVisibility(View.GONE);
+                            search.setVisibility(View.GONE);
+                        }
                     } else {
                         inviteName += "," + activityInviteBeanList.get(i).getUserName();
                     }

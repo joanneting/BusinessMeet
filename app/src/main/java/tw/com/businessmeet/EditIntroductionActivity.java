@@ -98,6 +98,7 @@ public class EditIntroductionActivity extends AppCompatActivity {
             userInformationDAO.update(ufb);
             AsyncTaskHelper.execute(() -> UserInformationServiceImpl.update(ufb));
             changeToSelfIntroductionPage();
+            finish();
         }
     };
 

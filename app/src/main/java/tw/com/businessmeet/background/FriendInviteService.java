@@ -79,13 +79,15 @@ public class FriendInviteService extends Service {
                     if (ACTIVE_NOTIFICATION == null && !inviteRequestList.isEmpty()) {
                         createNotification(inviteRequestList.getFirst());
                     }
-                    AsyncTaskHelper.execute(FriendServiceImpl::searchInviteNotification, friendBeans -> {
-                        for (FriendBean friendBean : friendBeans) {
-                            if (!inviteRequestList.contains(friendBean)) {
-                                inviteRequestList.addLast(friendBean);
+                    if (inviteRequestList.size() == 0) {
+                        AsyncTaskHelper.execute(FriendServiceImpl::searchInviteNotification, friendBeans -> {
+                            for (FriendBean friendBean : friendBeans) {
+                                if (!inviteRequestList.contains(friendBean)) {
+                                    inviteRequestList.addLast(friendBean);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
             }
         }, 1000, 1000);
@@ -140,10 +142,12 @@ public class FriendInviteService extends Service {
                     newFriendBean -> {
                         inviteRequestList.removeFirst();
                         FriendInviteService.ACTIVE_NOTIFICATION = null;
-                        Intent startActivityIntent = new Intent(context, FriendsIntroductionActivity.class);
-                        startActivityIntent.putExtra("friendId", friendBean.getFriendId());
-                        startActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(startActivityIntent);
+                        if (action.equals(ACTION_OK)) {
+                            Intent startActivityIntent = new Intent(context, FriendsIntroductionActivity.class);
+                            startActivityIntent.putExtra("friendId", friendBean.getFriendId());
+                            startActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(startActivityIntent);
+                        }
                     },
                     (status, message) -> {
                         inviteRequestList.removeFirst();
