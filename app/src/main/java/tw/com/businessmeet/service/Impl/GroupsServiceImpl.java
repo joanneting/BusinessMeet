@@ -1,5 +1,7 @@
 package tw.com.businessmeet.service.Impl;
 
+import androidx.annotation.Nullable;
+
 import retrofit2.Call;
 import tw.com.businessmeet.bean.Empty;
 import tw.com.businessmeet.bean.GroupsBean;
@@ -10,26 +12,26 @@ import java.util.List;
 
 import static tw.com.businessmeet.network.RetrofitConfig.retrofit;
 
-public class GroupsServiceImpl implements GroupsService{
+public class GroupsServiceImpl {
     private static GroupsService GroupsApi = retrofit.create(GroupsService.class);
 
-    @Override
-    public Call<ResponseBody<List<GroupsBean>>> search(GroupsBean groupsBean) {
+    @Nullable
+    public static Call<ResponseBody<List<GroupsBean>>> search(GroupsBean groupsBean) {
         return GroupsApi.search(groupsBean);
     }
 
-    @Override
-    public Call<ResponseBody<GroupsBean>> add(GroupsBean groupsBean) {
+    @Nullable
+    public static Call<ResponseBody<GroupsBean>> add(GroupsBean groupsBean) {
         return GroupsApi.add(groupsBean);
     }
 
-    @Override
-    public Call<ResponseBody<GroupsBean>> update(GroupsBean groupsBean) {
+    @Nullable
+    public static Call<ResponseBody<GroupsBean>> update(GroupsBean groupsBean) {
         return GroupsApi.update(groupsBean);
     }
 
-    @Override
-    public Call<ResponseBody<Empty>> delete(Integer groupsNo) {
+    @Nullable
+    public static Call<ResponseBody<Empty>> delete(Integer groupsNo) {
         return GroupsApi.delete(groupsNo);
     }
 }

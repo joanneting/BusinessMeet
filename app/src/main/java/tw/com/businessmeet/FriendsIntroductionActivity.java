@@ -182,6 +182,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         intent.setClass(FriendsIntroductionActivity.this, EditFriendsProfileActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("friendId", getIntent().getStringExtra("friendId"));
+        bundle.putString("userId", friendBean.getMatchmakerId());
         bundle.putInt("friendNo", friendNo);
         bundle.putString("remark", content);
         bundle.putString("matchmakerId", friendBean.getMatchmakerId());
