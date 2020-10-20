@@ -10,10 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import tw.com.businessmeet.background.FriendInviteService;
 import tw.com.businessmeet.background.NotificationService;
 import tw.com.businessmeet.dao.UserInformationDAO;
+import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.helper.BluetoothHelper;
 import tw.com.businessmeet.helper.DBHelper;
+import tw.com.businessmeet.helper.DeviceHelper;
 import tw.com.businessmeet.helper.PermissionHelper;
 import tw.com.businessmeet.network.ApplicationContext;
+import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 
 //https://codertw.com/android-%E9%96%8B%E7%99%BC/332688/
 public class MainActivity extends AppCompatActivity {
@@ -40,7 +43,30 @@ public class MainActivity extends AppCompatActivity {
                 while (!permission) {
                     permission = PermissionHelper.hasAccessCoarseLocation(MainActivity.this, userInformationDAO);
                     if (permission) {
+                        String userId = DeviceHelper.getUserId(MainActivity.this, userInformationDAO);
+                        Intent intent = new Intent();
+                        if (userId == "" || userId == null) {
+                            intent.setClass(MainActivity.this, LoginActivity.class);
+                            MainActivity.this.startActivity(intent);
+                            MainActivity.this.finish();
+                        } else {
+                            AsyncTaskHelper.execute(
+                                    () -> UserInformationServiceImpl.getById(userId),
+                                    userInformationBean -> {
+
+                                        intent.setClass(MainActivity.this, SelfIntroductionActivity.class);
+                                        MainActivity.this.startActivity(intent);
+                                        MainActivity.this.finish();
+                                    },
+                                    (status, message) -> {
+                                        intent.setClass(MainActivity.this, LoginActivity.class);
+                                        MainActivity.this.startActivity(intent);
+                                        MainActivity.this.finish();
+                                    }
+                            );
+                        }
                         Thread.interrupted();
+
                     }
                 }
                 Log.d("resultthread", String.valueOf(permission));
