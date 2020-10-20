@@ -1,14 +1,7 @@
 package tw.com.businessmeet;
 
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +11,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
@@ -26,12 +24,10 @@ import com.google.android.material.floatingactionbutton.ExtendedFloatingActionBu
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
 import tw.com.businessmeet.adapter.FriendMemoAddColumnRecyclerViewAdapter;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
-import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.dao.FriendCustomizationDAO;
-import tw.com.businessmeet.helper.AsyncTasKHelper;
+import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
 
@@ -65,9 +61,9 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
     private ImageButton editButton;
 
     // MemoFragment
-    private FriendCustomizationBean fcb = new FriendCustomizationBean();
+    private final FriendCustomizationBean fcb = new FriendCustomizationBean();
     private RecyclerView recyclerViewMemo;
-    private ArrayList<FriendCustomizationBean> friendCustomizationBeanList = new ArrayList<FriendCustomizationBean>();
+    private List<FriendCustomizationBean> friendCustomizationBeanList = new ArrayList<FriendCustomizationBean>();
     private FriendMemoAddColumnRecyclerViewAdapter friendMemoAddColumnRecyclerViewAdapter;
 
     // dialog
@@ -145,20 +141,16 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_edit_memo, container, false);
         fcb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
-        AsyncTasKHelper.execute(searchResponseListener, fcb);
+        AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.search(fcb), friendCustomizationBeanList -> {
+            if (friendCustomizationBeanList.size() > 1 ||
+                    (friendCustomizationBeanList.size() == 1 && friendCustomizationBeanList.get(0).getCreateDate() != null)) {
+                EditMemoFragment.this.friendCustomizationBeanList.addAll(friendCustomizationBeanList);
+            }
+        });
 
         // recyclerView
         recyclerViewMemo = (RecyclerView) view.findViewById(R.id.friends_edit_profile_memo_recycleView);
@@ -224,6 +216,7 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
                     }
                     return false;
                 }
+                return false;
             });
 
             confirm = (Button) view.findViewById(R.id.addColumn_dialog_confirmButton);

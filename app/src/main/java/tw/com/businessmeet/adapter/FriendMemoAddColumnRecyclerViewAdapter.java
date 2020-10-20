@@ -18,12 +18,9 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 
-import retrofit2.Call;
 import tw.com.businessmeet.R;
 import tw.com.businessmeet.bean.Empty;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
-import tw.com.businessmeet.bean.ResponseBody;
-import tw.com.businessmeet.helper.AsyncTasKHelper;
 import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
 
 public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter<FriendMemoAddColumnRecyclerViewAdapter.ViewHolder> {

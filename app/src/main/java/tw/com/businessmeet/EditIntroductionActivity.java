@@ -1,12 +1,8 @@
 package tw.com.businessmeet;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -18,46 +14,27 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import retrofit2.Call;
-import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
-import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.UserInformationDAO;
-import tw.com.businessmeet.helper.AsyncTasKHelper;
-import tw.com.businessmeet.helper.BlueToothHelper;
-import tw.com.businessmeet.helper.DBHelper;
+import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.helper.AvatarHelper;
+import tw.com.businessmeet.helper.BluetoothHelper;
+import tw.com.businessmeet.helper.DBHelper;
+import tw.com.businessmeet.helper.DeviceHelper;
+import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 
 public class EditIntroductionActivity extends AppCompatActivity {
-
     private TextView userName, profession, gender, email, tel;
     private String name, pro, gen, mail, phone;
     private ImageView avatar;
     private ImageButton editConfirmButtom;
-    private AvatarHelper avatarHelper;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private BlueToothHelper blueToothHelper;
     private DBHelper DH;
     private UserInformationDAO userInformationDAO;
-    private UserInformationServiceImpl userInformationService = new UserInformationServiceImpl();
-    private AsyncTasKHelper.OnResponseListener<UserInformationBean, UserInformationBean> updateResponseListener =
-            new AsyncTasKHelper.OnResponseListener<UserInformationBean, UserInformationBean>() {
-                @Override
-                public Call<ResponseBody<UserInformationBean>> request(UserInformationBean... userInformationBeans) {
-                    return userInformationService.update(userInformationBeans[0]);
-                }
 
-                @Override
-                public void onSuccess(UserInformationBean userInformationBean) {
-
-                }
-
-                @Override
-                public void onFail(int status,String message) {
-
-                }
-            };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +48,6 @@ public class EditIntroductionActivity extends AppCompatActivity {
         gender = (TextView) findViewById(R.id.profileGender);
         tel = (TextView) findViewById(R.id.profileTel);
         email = (TextView) findViewById(R.id.profileMail);
-        avatarHelper = new AvatarHelper();
 
         openDB();
         searchUserInformation();
@@ -88,11 +64,9 @@ public class EditIntroductionActivity extends AppCompatActivity {
     }
 
     public void searchUserInformation() {
-        SQLiteDatabase db = DH.getWritableDatabase();
         UserInformationBean ufb = new UserInformationBean();
-        blueToothHelper = new BlueToothHelper(this);
-        blueToothHelper.startBuleTooth();
-        ufb.setUserId(blueToothHelper.getUserId());
+        BluetoothHelper.startBluetooth(this);
+        ufb.setUserId(DeviceHelper.getUserId(this, userInformationDAO));
         Cursor cursor = userInformationDAO.searchAll(ufb);
 
         if (cursor.moveToFirst()) {
@@ -103,7 +77,7 @@ public class EditIntroductionActivity extends AppCompatActivity {
                 gen = cursor.getString(cursor.getColumnIndex("gender"));
                 mail = cursor.getString(cursor.getColumnIndex("mail"));
                 phone = cursor.getString(cursor.getColumnIndex("tel"));
-                avatar.setImageBitmap(avatarHelper.getImageResource(cursor.getString(cursor.getColumnIndex("avatar"))));
+                avatar.setImageBitmap(AvatarHelper.getImageResource(cursor.getString(cursor.getColumnIndex("avatar"))));
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -113,16 +87,16 @@ public class EditIntroductionActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             UserInformationBean ufb = new UserInformationBean();
-            ufb.setUserId(blueToothHelper.getUserId());
-            ufb.setIdentifier(blueToothHelper.getMyBuleTooth());
+            ufb.setUserId(DeviceHelper.getUserId(EditIntroductionActivity.this, userInformationDAO));
+            ufb.setIdentifier(DeviceHelper.getIdentifier(EditIntroductionActivity.this));
             ufb.setName(userName.getText().toString());
             ufb.setProfession(profession.getText().toString());
             ufb.setGender(gender.getText().toString());
             ufb.setMail(email.getText().toString());
             ufb.setTel(tel.getText().toString());
-            ufb.setAvatar(avatarHelper.setImageResource(avatar));
+            ufb.setAvatar(AvatarHelper.setImageResource(avatar));
             userInformationDAO.update(ufb);
-            AsyncTasKHelper.execute(updateResponseListener,ufb);
+            AsyncTaskHelper.execute(() -> UserInformationServiceImpl.update(ufb));
             changeToSelfIntroductionPage();
         }
     };
@@ -133,12 +107,12 @@ public class EditIntroductionActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private Button.OnClickListener choseAvatar = new Button.OnClickListener(){
+    private Button.OnClickListener choseAvatar = new Button.OnClickListener() {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("image/*");
-            if(intent.resolveActivity(getPackageManager()) != null){
+            if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
             }
         }
@@ -146,16 +120,16 @@ public class EditIntroductionActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK) {
             Uri uri = data.getData();
             Log.d("resultUri", uri.toString());
             ContentResolver cr = this.getContentResolver();
-            try{
+            try {
                 Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
 
-                avatar.setImageBitmap(avatarHelper.toCircle(bitmap));
-            }catch(Exception e){
-                Log.d("Exception",e.getMessage());
+                avatar.setImageBitmap(AvatarHelper.toCircle(bitmap));
+            } catch (Exception e) {
+                Log.d("Exception", e.getMessage());
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

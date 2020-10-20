@@ -13,16 +13,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import tw.com.businessmeet.background.NotificationService;
 import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.helper.AvatarHelper;
-import tw.com.businessmeet.helper.BlueToothHelper;
+import tw.com.businessmeet.helper.BluetoothHelper;
 import tw.com.businessmeet.helper.DBHelper;
+import tw.com.businessmeet.helper.DeviceHelper;
 
 public class SelfInformationActivity extends AppCompatActivity {
     private TextView userName, profession, gender, email, tel;
@@ -30,30 +32,26 @@ public class SelfInformationActivity extends AppCompatActivity {
     private ImageView avatar;
     private UserInformationDAO userInformationDAO;
     private DBHelper DH;
-    private AvatarHelper avatarHelper;
     private BottomNavigationView menu;
-    private BlueToothHelper blueToothHelper;
-    private NotificationService notificationService = null;
+    private final NotificationService notificationService = null;
     private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.self_information);
-        userName = (TextView) findViewById(R.id.profile_name);
-        profession = (TextView) findViewById(R.id.profile_profession);
-        gender = (TextView) findViewById(R.id.profile_gender);
-        email = (TextView) findViewById(R.id.profile_mail);
-        tel = (TextView) findViewById(R.id.profile_tel);
-        avatar = (ImageView) findViewById(R.id.edit_person_photo);
-        editButton = (Button) findViewById(R.id.editPersonalProfileButton);
+        userName = findViewById(R.id.profile_name);
+        profession = findViewById(R.id.profile_profession);
+        gender = findViewById(R.id.profile_gender);
+        email = findViewById(R.id.profile_mail);
+        tel = findViewById(R.id.profile_tel);
+        avatar = findViewById(R.id.edit_person_photo);
+        editButton = findViewById(R.id.editPersonalProfileButton);
         editButton.setOnClickListener(editButtonClick);
-        menu = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        menu = findViewById(R.id.bottom_navigation);
         //this.personal = personal;
-        blueToothHelper = new BlueToothHelper(this);
-        avatarHelper = new AvatarHelper();
         //toolbar
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         //toolbarMenu
         toolbar.inflateMenu(R.menu.toolbarmenu);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -90,31 +88,31 @@ public class SelfInformationActivity extends AppCompatActivity {
         Menu BVMenu = bottomNavigationView.getMenu();
         bottomNavigationView.setItemIconTintList(null);  //顯示頭像
         AvatarHelper avatarHelper = new AvatarHelper();
-        blueToothHelper.startBuleTooth();
+        BluetoothHelper.startBluetooth(this);
         Log.d("seedmess", "ness");
-        Cursor result = userInformationDAO.getById(blueToothHelper.getUserId());
+        Cursor result = userInformationDAO.getById(DeviceHelper.getUserId(this, userInformationDAO));
         Log.e("result", String.valueOf(result));
 
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
-        Bitmap myPhoto = avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
+        Bitmap myPhoto = AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
 
     }
 
 
-    private void openDB(){
-        Log.d("add","openDB");
+    private void openDB() {
+        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
     }
 
-    public void searchUserInformation(){
+    public void searchUserInformation() {
 
-        Cursor result = userInformationDAO.getById(blueToothHelper.getUserId());
-        Log.d("result",String.valueOf(result.getColumnCount()));
+        Cursor result = userInformationDAO.getById(DeviceHelper.getUserId(this, userInformationDAO));
+        Log.d("result", String.valueOf(result.getColumnCount()));
 
-        for(int i = 0; i<result.getColumnCount(); i++){
-            Log.d("result",result.getColumnName(i));
+        for (int i = 0; i < result.getColumnCount(); i++) {
+            Log.d("result", result.getColumnName(i));
         }
 
 
@@ -124,11 +122,10 @@ public class SelfInformationActivity extends AppCompatActivity {
             profession.append(result.getString(result.getColumnIndex("profession")));
             email.append(result.getString(result.getColumnIndex("mail")));
             tel.append(result.getString(result.getColumnIndex("tel")));
-            avatar.setImageBitmap(avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar"))));
+            avatar.setImageBitmap(AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar"))));
 
         }
         result.close();
-
 
 
     }
@@ -139,40 +136,39 @@ public class SelfInformationActivity extends AppCompatActivity {
             changeToEditIntroductionPage();
         }
     };
-    public void changeToEditIntroductionPage(){
+
+    public void changeToEditIntroductionPage() {
         Intent intent = new Intent();
-        intent.setClass(SelfInformationActivity.this,EditIntroductionActivity.class);
+        intent.setClass(SelfInformationActivity.this, EditIntroductionActivity.class);
         startActivity(intent);
     }
-
-
 
 
     //Perform ItemSelectedListener
     BottomNavigationView.OnNavigationItemSelectedListener navListener =
             (new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-            switch (menuItem.getItemId()){
-                case R.id.menu_home:
-                    return true;
-                case R.id.menu_search:
-                    startActivity(new Intent(getApplicationContext()
-                            ,SearchActivity.class));
-                    overridePendingTransition(0,0);
-                    return true;
-                case R.id.menu_friends:
-                    //menuItem.setIcon(R.drawable.ic_people_blue_24dp);
-                    startActivity(new Intent(getApplicationContext()
-                            ,FriendsActivity.class));
-                    overridePendingTransition(0,0);
-                    return true;
-            }
-            return false;
-        }
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    switch (menuItem.getItemId()) {
+                        case R.id.menu_home:
+                            return true;
+                        case R.id.menu_search:
+                            startActivity(new Intent(getApplicationContext()
+                                    , SearchActivity.class));
+                            overridePendingTransition(0, 0);
+                            return true;
+                        case R.id.menu_friends:
+                            //menuItem.setIcon(R.drawable.ic_people_blue_24dp);
+                            startActivity(new Intent(getApplicationContext()
+                                    , FriendsActivity.class));
+                            overridePendingTransition(0, 0);
+                            return true;
+                    }
+                    return false;
+                }
 
 
-    });
+            });
 
 
 }

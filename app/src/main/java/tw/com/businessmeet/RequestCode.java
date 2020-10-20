@@ -8,4 +8,5 @@ public class RequestCode {
     public static final int REQUEST_GPS = 5;
     public static final int REQUEST_ADD_PARTICIPANT = 6;
     public static final int REQUEST_EDIT_EVENT = 7;
+    public static final int REQUEST_BLUETOOTH = 8;
 }

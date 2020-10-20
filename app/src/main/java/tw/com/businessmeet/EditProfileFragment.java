@@ -109,15 +109,6 @@ public class EditProfileFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         chipGroup = (ChipGroup) view.findViewById(R.id.chooseGroup_chipGroup);
@@ -189,8 +180,7 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void changeToSelfIntroductionPage() {
-        Intent intent = new Intent();
-        intent.setClass(getActivity(), FriendsIntroductionActivity.class);
+        Intent intent = new Intent(getActivity(), FriendsIntroductionActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("friendId", getActivity().getIntent().getStringExtra("friendId"));
         bundle.putInt("friendNo", getActivity().getIntent().getIntExtra("friendNo", 0));

@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.Date;
@@ -16,14 +18,18 @@ public class ActivityInviteBean  implements Parcelable {
     private Integer activityInviteNo;
     private String userId;
     private Integer activityNo;
+    @SerializedName("createDateStr")
     private String createDate;
+    @SerializedName("modifyDateStr")
     private String modifyDate;
     private Integer statusCode;
     private String userName;
     private String avatar;
     private Integer status;
     private Boolean isInvite;
-
+    private String title;
+    private String place;
+    private String activityDate;
     public ActivityInviteBean() {
     }
 
@@ -181,5 +187,27 @@ public class ActivityInviteBean  implements Parcelable {
         isInvite = invite;
     }
 
+    public String getTitle() {
+        return title;
+    }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public String getActivityDate() {
+        return activityDate;
+    }
+
+    public void setActivityDate(String activityDate) {
+        this.activityDate = activityDate;
+    }
 }

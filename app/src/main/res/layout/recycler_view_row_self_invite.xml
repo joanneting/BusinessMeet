@@ -17,7 +17,7 @@
         android:orientation="vertical"
         android:layout_weight="1">
         <TextView
-            android:id="@+id/invite_month"
+            android:id="@+id/invite_year"
             android:text="2月"
             android:gravity="center_vertical|center|bottom"
             android:layout_width="50dp"
@@ -58,6 +58,20 @@
                 android:textColor="@color/colorAlmostBlack"
                 android:textSize="17sp" />
             <TextView
+                android:id="@+id/self_event_place"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="4dp"
+                android:layout_weight="0.5"
+                android:gravity="center_vertical|left"
+                android:text="eventTime"
+                android:textColor="@color/grey_60"
+                android:textSize="17sp" />
+
+            <TextView
                 android:id="@+id/self_event_time"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -78,6 +92,7 @@
                 android:orientation="horizontal">
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/self_invite_accept"
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="12dp"
@@ -88,18 +103,7 @@
                 android:text="接受"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/self_invite_maybe"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|center"
-                    android:text="可能"
-                    android:textColor="@color/grey_60"
-                    android:textSize="14sp" />
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/self_invite_Decline"
                     android:layout_width="match_parent"

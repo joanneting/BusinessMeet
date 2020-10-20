@@ -1,25 +1,5 @@
 package tw.com.businessmeet;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import retrofit2.Call;
-import tw.com.businessmeet.adapter.FriendProfileListViewAdapter;
-import tw.com.businessmeet.bean.Empty;
-import tw.com.businessmeet.bean.FriendBean;
-import tw.com.businessmeet.bean.FriendCustomizationBean;
-import tw.com.businessmeet.bean.ResponseBody;
-import tw.com.businessmeet.bean.UserInformationBean;
-import tw.com.businessmeet.dao.FriendDAO;
-import tw.com.businessmeet.dao.UserInformationDAO;
-import tw.com.businessmeet.helper.AsyncTasKHelper;
-import tw.com.businessmeet.helper.AvatarHelper;
-import tw.com.businessmeet.helper.BlueToothHelper;
-import tw.com.businessmeet.helper.DBHelper;
-import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
-import tw.com.businessmeet.service.Impl.FriendServiceImpl;
-import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -27,23 +7,35 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import tw.com.businessmeet.adapter.FriendProfileListViewAdapter;
+import tw.com.businessmeet.bean.FriendBean;
+import tw.com.businessmeet.bean.FriendCustomizationBean;
+import tw.com.businessmeet.bean.UserInformationBean;
+import tw.com.businessmeet.dao.UserInformationDAO;
+import tw.com.businessmeet.helper.AsyncTaskHelper;
+import tw.com.businessmeet.helper.AvatarHelper;
+import tw.com.businessmeet.helper.DBHelper;
+import tw.com.businessmeet.helper.DeviceHelper;
+import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
+import tw.com.businessmeet.service.Impl.FriendServiceImpl;
+import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 
 public class FriendsIntroductionActivity extends AppCompatActivity {
     private TextView userName, id, profession, gender, email, tel, remark, title;
@@ -54,114 +46,8 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
     private Integer friendNo;
     private UserInformationDAO userInformationDAO;
     private DBHelper DH;
-    private AvatarHelper avatarHelper = new AvatarHelper();
-    private BlueToothHelper blueToothHelper;
-    private FriendDAO friendDAO;
-    private FriendServiceImpl friendService = new FriendServiceImpl();
-    private FriendBean friendBean = new FriendBean();
-    private UserInformationServiceImpl userInformationService = new UserInformationServiceImpl();
-    private FriendServiceImpl matchedService = new FriendServiceImpl();
-    private ArrayList<FriendCustomizationBean> friendCustomizationBeanList = new ArrayList<FriendCustomizationBean>();
-    private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
-
-    private AsyncTasKHelper.OnResponseListener<String, UserInformationBean> userInfoResponseListener = new AsyncTasKHelper.OnResponseListener<String, UserInformationBean>() {
-        @Override
-        public Call<ResponseBody<UserInformationBean>> request(String... userId) {
-            return userInformationService.getById(userId[0]);
-        }
-
-        @Override
-        public void onSuccess(UserInformationBean userInformationBean) {
-            if (userInformationBean == null) {
-                Cursor cursor = userInformationDAO.getById(friendId);
-                userInformationBean.setName(cursor.getString(cursor.getColumnIndex("name")));
-                userInformationBean.setProfession(cursor.getString(cursor.getColumnIndex("profession")));
-                userInformationBean.setGender(cursor.getString(cursor.getColumnIndex("gender")));
-                userInformationBean.setMail(cursor.getString(cursor.getColumnIndex("mail")));
-                userInformationBean.setTel(cursor.getString(cursor.getColumnIndex("tel")));
-                userInformationBean.setAvatar(cursor.getString(cursor.getColumnIndex("avatar")));
-            }
-            id.append(userInformationBean.getUserId());
-            userName.append(userInformationBean.getName());
-            profession.append(userInformationBean.getProfession());
-            gender.append(userInformationBean.getGender());
-            email.append(userInformationBean.getMail());
-            tel.append(userInformationBean.getTel());
-            avatar.setImageBitmap(avatarHelper.getImageResource(userInformationBean.getAvatar()));
-        }
-
-        @Override
-        public void onFail(int status, String message) {
-        }
-    };
-
-    private AsyncTasKHelper.OnResponseListener<FriendBean, List<FriendBean>> friendsMemoResponseListener = new AsyncTasKHelper.OnResponseListener<FriendBean, List<FriendBean>>() {
-        @Override
-        public Call<ResponseBody<List<FriendBean>>> request(FriendBean... friendBeans) {
-            return matchedService.search(friendBeans[0]);
-        }
-
-        @Override
-        public void onSuccess(List<FriendBean> friendBeanList) {
-            if (friendBeanList.get(0).getRemark() != null) {
-                content = friendBeanList.get(0).getRemark();
-                remark.append(friendBeanList.get(0).getRemark());
-            }
-
-            friendNo = friendBeanList.get(0).getFriendNo();
-            FriendCustomizationBean fcb = new FriendCustomizationBean();
-            fcb.setFriendNo(friendNo);
-            System.out.println("friendNo = " + friendNo);
-            AsyncTasKHelper.execute(searchResponseListener, fcb);
-        }
-
-        @Override
-        public void onFail(int status, String message) {
-
-        }
-    };
-
-    private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>> searchResponseListener = new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>>() {
-
-        @Override
-        public Call<ResponseBody<List<FriendCustomizationBean>>> request(FriendCustomizationBean... friendCustomizationBeans) {
-            return friendCustomizationServiceImpl.search(friendCustomizationBeans[0]);
-        }
-
-        @Override
-        public void onSuccess(List<FriendCustomizationBean> friendCustomizationBeans) {
-            if (friendCustomizationBeans.size() > 1 || (friendCustomizationBeans.size() == 1 && (friendCustomizationBeans.get(0).getCreateDate() != null && !friendCustomizationBeans.get(0).equals("")))) {
-                for (int i = 0; i < friendCustomizationBeans.size(); i++) {
-                    friendCustomizationBeanList.add(friendCustomizationBeans.get(i));
-                }
-                FriendProfileListViewAdapter friendProfileListViewAdapter = new FriendProfileListViewAdapter(FriendsIntroductionActivity.this, friendCustomizationBeanList);
-                listView.setAdapter(friendProfileListViewAdapter);
-                setListViewHeight(listView);
-            }
-        }
-
-        @Override
-        public void onFail(int status, String message) {
-        }
-    };
-    private AsyncTasKHelper.OnResponseListener<Integer, Empty> deleteFriendResponseListener = new AsyncTasKHelper.OnResponseListener<Integer, Empty>() {
-        @Override
-        public Call<ResponseBody<Empty>> request(Integer... integers) {
-            return friendService.delete(integers[0]);
-        }
-
-        @Override
-        public void onSuccess(Empty empty) {
-            Intent intent = new Intent();
-            intent.setClass(FriendsIntroductionActivity.this, FriendsActivity.class);
-            startActivity(intent);
-        }
-
-        @Override
-        public void onFail(int status, String message) {
-
-        }
-    };
+    private final FriendBean friendBean = new FriendBean();
+    private final ArrayList<FriendCustomizationBean> friendCustomizationBeanList = new ArrayList<FriendCustomizationBean>();
 
     private static void setListViewHeight(ListView listView) {
         if (listView == null) {
@@ -188,25 +74,58 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends_profile);
         openDB();
-        remark = (TextView) findViewById(R.id.firends_profile_information_remark);
+        remark = findViewById(R.id.firends_profile_information_remark);
         friendId = getIntent().getStringExtra("friendId");
-        AsyncTasKHelper.execute(userInfoResponseListener, friendId);
+        AsyncTaskHelper.execute(() -> UserInformationServiceImpl.getById(friendId), userInformationBean -> {
+            if (userInformationBean == null) {
+                Cursor cursor = userInformationDAO.getById(friendId);
+                userInformationBean.setName(cursor.getString(cursor.getColumnIndex("name")));
+                userInformationBean.setProfession(cursor.getString(cursor.getColumnIndex("profession")));
+                userInformationBean.setGender(cursor.getString(cursor.getColumnIndex("gender")));
+                userInformationBean.setMail(cursor.getString(cursor.getColumnIndex("mail")));
+                userInformationBean.setTel(cursor.getString(cursor.getColumnIndex("tel")));
+                userInformationBean.setAvatar(cursor.getString(cursor.getColumnIndex("avatar")));
+            }
+            id.append(userInformationBean.getUserId());
+            userName.append(userInformationBean.getName());
+            profession.append(userInformationBean.getProfession());
+            gender.append(userInformationBean.getGender());
+            email.append(userInformationBean.getMail());
+            tel.append(userInformationBean.getTel());
+            avatar.setImageBitmap(AvatarHelper.getImageResource(userInformationBean.getAvatar()));
+        });
         friendBean.setFriendId(friendId);
-        blueToothHelper = new BlueToothHelper(this);
-        friendBean.setMatchmakerId(blueToothHelper.getUserId());
-        AsyncTasKHelper.execute(friendsMemoResponseListener, friendBean);
+        friendBean.setMatchmakerId(DeviceHelper.getUserId(this, userInformationDAO));
+        AsyncTaskHelper.execute(() -> FriendServiceImpl.search(friendBean), friendBeanList -> {
+            if (friendBeanList.get(0).getRemark() != null) {
+                content = friendBeanList.get(0).getRemark();
+                remark.append(friendBeanList.get(0).getRemark());
+            }
 
-        userName = (TextView) findViewById(R.id.friends_profile_information_name);
-        id = (TextView) findViewById(R.id.friends_profile_information_id);
-        profession = (TextView) findViewById(R.id.friends_profile_information_occupation);
-        gender = (TextView) findViewById(R.id.friends_profile_information_gender);
-        email = (TextView) findViewById(R.id.friends_profile_information_email);
-        tel = (TextView) findViewById(R.id.friends_profile_information_phone);
-        avatar = (ImageView) findViewById(R.id.friends_profile_information_photo);
-        avatarHelper = new AvatarHelper();
-        editButton = (Button) findViewById(R.id.friends_profile_information_edit);
+            friendNo = friendBeanList.get(0).getFriendNo();
+            FriendCustomizationBean fcb = new FriendCustomizationBean();
+            fcb.setFriendNo(friendNo);
+            System.out.println("friendNo = " + friendNo);
+            AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.search(fcb), friendCustomizationBeans -> {
+                if (friendCustomizationBeans.size() > 1 || (friendCustomizationBeans.size() == 1 && (friendCustomizationBeans.get(0).getCreateDate() != null && !friendCustomizationBeans.get(0).equals("")))) {
+                    friendCustomizationBeanList.addAll(friendCustomizationBeans);
+                    FriendProfileListViewAdapter friendProfileListViewAdapter = new FriendProfileListViewAdapter(FriendsIntroductionActivity.this, friendCustomizationBeanList);
+                    listView.setAdapter(friendProfileListViewAdapter);
+                    setListViewHeight(listView);
+                }
+            });
+        });
+
+        userName = findViewById(R.id.friends_profile_information_name);
+        id = findViewById(R.id.friends_profile_information_id);
+        profession = findViewById(R.id.friends_profile_information_occupation);
+        gender = findViewById(R.id.friends_profile_information_gender);
+        email = findViewById(R.id.friends_profile_information_email);
+        tel = findViewById(R.id.friends_profile_information_phone);
+        avatar = findViewById(R.id.friends_profile_information_photo);
+        editButton = findViewById(R.id.friends_profile_information_edit);
         editButton.setOnClickListener(editMemoButton);
-        listView = (ListView) findViewById(R.id.friends_profile_information_memo);
+        listView = findViewById(R.id.friends_profile_information_memo);
         deleteButton = findViewById(R.id.friends_profile_information_delete);
         deleteButton.setOnClickListener(deleteListener);
         //bottomNavigationView
@@ -223,7 +142,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         Cursor result = userInformationDAO.searchAll(ufb);
 
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
-        Bitmap myPhoto = avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
+        Bitmap myPhoto = AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
 
         if (getIntent().hasExtra("avatar")) {
@@ -238,8 +157,6 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
-        friendDAO = new FriendDAO(DH);
-
     }
 
     public View.OnClickListener editMemoButton = new View.OnClickListener() {
@@ -252,7 +169,11 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             System.out.println("friendNo = " + friendNo);
-            AsyncTasKHelper.execute(deleteFriendResponseListener, friendNo);
+            AsyncTaskHelper.execute(() -> FriendServiceImpl.delete(friendNo), empty -> {
+                Intent intent = new Intent();
+                intent.setClass(FriendsIntroductionActivity.this, FriendsActivity.class);
+                startActivity(intent);
+            });
         }
     };
 
@@ -271,7 +192,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
     }
 
     //Perform ItemSelectedListener
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+    private final BottomNavigationView.OnNavigationItemSelectedListener navListener =
             (new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

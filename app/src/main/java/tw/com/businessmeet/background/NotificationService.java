@@ -6,27 +6,22 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 
-import tw.com.businessmeet.bean.UserInformationBean;
-import tw.com.businessmeet.helper.BlueToothHelper;
+import tw.com.businessmeet.device.DeviceFinder;
+import tw.com.businessmeet.device.DeviceFinderCompat;
+import tw.com.businessmeet.device.actionhandler.supplier.BackgroundActionHandlerSupplier;
+import tw.com.businessmeet.device.bluetooth.connector.BluetoothConnectServer;
+import tw.com.businessmeet.device.discover.DiscoverServer;
+import tw.com.businessmeet.device.discover.DiscoverServerCompat;
+import tw.com.businessmeet.exception.BluetoothServerStartException;
 
-public class NotificationService  extends Service {
-    private Map<String, UserInformationBean> userInformationBeanMap = new HashMap<>();
-    public class LocalBinder extends Binder{
-        public NotificationService getService(){
-            return NotificationService.this;
-        }
-    }
-    private LocalBinder mLocBin = new LocalBinder();
-    private BlueToothHelper blueToothHelper = null;
-    public void sendNotifitation(){
-        Log.e("test","success");
-    }
-    public void searchBlueTooth(){
+public class NotificationService extends Service {
+    private final LocalBinder mLocBin = new LocalBinder();
+    private BluetoothConnectServer connectServer;
+    private DiscoverServer server;
+    private DeviceFinder finder;
 
-    }
     @Override
     public IBinder onBind(Intent intent) {
         return mLocBin;
@@ -34,26 +29,48 @@ public class NotificationService  extends Service {
 
     @Override
     public void onCreate() {
-        Log.e("service ","serviceStart");
-        blueToothHelper = new BlueToothHelper(this);
-        blueToothHelper.startBuleTooth();
-        blueToothHelper.searchBlueToothInBackground();
+        Log.e("service ", "serviceStart");
+        try {
+            connectServer = new BluetoothConnectServer(this);
+            connectServer.start();
+        } catch (IOException e) {
+            throw new BluetoothServerStartException(e);
+        }
+        server = DiscoverServerCompat.getInstance(this);
+        server.start();
+        finder = DeviceFinderCompat.getBackgroundFinder(this);
+        finder.find(new BackgroundActionHandlerSupplier(this, finder));
 
         super.onCreate();
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
     public void onDestroy() {
+        try {
+            connectServer.close();
+        } catch (IOException e) {
+            throw new BluetoothServerStartException(e);
+        }
+        server.stop();
+        finder.cancel();
         super.onDestroy();
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
+        try {
+            connectServer.close();
+        } catch (IOException e) {
+            throw new BluetoothServerStartException(e);
+        }
+        server.stop();
+        finder.cancel();
         return super.onUnbind(intent);
+    }
+
+    public class LocalBinder extends Binder {
+        public NotificationService getService() {
+            return NotificationService.this;
+        }
     }
 }
