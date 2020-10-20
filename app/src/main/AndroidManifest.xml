@@ -30,6 +30,7 @@
         <activity android:name=".EventCreateActivity" />
         <activity android:name=".EditEventActivity" />
         <activity android:name=".EventActivity" />
+        <activity android:name=".FriendSearchActivity" />
         <activity
             android:name=".FriendsTimelineActivity"
             android:parentActivityName=".FriendsActivity" />
@@ -41,7 +42,7 @@
         <activity android:name=".FriendsActivity" />
         <activity android:name=".FriendsIntroductionActivity" />
         <activity android:name=".FriendsMemoActivity" />
-        <activity android:name=".FriendsSearchActivity" />
+        <activity android:name=".OpenActivityFriendsSearchActivity" />
         <activity android:name=".FriendsFilterActivity" />
         <activity android:name=".EditIntroductionActivity" />
         <activity android:name=".SelfIntroductionActivity" />

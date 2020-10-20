@@ -14,14 +14,12 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import tw.com.businessmeet.AddIntroductionActivity;
-import tw.com.businessmeet.LoginActivity;
 import tw.com.businessmeet.RequestCode;
-import tw.com.businessmeet.SelfIntroductionActivity;
 import tw.com.businessmeet.dao.UserInformationDAO;
-import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 
 public class PermissionHelper {
+    private static boolean login = false;
+
     public static void requestBluetoothAddressPermission(Activity activity) {
         ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_PHONE_STATE}, RequestCode.REQUEST_BLUETOOTH);
     }
@@ -43,30 +41,7 @@ public class PermissionHelper {
     public static boolean hasAccessCoarseLocation(Activity activity, UserInformationDAO userInformationDAO) {
         int permissionCheck = ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION);
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED && bluetoothAdapter.isEnabled()) {
-            System.out.println("mBluetoothAdapter.isEnabled() : " + bluetoothAdapter.isEnabled());
-            String userId = DeviceHelper.getUserId(activity, userInformationDAO);
-            Intent intent = new Intent();
-            if (userId == "" || userId == null) {
-                intent.setClass(activity, AddIntroductionActivity.class);
-                activity.startActivity(intent);
-            } else {
-                AsyncTaskHelper.execute(
-                        () -> UserInformationServiceImpl.getById(userId),
-                        userInformationBean -> {
-                            intent.setClass(activity, SelfIntroductionActivity.class);
-                            activity.startActivity(intent);
-                        },
-                        (status,message) ->{
-                            intent.setClass(activity, LoginActivity.class);
-                            activity.startActivity(intent);
-                        }
-                );
-            }
-            return true;
-        } else {
-            return false;
-        }
+        return permissionCheck == PackageManager.PERMISSION_GRANTED && bluetoothAdapter.isEnabled();
     }
 
     public static void onRequestLocationResult(Activity activity, int[] grantResults) {
