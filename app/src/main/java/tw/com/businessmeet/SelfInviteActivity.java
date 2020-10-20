@@ -103,8 +103,7 @@ public class SelfInviteActivity extends AppCompatActivity implements ProfileTime
                             return true;
                         case R.id.menu_friends:
                             //menuItem.setIcon(R.drawable.ic_people_blue_24dp);
-                            startActivity(new Intent(getApplicationContext()
-                                    , FriendsActivity.class));
+                            startActivity(new Intent(getApplicationContext(), FriendSearchActivity.class));
                             overridePendingTransition(0, 0);
                             return true;
                     }

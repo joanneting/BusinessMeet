@@ -35,8 +35,6 @@ import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.helper.DeviceHelper;
 import tw.com.businessmeet.service.Impl.FriendGroupServiceImpl;
-import tw.com.businessmeet.service.Impl.FriendServiceImpl;
-import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 
 public class FriendsActivity extends AppCompatActivity implements FriendsRecyclerViewAdapter.ClickListener {
     private UserInformationDAO userInformationDAO;
@@ -46,6 +44,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
     private RecyclerView recyclerViewFriends;
     private FriendsRecyclerViewAdapter friendsRecyclerViewAdapter;
     private List<UserInformationBean> userInformationBeanList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +68,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
         Menu BVMenu = bottomNavigationView.getMenu();
         AvatarHelper avatarHelper = new AvatarHelper();
         UserInformationBean ufb = new UserInformationBean();
+        ufb.setUserId(DeviceHelper.getUserId(this));
         Cursor result = userInformationDAO.searchAll(ufb);
         Log.e("result", String.valueOf(result));
 
@@ -78,7 +78,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
         createRecyclerViewFriends();
         AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.searchFriendByGroup(groupNo), friendGroupBeanList -> {
             Log.e("FriendBean", "success");
-            if(friendGroupBeanList.size()>0){
+            if (friendGroupBeanList.size() > 0) {
                 for (FriendGroupBean friendGroupBean : friendGroupBeanList) {
                     UserInformationBean userInformationBean = new UserInformationBean();
                     FriendBean friendBean = friendGroupBean.getFriendBean();

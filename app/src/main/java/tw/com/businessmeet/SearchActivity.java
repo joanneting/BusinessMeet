@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -126,11 +125,9 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
         bottomNavigationView.setItemIconTintList(null);  //顯示頭像
         AvatarHelper avatarHelper = new AvatarHelper();
         //blueToothHelper.startBuleTooth();
-        Log.d("seedmess", "ness");
         UserInformationBean ufb = new UserInformationBean();
-        //ufb.setMatchmaker(blueToothHelper.getUserId());
+        ufb.setUserId(DeviceHelper.getUserId(this));
         Cursor result = userInformationDAO.searchAll(ufb);
-        Log.e("result", String.valueOf(result));
 
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
@@ -146,7 +143,7 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
                     friendBean.setFriendId(userInformationBean.getUserId());
                     friendBean.setMatchmakerId(userId);
                     AsyncTaskHelper.execute(() -> FriendServiceImpl.search(friendBean), friendBeanList -> {
-                        if (friendBeanList.size() == 1 && friendBeanList.get(0).getStatus()!=null ) {
+                        if (friendBeanList.size() == 1 && friendBeanList.get(0).getStatus() != null) {
                             Intent intent = new Intent(SearchActivity.this, FriendsIntroductionActivity.class);
                             intent.putExtra("friendId", userInformationBean.getUserId());
                             startActivity(intent);
@@ -229,7 +226,7 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
                             BluetoothHelper.cancelDiscovery();
                             //menuItem.setIcon(R.drawable.ic_people_black_24dp);
                             startActivity(new Intent(getApplicationContext()
-                                    , FriendsActivity.class));
+                                    , FriendSearchActivity.class));
                             overridePendingTransition(0, 0);
                             return true;
                     }
