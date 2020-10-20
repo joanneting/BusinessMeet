@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -21,6 +20,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
@@ -36,53 +38,31 @@ import androidx.appcompat.widget.Toolbar;
 import retrofit2.Call;
 import tw.com.businessmeet.bean.ActivityInviteBean;
 import tw.com.businessmeet.bean.ActivityLabelBean;
-import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.bean.TimelineBean;
 import tw.com.businessmeet.dao.ActivityLabelDAO;
 import tw.com.businessmeet.dao.TimelineDAO;
-import tw.com.businessmeet.helper.AsyncTasKHelper;
-import tw.com.businessmeet.helper.BlueToothHelper;
+import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.helper.DBHelper;
-import tw.com.businessmeet.service.Impl.ActivityLabelServiceImpl;
+import tw.com.businessmeet.helper.DeviceHelper;
 import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 
 public class EventCreateActivity extends AppCompatActivity {
-    private Activity activity = this;
     private Toolbar toolbar;
-    private TextView dateStart,dateEnd,timeStart,timeEnd,addColor,addParticipant;
-    private TextView event, date, moreEventTag, title, addEventMemo,addLocation;
+    private TextView dateStart, dateEnd, timeStart, timeEnd, addColor, addParticipant;
+    private TextView event, date, moreEventTag, title, addEventMemo, addLocation;
     private EditText addActivityLabel;
     private Switch switchDay;
-    private BlueToothHelper blueToothHelper;
-    public int timerHour,timerMinute;
+    public int timerHour, timerMinute;
     private final Calendar calendar = Calendar.getInstance();
     private Context context;
-    private TimelineServiceImpl timelineService = new TimelineServiceImpl();
     private TimelineDAO timelineDAO;
-    private ActivityLabelDAO activityLabelDAO;
-    private ActivityLabelServiceImpl activityLabelService = new ActivityLabelServiceImpl();
     private List<ActivityInviteBean> activityInviteBeanList = new ArrayList<>();
     //chip
-    private ChipGroup chipGroup,eventLabel;
+    private ChipGroup chipGroup, eventLabel;
     private String chipContent = "";
-    private Button confirm,cancel;
-    private AsyncTasKHelper.OnResponseListener<TimelineBean,TimelineBean> addEvent = new AsyncTasKHelper.OnResponseListener<TimelineBean, TimelineBean>() {
-        @Override
-        public Call<ResponseBody<TimelineBean>> request(TimelineBean... timelineBeans) {
-            return timelineService.add(timelineBeans[0]);
-        }
+    private String updateContent = "";
+    private Button confirm, cancel;
 
-        @Override
-        public void onSuccess(TimelineBean timelineBean) {
-            timelineService.add(timelineBean);
-
-        }
-
-        @Override
-        public void onFail(int status, String message) {
-
-        }
-    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +70,7 @@ public class EventCreateActivity extends AppCompatActivity {
         context = this;
         DBHelper dbHelper = new DBHelper(this);
         timelineDAO = new TimelineDAO(dbHelper);
-        activityLabelDAO = new ActivityLabelDAO(dbHelper);
+        ActivityLabelDAO activityLabelDAO = new ActivityLabelDAO(dbHelper);
         //Event = (TextView) findViewById(R.);
 //        addEventLocation = findViewById(R.id.add_event_location);
         switchDay = findViewById(R.id.switch_day);
@@ -98,7 +78,6 @@ public class EventCreateActivity extends AppCompatActivity {
         dateEnd = findViewById(R.id.date_end);
         timeStart = findViewById(R.id.time_start);
         timeEnd = findViewById(R.id.time_end);
-        blueToothHelper = new BlueToothHelper(this);
         addEventMemo = findViewById(R.id.add_event_memo);
         eventLabel = findViewById(R.id.event_label);
         eventLabel.setVisibility(View.GONE);
@@ -108,69 +87,56 @@ public class EventCreateActivity extends AppCompatActivity {
         switchDay = findViewById(R.id.switch_day);
         switchDay.setOnCheckedChangeListener(switchClickListener);
         //toolbar
-        toolbar = (Toolbar) findViewById(R.id.event_create_toolbar);
+        toolbar = findViewById(R.id.event_create_toolbar);
         toolbar.inflateMenu(R.menu.event_create_toolbarmenu);
         toolbar.setNavigationIcon(R.drawable.ic_cancel_16dp);  //back
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-                //do back
-            }
-        });
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener(){
-
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch(item.getItemId()){
-                    case R.id.menu_addevent:
-                        if(dateStart.getText() != null && dateStart.getText().equals("")){
-                            Toast.makeText(context,"請選擇開始日期",Toast.LENGTH_LONG).show();
-                            break;
-                        }
-                        if(dateEnd.getText() != null && dateEnd.getText().equals("")){
-                            Toast.makeText(context,"請選擇結束日期",Toast.LENGTH_LONG).show();
-                            break;
-                        }
-
-
-                        TimelineBean timelineBean = new TimelineBean();
-                        timelineBean.setMatchmakerId(blueToothHelper.getUserId());
-                        if (switchDay.isChecked()) {
-                            timelineBean.setStartDate(dateStart.getText().toString()+" 00:00");
-                            timelineBean.setEndDate(dateEnd.getText().toString()+" 23:59");
-                        }else{
-                            if(timeStart.getText() != null && timeStart.getText().equals("")){
-                                Toast.makeText(context,"請選擇開始時間",Toast.LENGTH_LONG).show();
-                                break;
-                            }
-                            if(timeEnd.getText() != null && timeEnd.getText().equals("")){
-                                Toast.makeText(context,"請選擇結束時間",Toast.LENGTH_LONG).show();
-                                break;
-                            }
-                            timelineBean.setStartDate(dateStart.getText().toString()+" "+timeStart.getText().toString());
-                            timelineBean.setEndDate(dateEnd.getText().toString()+" "+timeEnd.getText().toString());
-                        }
-                        timelineBean.setPlace(addLocation.getText().toString());
-//                        timelineBean.setPlace("place");
-                        timelineBean.setTitle(title.getText().toString());
-                        timelineBean.setTimelinePropertiesNo(1);
-                        timelineBean.setRemark(addEventMemo.getText().toString());
-                        ActivityLabelBean activityLabelBean = new ActivityLabelBean();
-                        activityLabelBean.setContent(chipContent);
-                        timelineBean.setActivityLabelBean(activityLabelBean);
-                        timelineBean.setActivityInviteBeanList(activityInviteBeanList);
-                        AsyncTasKHelper.execute(addEvent,timelineBean);
-                        Intent intent = new Intent();
-                        intent.setClass(EventCreateActivity.this,SelfIntroductionActivity.class);
-                        startActivity(intent);
-                        finish();
+        toolbar.setNavigationOnClickListener(view -> finish());
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menu_addevent) {
+                if (dateStart.getText() != null && dateStart.getText().equals("")) {
+                    Toast.makeText(context, "請選擇開始日期", Toast.LENGTH_LONG).show();
+                    return false;
                 }
-                return false;
+                if (dateEnd.getText() != null && dateEnd.getText().equals("")) {
+                    Toast.makeText(context, "請選擇結束日期", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+
+
+                TimelineBean timelineBean = new TimelineBean();
+                timelineBean.setMatchmakerId(DeviceHelper.getUserId(this));
+                if (switchDay.isChecked()) {
+                    timelineBean.setStartDate(dateStart.getText().toString() + " 00:00");
+                    timelineBean.setEndDate(dateEnd.getText().toString() + " 23:59");
+                } else {
+                    if (timeStart.getText() != null && timeStart.getText().equals("")) {
+                        Toast.makeText(context, "請選擇開始時間", Toast.LENGTH_LONG).show();
+                        return false;
+                    }
+                    if (timeEnd.getText() != null && timeEnd.getText().equals("")) {
+                        Toast.makeText(context, "請選擇結束時間", Toast.LENGTH_LONG).show();
+                        return false;
+                    }
+                    timelineBean.setStartDate(dateStart.getText().toString() + " " + timeStart.getText().toString());
+                    timelineBean.setEndDate(dateEnd.getText().toString() + " " + timeEnd.getText().toString());
+                }
+                timelineBean.setPlace(addLocation.getText().toString());
+//                        timelineBean.setPlace("place");
+                timelineBean.setTitle(title.getText().toString());
+                timelineBean.setTimelinePropertiesNo(1);
+                timelineBean.setRemark(addEventMemo.getText().toString());
+                ActivityLabelBean activityLabelBean = new ActivityLabelBean();
+                activityLabelBean.setContent(chipContent);
+                timelineBean.setActivityLabelBean(activityLabelBean);
+                timelineBean.setActivityInviteBeanList(activityInviteBeanList);
+                AsyncTaskHelper.execute(() -> TimelineServiceImpl.add(timelineBean), timelineDAO::add);
+                Intent intent = new Intent();
+                intent.setClass(this, SelfIntroductionActivity.class);
+                startActivity(intent);
+                finish();
             }
-
+            return false;
         });
-
 
 
         int year = calendar.get(Calendar.YEAR);
@@ -185,15 +151,12 @@ public class EventCreateActivity extends AppCompatActivity {
                         EventCreateActivity.this,R.style.MyDatePicker, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        year = year;
-                        month = month;
-                        day = day;
-                        calendar.set(year,month,day);
+                        calendar.set(year, month, day);
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         dateStart.setText(simpleDateFormat.format(calendar.getTime()));
                     }
-                },year,month,day);
-                datePickerDialog.updateDate(year,month,day);
+                }, year, month, day);
+                datePickerDialog.updateDate(year, month, day);
                 datePickerDialog.show();
                 datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(R.style.AppTheme);
                 datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(R.style.AppTheme);
@@ -207,16 +170,13 @@ public class EventCreateActivity extends AppCompatActivity {
                         EventCreateActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        year = year;
-                        month = month;
-                        day = day;
-                        calendar.set(year,month,day);
+                        calendar.set(year, month, day);
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         dateEnd.setText(simpleDateFormat.format(calendar.getTime()));
 
                     }
-                },year,month,day);
-                datePickerDialog.updateDate(year,month,day);
+                }, year, month, day);
+                datePickerDialog.updateDate(year, month, day);
                 datePickerDialog.show();
                 datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(R.style.AppTheme);
                 datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(R.style.AppTheme);
@@ -224,7 +184,7 @@ public class EventCreateActivity extends AppCompatActivity {
         });
 
         //Add Color
-        addColor = (TextView) findViewById(R.id.add_color);
+        addColor = findViewById(R.id.add_color);
         addColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -246,13 +206,13 @@ public class EventCreateActivity extends AppCompatActivity {
 //        });
 
         //Add Participant
-        addParticipant = (TextView) findViewById(R.id.add_event_participant);
+        addParticipant = findViewById(R.id.add_event_participant);
         addParticipant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), EventAddParticipantActivity.class);
 
-                startActivityForResult(intent,RequestCode.REQUEST_ADD_PARTICIPANT);
+                startActivityForResult(intent, RequestCode.REQUEST_ADD_PARTICIPANT);
             }
         });
 
@@ -267,14 +227,14 @@ public class EventCreateActivity extends AppCompatActivity {
                                 timerHour = hourOfDay;
                                 timerMinute = minute;
                                 //Set hour and minute
-                                calendar.set(0,0,0,timerHour,timerMinute);
-                                timeStart.setText(DateFormat.format("HH:mm",calendar));
+                                calendar.set(0, 0, 0, timerHour, timerMinute);
+                                timeStart.setText(DateFormat.format("HH:mm", calendar));
                             }
-                        },12,0,false
+                        }, 12, 0, false
 
                 );
                 //Displayed previous selected time
-                timePickerDialog.updateTime(timerHour,timerMinute);
+                timePickerDialog.updateTime(timerHour, timerMinute);
                 //Show dialog
                 timePickerDialog.show();
                 timePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setTextColor(R.style.AppTheme);
@@ -282,7 +242,6 @@ public class EventCreateActivity extends AppCompatActivity {
 
             }
         });
-
 
 
         timeEnd.setOnClickListener(new View.OnClickListener() {
@@ -296,14 +255,14 @@ public class EventCreateActivity extends AppCompatActivity {
                                 timerHour = hourOfDay;
                                 timerMinute = minute;
                                 //Set hour and minute
-                                calendar.set(0,0,0,timerHour,timerMinute);
-                                timeEnd.setText(DateFormat.format("HH:mm",calendar));
+                                calendar.set(0, 0, 0, timerHour, timerMinute);
+                                timeEnd.setText(DateFormat.format("HH:mm", calendar));
                             }
-                        },12,0,false
+                        }, 12, 0, false
 
                 );
                 //Displayed previous selected time
-                timePickerDialog.updateTime(timerHour,timerMinute);
+                timePickerDialog.updateTime(timerHour, timerMinute);
                 //Show dialog
                 timePickerDialog.show();
                 timePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setTextColor(R.style.AppTheme);
@@ -312,30 +271,57 @@ public class EventCreateActivity extends AppCompatActivity {
         });
 
     }
+
     public View.OnClickListener dialogClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            LayoutInflater inflater = activity.getLayoutInflater();
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            updateContent = chipContent;
+            LayoutInflater inflater = getLayoutInflater();
+            AlertDialog.Builder builder = new AlertDialog.Builder(EventCreateActivity.this);
             View view = inflater.inflate(R.layout.event_add_label, null);
             builder.setView(view);
             builder.create();
             AlertDialog alertDialog = builder.show();
-            addActivityLabel = (EditText) view.findViewById(R.id.addTag_dialog_Input);
+            addActivityLabel = view.findViewById(R.id.addTag_dialog_Input);
 
-            chipGroup = (ChipGroup) view.findViewById(R.id.addTag_dialog_selectedBox);
+            chipGroup = view.findViewById(R.id.addTag_dialog_selectedBox);
+            if (!updateContent.equals("")) {
+                String[] split = updateContent.split(",");
+                for (String nowChip : split) {
+                    Chip chip = new Chip(EventCreateActivity.this);
+                    ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(EventCreateActivity.this, null, 0, R.style.Widget_MaterialComponents_Chip_Action);
+                    chip.setChipDrawable(chipDrawable);
+                    chip.setText(nowChip);
+                    chip.setCloseIconVisible(true);
+                    chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            chipGroup.removeView(chip);
+                            String[] contentString = updateContent.split(",");
+                            String deleteContent = "";
+                            for (String s : contentString) {
+                                if(!chip.getText().equals(s)){
+                                    deleteContent += deleteContent.equals("")?s:","+s;
+                                }
+                            }
+                            updateContent = deleteContent;
+                        }
+                    });
+                    chipGroup.addView(chip);
+                }
+            }
             addActivityLabel.setOnKeyListener(new View.OnKeyListener() {
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
-                        if(chipContent==null || chipContent.equals("")){
-                            chipContent = addActivityLabel.getText().toString();
-                        }else{
-                            chipContent = chipContent + "," + addActivityLabel.getText().toString();
+                        if (updateContent == null || updateContent.equals("")) {
+                            updateContent = addActivityLabel.getText().toString();
+                        } else {
+                            updateContent = updateContent + "," + addActivityLabel.getText().toString();
                         }
-                        LayoutInflater chipInflater = LayoutInflater.from(activity);
-                        Chip chip = new Chip(activity);
-                        ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(activity, null, 0, R.style.Widget_MaterialComponents_Chip_Action);
+                        LayoutInflater chipInflater = LayoutInflater.from(EventCreateActivity.this);
+                        Chip chip = new Chip(EventCreateActivity.this);
+                        ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(EventCreateActivity.this, null, 0, R.style.Widget_MaterialComponents_Chip_Action);
                         chip.setChipDrawable(chipDrawable);
                         chip.setText(addActivityLabel.getText().toString());
                         chip.setCloseIconVisible(true);
@@ -343,6 +329,14 @@ public class EventCreateActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 chipGroup.removeView(chip);
+                                String[] contentString = updateContent.split(",");
+                                String deleteContent = "";
+                                for (String s : contentString) {
+                                    if(!chip.getText().equals(s)){
+                                        deleteContent += deleteContent.equals("")?s:","+s;
+                                    }
+                                }
+                                updateContent = deleteContent;
                             }
                         });
                         chipGroup.addView(chip);
@@ -355,22 +349,24 @@ public class EventCreateActivity extends AppCompatActivity {
                 }
             });
 
-            confirm = (Button) view.findViewById(R.id.addColumn_dialog_confirmButton);
+            confirm = view.findViewById(R.id.addColumn_dialog_confirmButton);
             confirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                        ActivityLabelBean activityLabelBean = new ActivityLabelBean();
-                        activityLabelBean.setContent(chipContent);
-                        if(chipContent.isEmpty()){
-                            Toast.makeText(activity,"請輸入標籤內容，輸入完標籤內容，請先按下鍵盤輸入鍵",Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        eventLabel.setVisibility(View.VISIBLE);
-                    String[] contentArray= chipContent.split(",");
+
+                    if (updateContent.isEmpty()) {
+                        Toast.makeText(EventCreateActivity.this, "請輸入標籤內容，輸入完標籤內容，請先按下鍵盤輸入鍵", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    chipContent = updateContent;
+                    ActivityLabelBean activityLabelBean = new ActivityLabelBean();
+                    activityLabelBean.setContent(chipContent);
+                    eventLabel.removeAllViews();
+                    eventLabel.setVisibility(View.VISIBLE);
+                    String[] contentArray = chipContent.split(",");
                     for (int i = 0; i < contentArray.length; i++) {
-                        System.out.println("contentArray[i] = " + contentArray[i]);
-                        Chip chip = new Chip(activity);
-                        ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(activity, null, 0, R.style.Widget_MaterialComponents_Chip_Action);
+                        Chip chip = new Chip(EventCreateActivity.this);
+                        ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(EventCreateActivity.this, null, 0, R.style.Widget_MaterialComponents_Chip_Action);
                         chip.setChipDrawable(chipDrawable);
                         chip.setText(contentArray[i]);
                         eventLabel.addView(chip);
@@ -379,7 +375,7 @@ public class EventCreateActivity extends AppCompatActivity {
 
                 }
             });
-            cancel = (Button) view.findViewById(R.id.addColumn_dialog_cancelButton);
+            cancel = view.findViewById(R.id.addColumn_dialog_cancelButton);
             cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -390,35 +386,37 @@ public class EventCreateActivity extends AppCompatActivity {
             });
         }
     };
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RequestCode.REQUEST_ADD_PARTICIPANT){
+        if (resultCode == RequestCode.REQUEST_ADD_PARTICIPANT) {
             activityInviteBeanList = ActivityInviteBean.inviteBean;
             String invite = "";
             for (int i = 0; i < activityInviteBeanList.size(); i++) {
                 ActivityInviteBean activityInviteBean = activityInviteBeanList.get(i);
-                if(i==0){
+                if (i == 0) {
                     invite = activityInviteBean.getUserName();
-                }else if(i > 3){
+                } else if (i > 3) {
                     invite += "...";
                     break;
-                }else{
+                } else {
 
-                    invite += ","+activityInviteBean.getUserName();
+                    invite += "," + activityInviteBean.getUserName();
                 }
             }
             addParticipant.setText(invite);
 
         }
     }
+
     public CompoundButton.OnCheckedChangeListener switchClickListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked){
+            if (isChecked) {
                 timeEnd.setVisibility(View.GONE);
                 timeStart.setVisibility(View.GONE);
-            }else {
+            } else {
                 timeEnd.setVisibility(View.VISIBLE);
                 timeStart.setVisibility(View.VISIBLE);
 

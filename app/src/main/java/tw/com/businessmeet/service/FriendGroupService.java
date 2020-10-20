@@ -20,4 +20,8 @@ public interface FriendGroupService {
     Call<ResponseBody<FriendGroupBean>> update (@Body FriendGroupBean friendGroupBean);
     @POST(baseRoute+"{friendGroupNo}/delete")
     Call<ResponseBody<Empty>> delete (@Path("friendGroupNo") Integer friendGroupNo);
+    @POST(baseRoute+"search/count")
+    Call<ResponseBody<List<FriendGroupBean>>> searchCount();
+    @POST(baseRoute+"search/friend/group/{groupNo}")
+    Call<ResponseBody<List<FriendGroupBean>>> searchFriendByGroup(@Path("groupNo") Integer groupNo);
 }

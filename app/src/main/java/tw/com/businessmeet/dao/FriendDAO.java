@@ -26,19 +26,20 @@ public class FriendDAO {
         values.put(column[1],friendBean.getMatchmakerId());
         values.put(column[2],friendBean.getFriendId());
         values.put(column[3],friendBean.getRemark());
-        values.put(column[4],friendBean.getCreateDate());
-        values.put(column[5],friendBean.getModifyDate());
+        values.put(column[4],friendBean.getStatus());
+        values.put(column[5],friendBean.getCreateDate());
+        values.put(column[6],friendBean.getModifyDate());
         return values;
     }
     public void add(FriendBean friendBean){
         if(friendBean.getRemark() == null || friendBean.getRemark().equals("")) friendBean.setRemark("");
         ContentValues values = putValues(friendBean);
-        values.put(column[4],dataFormat.format(new Date()));
+        values.put(column[5],dataFormat.format(new Date()));
         db.insert(tableName,null,values);
     }
     public void update(FriendBean friendBean){
         ContentValues values = putValues(friendBean);
-        values.put(column[5],dataFormat.format(new Date()));
+        values.put(column[6],dataFormat.format(new Date()));
         db.update(tableName,values,whereClause,new String[]{String.valueOf(friendBean.getFriendNo())});
 
     }

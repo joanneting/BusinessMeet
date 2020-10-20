@@ -91,7 +91,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/frineds_add"
-                    style="@style/button"
+                    style="@style/confirmButton"
                     android:textColor="@color/colorPrimary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

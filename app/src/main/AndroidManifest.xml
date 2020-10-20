@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="tw.com.businessmeet">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -11,10 +20,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SelfInviteActivity"></activity>
+        <activity android:name=".SelfInviteActivity" />
         <activity android:name=".EventAddParticipantActivity" />
         <activity android:name=".EventAddLocationActivity" />
-        <activity android:name=".adapter.EventTagRecyclerViewAdapter" />
         <activity android:name=".EventSearch" />
         <activity
             android:name=".EventColorSelectActivity"
@@ -22,6 +30,7 @@
         <activity android:name=".EventCreateActivity" />
         <activity android:name=".EditEventActivity" />
         <activity android:name=".EventActivity" />
+        <activity android:name=".FriendSearchActivity" />
         <activity
             android:name=".FriendsTimelineActivity"
             android:parentActivityName=".FriendsActivity" />
@@ -33,12 +42,13 @@
         <activity android:name=".FriendsActivity" />
         <activity android:name=".FriendsIntroductionActivity" />
         <activity android:name=".FriendsMemoActivity" />
-        <activity android:name=".FriendsSearchActivity" />
+        <activity android:name=".OpenActivityFriendsSearchActivity" />
         <activity android:name=".FriendsFilterActivity" />
         <activity android:name=".EditIntroductionActivity" />
         <activity android:name=".SelfIntroductionActivity" />
         <activity android:name=".AddIntroductionActivity" />
         <activity android:name=".SearchActivity" />
+        <activity android:name=".EditFriendMemoActivity" />
         <activity android:name=".EditFriendsProfileActivity" />
         <activity android:name=".SelfInformationActivity" />
         <activity android:name=".MainActivity">
@@ -49,16 +59,17 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".background.NotificationService" />
-    </application> <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
+        <receiver android:name=".BootCompletedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".device.bluetooth.connector.BluetoothConnectServer$BluetoothFriendBroadcastReceiver" />
+        <receiver android:name=".background.FriendInviteService$FriendInviteBroadcastReceiver" />
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+        <service android:name=".background.NotificationService" />
+        <service android:name=".background.FriendInviteService" />
+    </application> <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+
 
 </manifest>

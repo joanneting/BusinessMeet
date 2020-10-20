@@ -4,25 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="6dp"
+    android:layout_marginRight="6dp"
     android:layout_marginTop="10dp"
     android:layout_marginBottom="6dp">
 
     <ImageButton
         android:id="@+id/friends_edit_profile_memo_recycleView_column_removeColumn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="14dp"
+        android:layout_height="18dp"
         android:background="@color/trasparent"
         android:src="@drawable/ic_remove_circle_outline_black_16dp"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/friends_edit_profile_memo_recycleView_column_title"
+        style="@style/friends_profile_information_basic_title"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginLeft="6dp"
-        android:text="test"
-        android:textColor="@color/black"
-        android:textSize="18dp"
         app:layout_constraintStart_toEndOf="@id/friends_edit_profile_memo_recycleView_column_removeColumn" />
 
     <HorizontalScrollView
@@ -38,10 +39,10 @@
             android:id="@+id/friends_edit_profile_memo_chip_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="6dp"
             app:singleLine="false"
             app:layout_constraintStart_toStartOf="@id/friends_edit_profile_memo_recycleView_column_title"/>
 
     </HorizontalScrollView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
