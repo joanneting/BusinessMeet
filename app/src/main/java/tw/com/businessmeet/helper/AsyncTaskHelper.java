@@ -15,6 +15,7 @@ import tw.com.businessmeet.function.Consumer;
 import tw.com.businessmeet.function.Supplier;
 
 public class AsyncTaskHelper<R> extends AsyncTask<Void, Void, Response<ResponseBody<R>>> {
+
     private final Supplier<Call<ResponseBody<R>>> requestSender;
     private final Consumer<R> onSuccess;
     private final BiConsumer<Integer, String> onFail;

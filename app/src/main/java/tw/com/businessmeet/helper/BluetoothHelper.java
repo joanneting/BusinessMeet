@@ -16,6 +16,7 @@ import java.util.UUID;
 import tw.com.businessmeet.RequestCode;
 
 public class BluetoothHelper {
+
     public static final String BLUETOOTH_NAME = "BeMet";
     public static final UUID BLUETOOTH_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private static final String SECURE_SETTINGS_BLUETOOTH_ADDRESS = "bluetooth_address";
