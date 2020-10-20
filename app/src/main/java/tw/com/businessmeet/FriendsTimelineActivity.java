@@ -1,26 +1,5 @@
 package tw.com.businessmeet;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import retrofit2.Call;
-import tw.com.businessmeet.bean.FriendBean;
-import tw.com.businessmeet.adapter.FriendsTimelineRecyclerViewAdapter;
-import tw.com.businessmeet.bean.ResponseBody;
-import tw.com.businessmeet.bean.TimelineBean;
-import tw.com.businessmeet.bean.UserInformationBean;
-import tw.com.businessmeet.dao.FriendDAO;
-import tw.com.businessmeet.dao.UserInformationDAO;
-import tw.com.businessmeet.helper.AsyncTasKHelper;
-import tw.com.businessmeet.helper.AvatarHelper;
-import tw.com.businessmeet.helper.BlueToothHelper;
-import tw.com.businessmeet.helper.DBHelper;
-import tw.com.businessmeet.service.Impl.FriendServiceImpl;
-import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
-import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
-
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -40,6 +19,27 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import tw.com.businessmeet.adapter.FriendsTimelineRecyclerViewAdapter;
+import tw.com.businessmeet.bean.FriendBean;
+import tw.com.businessmeet.bean.ResponseBody;
+import tw.com.businessmeet.bean.TimelineBean;
+import tw.com.businessmeet.bean.UserInformationBean;
+import tw.com.businessmeet.dao.FriendDAO;
+import tw.com.businessmeet.dao.UserInformationDAO;
+import tw.com.businessmeet.helper.AsyncTasKHelper;
+import tw.com.businessmeet.helper.AvatarHelper;
+import tw.com.businessmeet.helper.BlueToothHelper;
+import tw.com.businessmeet.helper.DBHelper;
+import tw.com.businessmeet.service.Impl.FriendServiceImpl;
+import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
+import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 
 public class FriendsTimelineActivity extends AppCompatActivity implements FriendsTimelineRecyclerViewAdapter.ClickListener {
     private TextView userName, company, position, email, tel, memo;
@@ -125,12 +125,13 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         //toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbarMenu    
-        toolbar.inflateMenu(R.menu.timeline_toolbarmenu);
+        toolbar.inflateMenu(R.menu.friends_timeline_toolbarmenu);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_ios_24px);  //back
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //do back
+                onBackPressed();
             }
         });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener(){
