@@ -3,7 +3,6 @@ package tw.com.businessmeet;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -145,12 +144,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         Bitmap myPhoto = AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
 
-        if (getIntent().hasExtra("avatar")) {
-            ImageView photo = findViewById(R.id.friends_photo);
-            Bitmap profilePhoto = BitmapFactory.decodeByteArray(
-                    getIntent().getByteArrayExtra("avatar"), 0, getIntent().getByteArrayExtra("avatar").length);
-            photo.setImageBitmap(profilePhoto);
-        }
+        
     }
 
     private void openDB() {

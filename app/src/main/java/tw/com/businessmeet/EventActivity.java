@@ -86,8 +86,8 @@ public class EventActivity extends AppCompatActivity {
                     activityInviteBeanList.get(i).setAvatar("");
                     if (i == 0) {
                         inviteName = activityInviteBeanList.get(i).getUserName();
-                        String userId = DeviceHelper.getUserId(this);
-                        if (!inviteName.equals(userId)) {
+                        String userName = DeviceHelper.getUserName(this);
+                        if (!inviteName.equals(userName)) {
                             View delete = toolbar.findViewById(R.id.menu_toolbar_delete);
                             View search = toolbar.findViewById(R.id.menu_toolbar_search);
                             delete.setVisibility(View.GONE);
