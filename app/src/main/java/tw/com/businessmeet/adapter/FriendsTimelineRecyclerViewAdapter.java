@@ -8,12 +8,11 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import tw.com.businessmeet.R;
 import tw.com.businessmeet.bean.RecyclerViewFilterBean;
 import tw.com.businessmeet.bean.TimelineBean;
@@ -64,7 +63,7 @@ public class FriendsTimelineRecyclerViewAdapter extends RecyclerView.Adapter<Fri
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             friends_date = itemView.findViewById(R.id.friends_date);
-            //friends_place = itemView.findViewById(R.id.friends_place);
+            friends_place = itemView.findViewById(R.id.friends_place);
             itemView.setOnClickListener(this);
         }
 
