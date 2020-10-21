@@ -5,26 +5,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout_top"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/friends_profile_topAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="?attr/colorPrimary"
+        android:elevation="3dp"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/AppTheme.ToolBarStyle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        tools:layout_editor_absoluteX="1dp">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/friends_profile_topAppBar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/friends_profile_toolbar"
-            app:title="@string/friends_profile_topAppBar" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+        <TextView
+            android:id="@+id/friends_toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="聯絡人"
+            android:textColor="@color/colorAlmostBlack"
+            android:textStyle="bold"
+            tools:ignore="MissingConstraints" />
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintTop_toBottomOf="@id/appBarLayout_top">
+        app:layout_constraintTop_toBottomOf="@id/friends_profile_topAppBar">
 
         <LinearLayout
             android:id="@+id/test"
