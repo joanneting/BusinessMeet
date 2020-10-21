@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -41,6 +42,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
     private TextView userName, id, profession, gender, email, tel, remark, title;
     private Button editButton, deleteButton;
     private ImageView avatar;
+    private Toolbar toolbar;
     private ListView listView;
     private String friendId, content;
     private Integer friendNo;
@@ -151,6 +153,18 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
                     getIntent().getByteArrayExtra("avatar"), 0, getIntent().getByteArrayExtra("avatar").length);
             photo.setImageBitmap(profilePhoto);
         }
+
+        //toolbar
+        toolbar = (Toolbar) findViewById(R.id.friends_profile_topAppBar);
+        //toolbarMenu
+        toolbar.inflateMenu(R.menu.friends_profile_toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_ios_24px);  //back
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
     private void openDB() {

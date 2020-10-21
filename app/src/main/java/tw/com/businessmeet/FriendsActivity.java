@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -51,6 +52,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         recyclerViewFriends = findViewById(R.id.friendsView);
         eventSearchbar = findViewById(R.id.event_searchbar);
         eventSearchbar.addTextChangedListener(textWatcher);

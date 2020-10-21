@@ -29,38 +29,19 @@
 
     <EditText
         android:id="@+id/event_searchbar"
-        style="@style/searchBar"
-        android:layout_width="match_parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/search_fill"
+        android:layout_margin="10dp"
         app:layout_constraintBottom_toTopOf="@id/friendsView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/friends_toolbar" />
-
-    <ImageView
-        android:id="@+id/event_searchbar_icon"
-        style="@style/search_icon"
-        app:layout_constraintBottom_toBottomOf="@id/event_searchbar"
-        app:layout_constraintStart_toStartOf="@id/event_searchbar"
-        app:layout_constraintTop_toTopOf="@id/event_searchbar" />
-
-    <TextView
-        android:id="@+id/friends_searchbar_text"
-        style="@style/search_text"
-        app:layout_constraintBottom_toBottomOf="@id/event_searchbar_icon"
-        app:layout_constraintStart_toStartOf="@id/event_searchbar_icon"
-        app:layout_constraintTop_toTopOf="@id/event_searchbar_icon" />
-
-    <ImageView
-        android:id="@+id/friends_searchbar_cancelIcon"
-        style="@style/search_cancel"
-        app:layout_constraintBottom_toBottomOf="@id/event_searchbar"
-        app:layout_constraintEnd_toEndOf="@id/event_searchbar"
-        app:layout_constraintTop_toTopOf="@id/event_searchbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/friendsView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
