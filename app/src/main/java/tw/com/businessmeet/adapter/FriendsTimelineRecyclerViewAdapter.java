@@ -64,7 +64,7 @@ public class FriendsTimelineRecyclerViewAdapter extends RecyclerView.Adapter<Fri
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             friends_date = itemView.findViewById(R.id.friends_date);
-            friends_place = itemView.findViewById(R.id.friends_place);
+            //friends_place = itemView.findViewById(R.id.friends_place);
             itemView.setOnClickListener(this);
         }
 
