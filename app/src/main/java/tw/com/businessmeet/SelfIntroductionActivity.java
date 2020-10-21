@@ -32,6 +32,7 @@ import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.helper.DeviceHelper;
+import tw.com.businessmeet.service.FriendService;
 import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 
 public class SelfIntroductionActivity extends AppCompatActivity implements ProfileTimelineRecyclerViewAdapter.ClickListener {
@@ -62,7 +63,9 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
         recyclerViewProfileTimeline = findViewById(R.id.profile_timeline_view);
         //this.personal = personal;
         Intent intent = new Intent(this, NotificationService.class);
+        Intent friendIntent = new Intent(this, FriendService.class);
         this.startService(intent);
+        this.startService(friendIntent);
         //toolbar
         toolbar = findViewById(R.id.toolbar);
         //toolbarMenu

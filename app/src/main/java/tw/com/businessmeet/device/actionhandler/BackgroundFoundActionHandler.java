@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -134,11 +135,20 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
                 timelineBean.setTitle(timelineBean.getPlace());
                 Log.d("place", timelineBean.getPlace());
                 TimelineDAO timelineDAO = new TimelineDAO(dbHelper);
+                TimelineBean searchBean = new TimelineBean();
+                searchBean.setFriendId(friendBean.getFriendId());
+                searchBean.setMatchmakerId(friendBean.getMatchmakerId());
+                Cursor cursor = timelineDAO.search(searchBean);
+                String lastMeetPlace = "";
+                if (cursor != null && cursor.moveToLast()) {
+                    lastMeetPlace = cursor.getString(cursor.getColumnIndex("place"));
+                }
                 AsyncTaskHelper.execute(
                         () -> TimelineServiceImpl.add(timelineBean),
                         timelineDAO::add
                 );
-                notificationHelper.sendBackgroundMessage(userInformationBean, friendBeanList.get(0).getRemark());
+
+                notificationHelper.sendBackgroundMessage(userInformationBean, lastMeetPlace);
             }
         }
     }

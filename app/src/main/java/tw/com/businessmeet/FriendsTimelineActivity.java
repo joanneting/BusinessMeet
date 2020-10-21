@@ -6,11 +6,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,6 +44,7 @@ import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 
 public class FriendsTimelineActivity extends AppCompatActivity implements FriendsTimelineRecyclerViewAdapter.ClickListener {
     private TextView userName, company, position, email, tel, memo;
+    private EditText searchBar;
     private Button editButton;
     private ImageButton goProfile;
     private ImageView avatar;
@@ -80,7 +84,8 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         goProfile.setOnClickListener(goProfileClick);
         position = (TextView) findViewById(R.id.friends_position);
         avatar = (ImageView) findViewById(R.id.friends_photo);
-
+        searchBar = findViewById(R.id.searchBar);
+        searchBar.addTextChangedListener(textWatcher);
         //toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbarMenu    
@@ -213,5 +218,20 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
                     return false;
                 }
             });
+    public TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            friendsTimelineRecyclerViewAdapter.getFilter().filter(s);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 }
