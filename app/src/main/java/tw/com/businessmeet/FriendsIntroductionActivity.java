@@ -144,7 +144,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         Bitmap myPhoto = AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
 
-        
+
     }
 
     private void openDB() {

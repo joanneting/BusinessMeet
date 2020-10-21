@@ -39,7 +39,9 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+
+            >
 
             <EditText
                 android:id="@+id/add_event"
@@ -104,7 +106,7 @@
                 android:src="@drawable/ic_local_offer_24px"
                 app:layout_constraintBottom_toBottomOf="@+id/more_event_tag"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/event_label"
+                app:layout_constraintTop_toTopOf="@+id/tag_scrollview"
                 app:layout_constraintVertical_bias="0.38"
                 tools:ignore="MissingConstraints" />
 
@@ -192,7 +194,7 @@
                 android:theme="@style/AppTheme.content"
                 app:layout_constraintStart_toStartOf="@+id/date_start"
                 app:layout_constraintTop_toBottomOf="@+id/date_start"
-                app:layout_constraintBottom_toTopOf="@+id/event_label"
+                app:layout_constraintBottom_toTopOf="@+id/tag_scrollview"
                 tools:ignore="MissingConstraints" />
 
 
@@ -207,18 +209,33 @@
                 app:layout_constraintTop_toTopOf="@+id/date_end"
                 tools:ignore="MissingConstraints" />
 
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/event_label"
+            <HorizontalScrollView
+                android:id="@+id/tag_scrollview"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 app:layout_constraintBottom_toTopOf="@+id/more_event_tag"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.092"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/tag_icon"
-                app:layout_constraintTop_toBottomOf="@+id/date_end"
-                app:singleLine="true"
-                app:singleSelection="false" />
+                app:layout_constraintTop_toBottomOf="@+id/date_end">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/event_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    app:layout_constraintBottom_toTopOf="@+id/more_event_tag"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.092"
+                    app:layout_constraintStart_toEndOf="@+id/tag_icon"
+                    app:layout_constraintTop_toBottomOf="@+id/date_end"
+                    app:singleLine="true"
+                    app:singleSelection="false" />
+
+            </HorizontalScrollView>
+
+
 
             <TextView
                 android:id="@+id/more_event_tag"
@@ -228,9 +245,10 @@
                 android:paddingRight="10dp"
                 android:paddingBottom="3dp"
                 android:text="更多標籤"
+                android:textColor="@color/grey_60"
                 android:textSize="14dp"
                 app:layout_constraintStart_toStartOf="@+id/date_end"
-                app:layout_constraintTop_toBottomOf="@+id/event_label"
+                app:layout_constraintTop_toBottomOf="@+id/tag_scrollview"
                 tools:ignore="MissingConstraints" />
 
             <EditText

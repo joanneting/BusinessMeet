@@ -84,12 +84,13 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         //toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbarMenu    
-        toolbar.inflateMenu(R.menu.timeline_toolbarmenu);
+        toolbar.inflateMenu(R.menu.friends_timeline_toolbarmenu);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_ios_24px);  //back
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //do back
+                onBackPressed();
             }
         });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
