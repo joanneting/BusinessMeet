@@ -1,7 +1,6 @@
 package tw.com.businessmeet.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tw.com.businessmeet.R;
-import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.bean.RecyclerViewFilterBean;
 import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.helper.AvatarHelper;
@@ -26,10 +24,11 @@ import tw.com.businessmeet.helper.AvatarHelper;
 public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecyclerViewAdapter.ViewHolder> implements Filterable {
     private LayoutInflater layoutInflater;
     private Context context;
-    private  List<UserInformationBean> userInformationBeanList;
+    private List<UserInformationBean> userInformationBeanList;
     private List<RecyclerViewFilterBean<UserInformationBean>> filterList = new ArrayList<RecyclerViewFilterBean<UserInformationBean>>();
     private ClickListener clickLinster;
     private AvatarHelper avatarHelper = new AvatarHelper();
+
     public FriendsRecyclerViewAdapter(Context context, List<UserInformationBean> userInformationBeanList) {
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
@@ -52,7 +51,7 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
     public void onBindViewHolder(@NonNull FriendsRecyclerViewAdapter.ViewHolder holder, int position) {
         RecyclerViewFilterBean<UserInformationBean> filterBean = filterList.get(position);
         UserInformationBean ufb = filterBean.getData();
-        holder.bindInformation(ufb.getName(),ufb.getAvatar(),ufb.getProfession());
+        holder.bindInformation(ufb.getName(), ufb.getAvatar(), ufb.getProfession());
     }
 
     @Override
@@ -67,7 +66,6 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
         TextView friends_profession;
 
 
-
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             friends_photo = itemView.findViewById(R.id.friends_photo);
@@ -76,7 +74,7 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
             itemView.setOnClickListener(this);
         }
 
-        void bindInformation(String userName, String avatar,String userProfession){
+        void bindInformation(String userName, String avatar, String userProfession) {
             friends_photo.setImageBitmap(avatarHelper.getImageResource(avatar));
             friends_name.setText(userName);
             friends_profession.setText(userProfession);
@@ -84,19 +82,22 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
 
         @Override
         public void onClick(View v) {
-            if(clickLinster != null){
-                clickLinster.onClick(v,getAdapterPosition());
+            if (clickLinster != null) {
+                clickLinster.onClick(v, getAdapterPosition());
             }
         }
 
     }
-    public UserInformationBean getUserInformation(int position){
+
+    public UserInformationBean getUserInformation(int position) {
         return filterList.get(position).getData();
     }
-    public void  setClickListener(ClickListener clickLinster){
+
+    public void setClickListener(ClickListener clickLinster) {
         this.clickLinster = clickLinster;
     }
-    public void dataInsert(UserInformationBean userInformationBean){
+
+    public void dataInsert(UserInformationBean userInformationBean) {
         RecyclerViewFilterBean<UserInformationBean> filterBean = new RecyclerViewFilterBean<>();
         filterBean.setData(userInformationBean);
         filterBean.setPosition(userInformationBeanList.size());
@@ -104,6 +105,7 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
         userInformationBeanList.add(userInformationBean);
         notifyItemInserted(getItemCount());
     }
+
     @Override
     public Filter getFilter() {
         return new Filter() {
@@ -111,7 +113,6 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String filterString = charSequence.toString();
-                System.out.println("filterString = " + filterString);
                 if (filterString.isEmpty()) {
                     List<RecyclerViewFilterBean<UserInformationBean>> filterFriendList = new ArrayList<>();
                     //沒有過濾的內容
@@ -142,6 +143,7 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
                 filterResults.values = filterList;
                 return filterResults;
             }
+
             //把過濾後的值返回出來
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
@@ -151,7 +153,7 @@ public class FriendsRecyclerViewAdapter extends RecyclerView.Adapter<FriendsRecy
         };
     }
 
-    public interface ClickListener{
+    public interface ClickListener {
         void onClick(View view, int position);
     }
 

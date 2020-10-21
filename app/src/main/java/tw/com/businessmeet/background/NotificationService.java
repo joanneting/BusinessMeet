@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -33,7 +32,6 @@ public class NotificationService extends Service {
 
     @Override
     public void onCreate() {
-        Log.e("service ", "serviceStart");
 //        try {
 //            connectServer = new BluetoothConnectServer(this);
 //            connectServer.start();

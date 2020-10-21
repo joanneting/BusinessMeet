@@ -105,7 +105,6 @@ public class EditEventActivity extends AppCompatActivity {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年M月d日 E aa h:m", Locale.TAIWAN);
                 try {
                     Date start = simpleDateFormat.parse(timelineBean.getStartDate());
-                    System.out.println("start = " + start);
                     Date end = simpleDateFormat.parse(timelineBean.getEndDate());
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
@@ -169,7 +168,6 @@ public class EditEventActivity extends AppCompatActivity {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                System.out.println("item.getItemId() = " + item.getItemId());
                 switch (item.getItemId()) {
                     case R.id.menu_addevent:
                         String action = bundle.getString("action");

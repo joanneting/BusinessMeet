@@ -3,7 +3,6 @@ package tw.com.businessmeet.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,9 +69,6 @@ public class UserInformationDAO {
     }
 
     public void add(UserInformationBean userInformationBean) {
-        Log.d("add:", "add");
-
-        Log.d("add", "dbsuccess");
         ContentValues values = putValues(userInformationBean);
 
         String createDate = dateFormat.format(new Date());
@@ -90,8 +86,6 @@ public class UserInformationDAO {
 //        String[] whereArgs1 = {"#100", b.getStorage_id()};
 //        String whereClause1 = DatabaseSchema.TABLE_TALKS.COLUMN_TID + "=? AND " + DatabaseSchema.TABLE_TALKS.COLUMN_STORAGEID + "=?";
 //        db.update(DatabaseSchema.TABLE_TALKS.NAME, values1, whereClause1, whereArgs1);
-        System.out.println("=====================" + userInformationBean.getUserId());
-        System.out.println(values);
         db.update(tableName, values, whereClause, new String[]{userInformationBean.getUserId()});
         db.close();
     }

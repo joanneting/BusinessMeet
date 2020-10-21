@@ -71,7 +71,6 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
                 inviteList.add(activityInviteBean);
             }
         }
-        System.out.println("inviteList.size() = " + inviteList.size());
         return inviteList;
     }
 
@@ -141,7 +140,6 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String filterString = charSequence.toString();
-                System.out.println("filterString = " + filterString);
                 if (filterString.isEmpty()) {
                     List<RecyclerViewFilterBean<ActivityInviteBean>> filterInviteList = new ArrayList<>();
                     //沒有過濾的內容

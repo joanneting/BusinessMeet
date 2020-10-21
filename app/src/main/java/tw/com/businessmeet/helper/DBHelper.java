@@ -3,7 +3,6 @@ package tw.com.businessmeet.helper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -16,12 +15,10 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, _DBName, null, _DBVersion);
         this.context = context;
         SQLiteDatabase db = getWritableDatabase();
-        Log.d("add", context.toString());
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("add", "create");
         String SQL = "create table if not exists " + _TableName[0] + "(" +
                 "user_id varchar(100) not null  primary key," +
                 "password varchar(64) not null," +

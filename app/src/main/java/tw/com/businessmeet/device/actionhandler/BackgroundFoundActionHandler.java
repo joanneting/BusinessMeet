@@ -11,7 +11,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -133,7 +132,6 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
                 timelineBean.setTimelinePropertiesNo(2);
 
                 timelineBean.setTitle(timelineBean.getPlace());
-                Log.d("place", timelineBean.getPlace());
                 TimelineDAO timelineDAO = new TimelineDAO(dbHelper);
                 TimelineBean searchBean = new TimelineBean();
                 searchBean.setFriendId(friendBean.getFriendId());

@@ -8,7 +8,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -148,7 +147,6 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
     }
 
     private void openDB() {
-        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
         matchedDAO = new FriendDAO(DH);

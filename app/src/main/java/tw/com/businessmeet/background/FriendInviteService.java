@@ -63,34 +63,42 @@ public class FriendInviteService extends Service {
             channel1.enableVibration(true);
             notificationManager.createNotificationChannel(channel1);
         }
-        timer.schedule(new TimerTask() {
+        Thread invite = new Thread() {
             @Override
             public void run() {
-                SharedPreferences sharedPreferences = getSharedPreferences("cookieData", Context.MODE_PRIVATE);
-                Set<String> cookieSet = sharedPreferences.getStringSet("cookie", new HashSet<>());
-                boolean isLogin = false;
-                for (String cookie : cookieSet) {
-                    if (cookie.contains("JSESSIONID")) {
-                        isLogin = true;
-                        break;
-                    }
-                }
-                if (isLogin) {
-                    if (ACTIVE_NOTIFICATION == null && !inviteRequestList.isEmpty()) {
-                        createNotification(inviteRequestList.getFirst());
-                    }
-                    if (inviteRequestList.size() == 0) {
-                        AsyncTaskHelper.execute(FriendServiceImpl::searchInviteNotification, friendBeans -> {
-                            for (FriendBean friendBean : friendBeans) {
-                                if (!inviteRequestList.contains(friendBean)) {
-                                    inviteRequestList.addLast(friendBean);
-                                }
+                super.run();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        SharedPreferences sharedPreferences = getSharedPreferences("cookieData", Context.MODE_PRIVATE);
+                        Set<String> cookieSet = sharedPreferences.getStringSet("cookie", new HashSet<>());
+                        boolean isLogin = false;
+                        for (String cookie : cookieSet) {
+                            if (cookie.contains("JSESSIONID")) {
+                                isLogin = true;
+                                break;
                             }
-                        });
+                        }
+                        if (isLogin) {
+                            if (ACTIVE_NOTIFICATION == null && !inviteRequestList.isEmpty()) {
+                                createNotification(inviteRequestList.getFirst());
+                            }
+                            if (inviteRequestList.size() == 0) {
+                                AsyncTaskHelper.execute(FriendServiceImpl::searchInviteNotification, friendBeans -> {
+                                    for (FriendBean friendBean : friendBeans) {
+                                        if (!inviteRequestList.contains(friendBean)) {
+                                            inviteRequestList.addLast(friendBean);
+                                        }
+                                    }
+                                });
+                            }
+                        }
                     }
-                }
+                }, 1000, 1000);
             }
-        }, 1000, 1000);
+        };
+        invite.start();
+
     }
 
     private void createNotification(FriendBean friendBean) {

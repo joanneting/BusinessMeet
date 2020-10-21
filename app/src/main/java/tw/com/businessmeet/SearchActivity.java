@@ -7,7 +7,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,7 +69,6 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
 
                 Toast.makeText(SearchActivity.this, friendId, Toast.LENGTH_LONG).show();
                 FriendBean friendBean = new FriendBean();
-                Log.d("getblueTooth", myUserId);
                 friendBean.setMatchmakerId(myUserId);
                 friendBean.setFriendId(friendId);
                 AsyncTaskHelper.execute(() -> FriendServiceImpl.add(friendBean), friendDAO::add);
@@ -99,7 +97,6 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
         createRecyclerViewUnmatched();
         createRecyclerViewMatched();
         TextView search_title = findViewById(R.id.search_title);
-        Log.e("searhTitle", String.valueOf(search_title));
         DeviceFinder foregroundDeviceFinder = DeviceFinderCompat.getForegroundFinder(this);
         foregroundDeviceFinder.find(new ForegroundActionHandlerSupplier(this, new MatchListener() {
             @Override
@@ -157,7 +154,6 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
     }
 
     private void openDB() {
-        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
         friendDAO = new FriendDAO(DH);
@@ -170,7 +166,6 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
         recyclerViewMatched.setAdapter(matchedRecyclerViewAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewMatched.getContext(), DividerItemDecoration.VERTICAL);
         recyclerViewMatched.addItemDecoration(dividerItemDecoration);
-        Log.d("resultMainAdapter", String.valueOf(matchedRecyclerViewAdapter.getItemCount()));
     }
 
     private void createRecyclerViewUnmatched() {
@@ -180,7 +175,6 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
         recyclerViewUnmatched.setAdapter(unmatchedRecyclerViewAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewUnmatched.getContext(), DividerItemDecoration.VERTICAL);
         recyclerViewUnmatched.addItemDecoration(dividerItemDecoration);
-        Log.d("resultMainAdapter", String.valueOf(unmatchedRecyclerViewAdapter.getItemCount()));
     }
 
     @Override
@@ -192,7 +186,6 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
         bundle.putString("friendId", matchedRecyclerViewAdapter.getUserInformation(position).getUserId());
         intent.putExtras(bundle);
         startActivity(intent);
-        Log.e("send", "============================");
         //NotificationHelper notificationHelper = new NotificationHelper(this);
         //notificationHelper.sendMessage(address);
     }

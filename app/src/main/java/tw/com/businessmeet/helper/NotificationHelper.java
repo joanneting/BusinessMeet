@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -183,15 +182,10 @@ public class NotificationHelper {
         if (NOTIFICATION_ID >= 10) {
             notificationManager.cancel(NOTIFICATION_ID - 10);// 取消之前的通知消息;
         }
-        Log.d("intomatchID", String.valueOf(NOTIFICATION_ID));
-/*                    SystemClock.sleep(1000);
-                    notificationManager.notify(2, notification1.build());
-                    SystemClock.sleep(1000);
-                    notificationManager.notify(3, notification2.build());
-                    SystemClock.sleep(1000);
-                    notificationManager.notify(4, summaryNotification.build());*/
+//                    notificationManager.notify(2, notification1.build());
+//                    notificationManager.notify(3, notification2.build());
+//                    notificationManager.notify(4, summaryNotification.build());*/
 
-        Log.d("taskHelper", "sucess");
     }
 
 
@@ -223,7 +217,6 @@ public class NotificationHelper {
                     String message2 = " SM娛樂公司";*/
         /**/
 
-        Log.e("avatar", userInformationBean.getAvatar());
 //        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
 //        bigStyle.bigText(memo);
         NotificationCompat.Builder notification1 = new NotificationCompat.Builder(
@@ -339,15 +332,6 @@ public class NotificationHelper {
         if (NOTIFICATION_ID >= 10) {
             notificationManager.cancel(NOTIFICATION_ID - 10);// 取消之前的通知消息;
         }
-        Log.d("intomatchID", String.valueOf(NOTIFICATION_ID));
-/*                    SystemClock.sleep(1000);
-                    notificationManager.notify(2, notification1.build());
-                    SystemClock.sleep(1000);
-                    notificationManager.notify(3, notification2.build());
-                    SystemClock.sleep(1000);
-                    notificationManager.notify(4, summaryNotification.build());*/
-
-        Log.d("taskHelper", "sucess");
     }
 
 }

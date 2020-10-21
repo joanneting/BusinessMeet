@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -93,14 +92,12 @@ public class AddIntroductionActivity extends AppCompatActivity {
         if (requestCode != RESULT_CANCELED) {
             if (resultCode == RESULT_OK) {
                 Uri uri = data.getData();
-                Log.d("resultUri", uri.toString());
                 ContentResolver cr = this.getContentResolver();
                 try {
                     Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
 
                     avatar.setImageBitmap(AvatarHelper.toCircle(bitmap));
                 } catch (Exception e) {
-                    Log.d("Exception", e.getMessage());
                 }
             }
         }
@@ -108,7 +105,6 @@ public class AddIntroductionActivity extends AppCompatActivity {
     }
 
     private void openDB() {
-        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
     }

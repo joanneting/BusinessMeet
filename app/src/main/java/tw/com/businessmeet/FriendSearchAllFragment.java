@@ -1,29 +1,18 @@
 package tw.com.businessmeet;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +22,6 @@ import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
-import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.helper.DeviceHelper;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
@@ -63,14 +51,12 @@ public class FriendSearchAllFragment extends Fragment implements FriendsRecycler
         FriendBean friendBean = new FriendBean();
         friendBean.setMatchmakerId(DeviceHelper.getUserId(getContext(), userInformationDAO));
         AsyncTaskHelper.execute(() -> FriendServiceImpl.search(friendBean), friendBeanList -> {
-            Log.e("FriendBean", "success");
             if (friendBeanList.size() > 1 || (friendBeanList.size() == 1 && (friendBeanList.get(0).getCreateDate() != null && !friendBeanList.get(0).equals("")))) {
                 for (FriendBean searchBean : friendBeanList) {
                     AsyncTaskHelper.execute(
                             () -> UserInformationServiceImpl.getById(searchBean.getFriendId()),
                             friendsRecyclerViewAdapter::dataInsert
                     );
-                    Log.e("FriendBean", String.valueOf(searchBean));
                 }
             }
         });
@@ -78,10 +64,7 @@ public class FriendSearchAllFragment extends Fragment implements FriendsRecycler
     }
 
     private void openDB() {
-        Log.d("add", "openDB");
-        System.out.println("getActivity() = " + getActivity());
         DH = new DBHelper(getActivity());
-        System.out.println("DH = " + DH);
         userInformationDAO = new UserInformationDAO(DH);
     }
 
@@ -92,7 +75,6 @@ public class FriendSearchAllFragment extends Fragment implements FriendsRecycler
         recyclerViewFriends.setAdapter(friendsRecyclerViewAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewFriends.getContext(), DividerItemDecoration.VERTICAL);
         recyclerViewFriends.addItemDecoration(dividerItemDecoration);
-        Log.d("resultMainAdapter", String.valueOf(friendsRecyclerViewAdapter.getItemCount()));
     }
 
     @Override
@@ -136,8 +118,6 @@ public class FriendSearchAllFragment extends Fragment implements FriendsRecycler
 
         }
     };
-
-
 
 
 }

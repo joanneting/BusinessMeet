@@ -2,7 +2,6 @@ package tw.com.businessmeet;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }
-                Log.d("resultthread", String.valueOf(permission));
             }
         };
         checkPermission.start();
