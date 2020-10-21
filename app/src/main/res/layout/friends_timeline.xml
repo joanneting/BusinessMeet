@@ -13,24 +13,42 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         tools:layout_editor_absoluteX="0dp">
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#F3F3F3">
 
-
-            <ImageButton
-                android:id="@+id/goProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#00000000"
-                android:src="@drawable/ic_proceed"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <EditText
+                android:id="@+id/searchBar"
+                style="@style/searchBar"
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.94"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="MissingConstraints" />
+
+            <ImageView
+                android:id="@+id/event_searchbar_icon"
+                style="@style/search_icon"
+                app:layout_constraintBottom_toBottomOf="@id/searchBar"
+                app:layout_constraintStart_toStartOf="@id/searchBar"
+                app:layout_constraintTop_toTopOf="@id/searchBar" />
+
+            <TextView
+                android:id="@+id/friends_searchbar_text"
+                style="@style/search_text"
+                app:layout_constraintBottom_toBottomOf="@id/event_searchbar_icon"
+                app:layout_constraintStart_toStartOf="@id/event_searchbar_icon"
+                app:layout_constraintTop_toTopOf="@id/event_searchbar_icon" />
+
+            <ImageView
+                android:id="@+id/friends_searchbar_cancelIcon"
+                style="@style/search_cancel"
+                app:layout_constraintBottom_toBottomOf="@id/searchBar"
+                app:layout_constraintEnd_toEndOf="@id/searchBar"
+                app:layout_constraintTop_toTopOf="@id/searchBar" />
 
             <ImageView
                 android:id="@+id/friends_photo"
@@ -42,8 +60,22 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.06"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchBar"
                 app:srcCompat="@drawable/avatar" />
+
+            <ImageButton
+                android:id="@+id/goProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:src="@drawable/ic_proceed"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.94"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchBar"
+                tools:ignore="MissingConstraints" />
+
 
             <TextView
                 android:id="@+id/friends_position"
@@ -71,7 +103,6 @@
                 app:layout_constraintStart_toEndOf="@+id/friends_photo"
                 app:layout_constraintTop_toTopOf="@+id/friends_photo"
                 tools:ignore="MissingConstraints" />
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -124,6 +155,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:elevation="3dp"
         tools:layout_editor_absoluteX="1dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

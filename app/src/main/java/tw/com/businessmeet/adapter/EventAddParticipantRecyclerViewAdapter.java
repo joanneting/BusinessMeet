@@ -1,7 +1,6 @@
 package tw.com.businessmeet.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,6 @@ import java.util.List;
 import tw.com.businessmeet.R;
 import tw.com.businessmeet.bean.ActivityInviteBean;
 import tw.com.businessmeet.bean.RecyclerViewFilterBean;
-import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.helper.AvatarHelper;
 
 public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter<EventAddParticipantRecyclerViewAdapter.ViewHolder> implements Filterable {
@@ -30,7 +28,8 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
     private List<ActivityInviteBean> activityInviteBeanList = new ArrayList<>();
     private List<RecyclerViewFilterBean<ActivityInviteBean>> filterList = new ArrayList<RecyclerViewFilterBean<ActivityInviteBean>>();
     private AvatarHelper avatarHelper = new AvatarHelper();
-    public EventAddParticipantRecyclerViewAdapter(Context context,List<ActivityInviteBean> activityInviteBeanList) {
+
+    public EventAddParticipantRecyclerViewAdapter(Context context, List<ActivityInviteBean> activityInviteBeanList) {
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
         this.activityInviteBeanList = activityInviteBeanList;
@@ -45,7 +44,7 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
     @NonNull
     @Override
     public EventAddParticipantRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.recycler_view_row_event_add_participant, parent,false);
+        View view = layoutInflater.inflate(R.layout.recycler_view_row_event_add_participant, parent, false);
         return new EventAddParticipantRecyclerViewAdapter.ViewHolder(view);
     }
 
@@ -53,7 +52,7 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecyclerViewFilterBean<ActivityInviteBean> recyclerViewFilterBean = filterList.get(position);
         ActivityInviteBean activityInviteBean = recyclerViewFilterBean.getData();
-        holder.bindInformation(activityInviteBean.getUserName(),activityInviteBean.getAvatar(),activityInviteBean.isInvite());
+        holder.bindInformation(activityInviteBean.getUserName(), activityInviteBean.getAvatar(), activityInviteBean.isInvite(), position);
     }
 
     @Override
@@ -61,10 +60,11 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
         return filterList.size();
     }
 
-    public ActivityInviteBean getActivityInviteBean(int position){
+    public ActivityInviteBean getActivityInviteBean(int position) {
         return filterList.get(position).getData();
     }
-    public List<ActivityInviteBean> getInviteList(){
+
+    public List<ActivityInviteBean> getInviteList() {
         List<ActivityInviteBean> inviteList = new ArrayList<>();
         for (ActivityInviteBean activityInviteBean : activityInviteBeanList) {
             if (activityInviteBean.isInvite()) {
@@ -74,6 +74,7 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
         System.out.println("inviteList.size() = " + inviteList.size());
         return inviteList;
     }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView friends_photo;
         TextView friends_name;
@@ -88,23 +89,33 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
             itemView.setOnClickListener(this);
         }
 
-        void bindInformation(String userName, String avatar,boolean isInvite){
+        void bindInformation(String userName, String avatar, boolean isInvite, Integer position) {
             friends_photo.setImageBitmap(avatarHelper.getImageResource(avatar));
             friends_name.setText(userName);
             invite.setChecked(isInvite);
+            invite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActivityInviteBean activityInviteBean = filterList.get(position).getData();
+                    activityInviteBean.setInvite(!activityInviteBean.isInvite());
+                    dataUpdate(activityInviteBean, position);
+                }
+            });
         }
 
         @Override
         public void onClick(View v) {
-            if(clickLinster != null){
-                clickLinster.onClick(v,getAdapterPosition());
+            if (clickLinster != null) {
+                clickLinster.onClick(v, getAdapterPosition());
             }
         }
     }
-    public void  setClickListener(ClickListener clickLinster){
+
+    public void setClickListener(ClickListener clickLinster) {
         this.clickLinster = clickLinster;
     }
-    public void dataInsert(ActivityInviteBean activityInviteBean){
+
+    public void dataInsert(ActivityInviteBean activityInviteBean) {
         RecyclerViewFilterBean<ActivityInviteBean> recyclerViewFilterBean = new RecyclerViewFilterBean<>();
         recyclerViewFilterBean.setPosition(activityInviteBeanList.size());
         recyclerViewFilterBean.setData(activityInviteBean);
@@ -112,7 +123,8 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
         activityInviteBeanList.add(activityInviteBean);
         notifyItemInserted(getItemCount());
     }
-    public void dataUpdate(ActivityInviteBean activityInviteBean,int position){
+
+    public void dataUpdate(ActivityInviteBean activityInviteBean, int position) {
         RecyclerViewFilterBean<ActivityInviteBean> recyclerViewFilterBean = filterList.get(position);
 
         ActivityInviteBean recyclerViewFilterBeanData = recyclerViewFilterBean.getData();
@@ -160,6 +172,7 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
                 filterResults.values = filterList;
                 return filterResults;
             }
+
             //把過濾後的值返回出來
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
@@ -169,7 +182,7 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
         };
     }
 
-    public interface ClickListener{
+    public interface ClickListener {
         void onClick(View view, int position);
     }
 

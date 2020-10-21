@@ -1,5 +1,7 @@
 package tw.com.businessmeet;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -31,6 +33,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import retrofit2.Call;
 import tw.com.businessmeet.bean.ActivityInviteBean;
 import tw.com.businessmeet.bean.ActivityLabelBean;
 import tw.com.businessmeet.bean.TimelineBean;
@@ -139,10 +144,11 @@ public class EventCreateActivity extends AppCompatActivity {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         dateStart.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View view) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        EventCreateActivity.this, new DatePickerDialog.OnDateSetListener() {
+                        EventCreateActivity.this,R.style.MyDatePicker, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         calendar.set(year, month, day);
@@ -152,6 +158,8 @@ public class EventCreateActivity extends AppCompatActivity {
                 }, year, month, day);
                 datePickerDialog.updateDate(year, month, day);
                 datePickerDialog.show();
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(R.style.AppTheme);
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(R.style.AppTheme);
             }
         });
 
@@ -165,10 +173,13 @@ public class EventCreateActivity extends AppCompatActivity {
                         calendar.set(year, month, day);
                         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         dateEnd.setText(simpleDateFormat.format(calendar.getTime()));
+
                     }
                 }, year, month, day);
                 datePickerDialog.updateDate(year, month, day);
                 datePickerDialog.show();
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setTextColor(R.style.AppTheme);
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setTextColor(R.style.AppTheme);
             }
         });
 
@@ -226,6 +237,8 @@ public class EventCreateActivity extends AppCompatActivity {
                 timePickerDialog.updateTime(timerHour, timerMinute);
                 //Show dialog
                 timePickerDialog.show();
+                timePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setTextColor(R.style.AppTheme);
+                timePickerDialog.getButton(TimePickerDialog.BUTTON_NEGATIVE).setTextColor(R.style.AppTheme);
 
             }
         });
@@ -252,7 +265,8 @@ public class EventCreateActivity extends AppCompatActivity {
                 timePickerDialog.updateTime(timerHour, timerMinute);
                 //Show dialog
                 timePickerDialog.show();
-
+                timePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setTextColor(R.style.AppTheme);
+                timePickerDialog.getButton(TimePickerDialog.BUTTON_NEGATIVE).setTextColor(R.style.AppTheme);
             }
         });
 
