@@ -154,8 +154,8 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onBackPressed();
-        });
             }
+        });
     }
 
     private void openDB() {
