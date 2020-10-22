@@ -61,6 +61,9 @@ public class UserInformationDAO {
         if (identifier != null && !identifier.equals("")) {
             values.put("identifier", identifier);
         }
+        if (identifier != null && !identifier.equals("")) {
+            values.put("firebase_token", identifier);
+        }
         if (roleNo != null && roleNo != 0) {
             values.put("role_no", roleNo);
         }
@@ -143,8 +146,9 @@ public class UserInformationDAO {
         String identifier = userInformationBean.getIdentifier();
         String avatar = userInformationBean.getAvatar();
         String tel = userInformationBean.getTel();
-        String[] searchValue = new String[]{userId, password, name, gender, mail, profession, identifier, avatar, tel};
-        String[] searchColumn = new String[]{column[0], column[1], column[2], column[3], column[4], column[5], column[6], column[7], column[8]};
+        String firebaseToken = userInformationBean.getFirebaseToken();
+        String[] searchValue = new String[]{userId, password, name, gender, mail, profession, identifier, firebaseToken, avatar, tel};
+        String[] searchColumn = new String[]{column[0], column[1], column[2], column[3], column[4], column[5], column[6], column[7], column[8], column[9]};
         String where = "";
         ArrayList<String> args = new ArrayList<>();
 

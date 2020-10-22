@@ -132,6 +132,7 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         Menu BVMenu = bottomNavigationView.getMenu();
         AvatarHelper avatarHelper = new AvatarHelper();
         UserInformationBean ufb = new UserInformationBean();
+        ufb.setUserId(DeviceHelper.getUserId(this));
         Cursor result = userInformationDAO.searchAll(ufb);
         createRecyclerViewFriendsTimeline(); //timelineRecycleView
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);

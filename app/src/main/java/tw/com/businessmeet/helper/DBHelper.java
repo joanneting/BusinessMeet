@@ -30,6 +30,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "tel varchar(20), " +
                 "role_no int not null," +
                 "identifier varchar(36) not null," +
+                "firebase_token varchar(255)," +
                 "create_date datetime not null," +
                 "modify_date datetime" +
                 ");";

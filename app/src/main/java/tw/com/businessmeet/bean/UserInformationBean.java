@@ -1,7 +1,7 @@
 package tw.com.businessmeet.bean;
 
 public class UserInformationBean {
-    private static String[] column = new String[]{ "user_id","password","name", "gender","mail","profession","identifier","avatar","tel","create_date","modify_date"};
+    private static String[] column = new String[]{"user_id", "password", "name", "gender", "mail", "profession", "identifier", "firebase_token", "avatar", "tel", "create_date", "modify_date"};
 
     private String userId;
     private String password;
@@ -10,6 +10,7 @@ public class UserInformationBean {
     private String mail;
     private String profession;
     private String identifier;
+    private String firebaseToken;
     private String avatar;
     private String tel;
     private Integer roleNo;
@@ -100,6 +101,14 @@ public class UserInformationBean {
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
+    }
+
+    public String getFirebaseToken() {
+        return firebaseToken;
+    }
+
+    public void setFirebaseToken(String firebaseToken) {
+        this.firebaseToken = firebaseToken;
     }
 
     public String getCreateDate() {

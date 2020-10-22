@@ -24,8 +24,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import tw.com.businessmeet.adapter.MatchedDeviceRecyclerViewAdapter;
 import tw.com.businessmeet.adapter.UnmatchedDeviceRecyclerViewAdapter;
@@ -131,26 +129,26 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
         Boolean matched = false;
         String userId = DeviceHelper.getUserId(this, userInformationDAO);
-        Timer timer = new Timer(true);
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                for (UserInformationBean userInformationBean : unmatchedList) {
-                    FriendBean friendBean = new FriendBean();
-                    friendBean.setFriendId(userInformationBean.getUserId());
-                    friendBean.setMatchmakerId(userId);
-                    AsyncTaskHelper.execute(() -> FriendServiceImpl.search(friendBean), friendBeanList -> {
-                        if (friendBeanList.size() == 1 && friendBeanList.get(0).getStatus() != null) {
-                            Intent intent = new Intent(SearchActivity.this, FriendsIntroductionActivity.class);
-                            intent.putExtra("friendId", userInformationBean.getUserId());
-                            startActivity(intent);
-                            finish();
-                            timer.cancel();
-                        }
-                    });
-                }
-            }
-        }, 1_000, 1_000);
+//        Timer timer = new Timer(true);
+//        timer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                for (UserInformationBean userInformationBean : unmatchedList) {
+//                    FriendBean friendBean = new FriendBean();
+//                    friendBean.setFriendId(userInformationBean.getUserId());
+//                    friendBean.setMatchmakerId(userId);
+//                    AsyncTaskHelper.execute(() -> FriendServiceImpl.search(friendBean), friendBeanList -> {
+//                        if (friendBeanList.size() == 1 && friendBeanList.get(0).getStatus() != null) {
+//                            Intent intent = new Intent(SearchActivity.this, FriendsIntroductionActivity.class);
+//                            intent.putExtra("friendId", userInformationBean.getUserId());
+//                            startActivity(intent);
+//                            finish();
+//                            timer.cancel();
+//                        }
+//                    });
+//                }
+//            }
+//        }, 1_000, 1_000);
     }
 
     private void openDB() {

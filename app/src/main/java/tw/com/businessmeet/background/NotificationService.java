@@ -47,7 +47,7 @@ public class NotificationService extends Service {
             finder.find(new BackgroundActionHandlerSupplier(this, finder));
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            sharedPreferences.edit().putBoolean("KEY_NOTIFICATION", true).apply();
+            sharedPreferences.edit().putBoolean(KEY_NOTIFICATION, true).apply();
         }
 
         super.onCreate();

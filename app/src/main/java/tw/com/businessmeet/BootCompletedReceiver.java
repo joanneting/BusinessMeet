@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import tw.com.businessmeet.background.FriendInviteService;
 import tw.com.businessmeet.background.NotificationService;
 
 public class BootCompletedReceiver extends BroadcastReceiver {
@@ -16,8 +15,8 @@ public class BootCompletedReceiver extends BroadcastReceiver {
             //Service
             Intent serviceIntent = new Intent(context, NotificationService.class);
             context.startService(serviceIntent);
-            Intent friendInvite = new Intent(context, FriendInviteService.class);
-            context.startService(friendInvite);
+//            Intent friendInvite = new Intent(context, FriendInviteService.class);
+//            context.startService(friendInvite);
         }
     }
 }

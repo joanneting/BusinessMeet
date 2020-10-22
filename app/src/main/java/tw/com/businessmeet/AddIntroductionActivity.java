@@ -2,10 +2,12 @@ package tw.com.businessmeet;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -71,6 +73,8 @@ public class AddIntroductionActivity extends AppCompatActivity {
             ufb.setAvatar(AvatarHelper.setImageResource(avatar));
             ufb.setIdentifier(DeviceHelper.getIdentifier(this));
             ufb.setRoleNo(3);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            ufb.setFirebaseToken(sharedPreferences.getString("firebaseToken", null));
             if (checkData(ufb)) {
                 AsyncTaskHelper.execute(() -> UserInformationServiceImpl.add(ufb), userInformationBean -> {
                     userInformationDAO.add(userInformationBean);
