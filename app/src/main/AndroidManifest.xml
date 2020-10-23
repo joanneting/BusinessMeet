@@ -42,7 +42,9 @@
         <activity android:name=".EventCreateActivity" />
         <activity android:name=".EditEventActivity" />
         <activity android:name=".EventActivity" />
-        <activity android:name=".FriendSearchActivity" />
+        <activity
+            android:name=".FriendSearchActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".FriendsTimelineActivity"
             android:parentActivityName=".FriendsActivity" />
@@ -51,7 +53,9 @@
             android:label="@string/title_activity_login" />
         <activity android:name=".BaseActivity" />
         <activity android:name=".NotificationActivity" />
-        <activity android:name=".FriendsActivity" />
+        <activity
+            android:name=".FriendsActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".FriendsIntroductionActivity" />
         <activity android:name=".FriendsMemoActivity" />
         <activity android:name=".OpenActivityFriendsSearchActivity" />

@@ -74,25 +74,6 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
     private DBHelper dh = null;
     private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
 
-//    private AsyncTaskHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean> addResponseListener =
-//            new AsyncTaskHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean>() {
-//                @Override
-//                public Call<ResponseBody<FriendCustomizationBean>> request(FriendCustomizationBean... friendCustomizationBean) {
-//                    return friendCustomizationServiceImpl.add(friendCustomizationBean[0]);
-//                }
-//
-//                @Override
-//                public void onSuccess(FriendCustomizationBean friendCustomizationBean) {
-////                    openDB();
-////                    friendCustomizationDAO.add(friendCustomizationBean);
-//                    AsyncTaskHelper.execute(searchResponseListener, friendCustomizationBean);
-//                }
-//
-//                @Override
-//                public void onFail(int status, String message) {
-//                }
-//            };
-
     private void openDB() {
         dh = new DBHelper(getContext());
         friendCustomizationDAO = new FriendCustomizationDAO(dh);
@@ -145,13 +126,7 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_edit_memo, container, false);
-        fcb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
-        AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.search(fcb), friendCustomizationBeanList -> {
-            if (friendCustomizationBeanList.size() > 1 ||
-                    (friendCustomizationBeanList.size() == 1 && friendCustomizationBeanList.get(0).getCreateDate() != null)) {
-                EditMemoFragment.this.friendCustomizationBeanList.addAll(friendCustomizationBeanList);
-            }
-        });
+        friendsearchMemo(getActivity().getIntent().getIntExtra("friendNo", 0));
 
         // recyclerView
         recyclerViewMemo = (RecyclerView) view.findViewById(R.id.friends_edit_profile_memo_recycleView);
@@ -281,5 +256,16 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
         bundle.putString("content", friendMemoAddColumnRecyclerViewAdapter.getFriendMemo(position).getContent());
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    private List<FriendCustomizationBean> friendsearchMemo(Integer friendNo) {
+        AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.search(fcb), friendCustomizationBeanList -> {
+            for (int i = 0; i < friendCustomizationBeanList.size(); i++) {
+                if (friendCustomizationBeanList.get(i).getFriendNo() == getActivity().getIntent().getIntExtra("friendNo", 0)) {
+                    EditMemoFragment.this.friendCustomizationBeanList.add(friendCustomizationBeanList.get(i));
+                }
+            }
+        });
+        return friendCustomizationBeanList;
     }
 }
