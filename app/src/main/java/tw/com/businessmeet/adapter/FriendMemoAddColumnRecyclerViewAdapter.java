@@ -83,7 +83,9 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
                 public void onClick(View v) {
                     System.out.println("HERE!!!");
                     System.out.println(friendCustomizationNo);
-                    AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.delete(friendCustomizationNo));
+                    AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.delete(friendCustomizationNo)
+
+                    );
                 }
             });
         }

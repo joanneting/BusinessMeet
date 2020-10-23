@@ -88,6 +88,7 @@ public class EditProfileFragment extends Fragment {
         FriendGroupBean fgb = new FriendGroupBean();
         fgb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
         GroupsBean gb = new GroupsBean();
+        // 搜尋好友目前的群組編號
         AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.search(fgb), friendGroupBeanList -> {
             if (friendGroupBeanList.size() > 0) {
                 gb.setGroupNo(friendGroupBeanList.get(0).getGroupNo());
@@ -96,6 +97,15 @@ public class EditProfileFragment extends Fragment {
             }
         });
         AsyncTaskHelper.execute(() -> GroupsServiceImpl.search(gb), groupsBeanList -> {
+            // 搜尋好友目前的群組名稱
+            for (int i = 0; i < groupsBeanList.size(); i++) {
+                if (groupsBeanList.get(i).getGroupNo() == gb.getGroupNo()) {
+                    System.out.println(groupsBeanList.get(i).getName());
+                    currentGroup.setText(groupsBeanList.get(i).getName());
+                    currentGroupNo = groupsBeanList.get(i).getGroupNo();
+                }
+            }
+            // 設定所有群組
             String chipIndex;
             for (int i = 0; i < groupsBeanList.size(); i++) {
                 if (groupsBeanList.get(i).getUserId().equals(getActivity().getIntent().getStringExtra("userId"))) {
@@ -108,6 +118,7 @@ public class EditProfileFragment extends Fragment {
                     System.out.println("chipId = " + chip.getId());
                     chip.setText(groupsBeanList.get(i).getName());
                     chip.setCloseIconVisible(true);
+                    // 編輯所有群組
                     chip.setOnCloseIconClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -128,6 +139,7 @@ public class EditProfileFragment extends Fragment {
                                         System.out.println("gb.getGroupNo() = " + gb.getGroupNo());
                                         gb.setName(editGroupDialogInput.getText().toString());
                                         gb.setUserId(getActivity().getIntent().getStringExtra("userId"));
+                                        // 群組名稱重新命名
                                         AsyncTaskHelper.execute(() -> GroupsServiceImpl.update(gb), groupsBean -> {
                                             System.out.println("Rename group name success!!!");
                                             if(alertDialog.isShowing()){
@@ -143,7 +155,12 @@ public class EditProfileFragment extends Fragment {
                             deleteDialogButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-
+                                    // 刪除群組
+                                    // 把好友從群組刪除
+                                    AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.delete(friendGroupNo), friendGroupNo -> {
+                                        System.out.println("delete friend group success!!!");
+//                                        AsyncTaskHelper.execute(() -> GroupsServiceImpl.delete);
+                                    });
                                 }
                             });
                             cancelDialogButton = (Button) view.findViewById(R.id.editGroup_dialog_cancelButton);
@@ -157,11 +174,22 @@ public class EditProfileFragment extends Fragment {
                             });
                         }
                     });
+                    // 點擊選取目前好友群組
                     chip.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Toast.makeText(getContext(), chip.getText().toString() + chip.getId(), Toast.LENGTH_SHORT).show();
                             currentGroup.setText(chip.getText().toString());
+                            currentGroup.setCloseIconVisible(true);
+                            currentGroup.setOnCloseIconClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    chip.setText("");
+                                    AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.delete(friendGroupNo), empty -> {
+                                        System.out.println("刪除好友目前群組成功!!!");
+                                    });
+                                }
+                            });
                             updateGroupNo = chip.getId();
                         }
                     });
@@ -169,15 +197,9 @@ public class EditProfileFragment extends Fragment {
 
                 }
             }
-            for (int i = 0; i < groupsBeanList.size(); i++) {
-                if (groupsBeanList.get(i).getGroupNo() == gb.getGroupNo()) {
-                    System.out.println(groupsBeanList.get(i).getName());
-                    currentGroup.setText(groupsBeanList.get(i).getName());
-                    currentGroupNo = groupsBeanList.get(i).getGroupNo();
-                }
-            }
-        });
 
+        });
+        // 新增群組
         addGroupButton = (Chip) view.findViewById(R.id.addGroupButton);
         addGroupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,6 +232,24 @@ public class EditProfileFragment extends Fragment {
 
                                     }
                                 });
+                                chip.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Toast.makeText(getContext(), chip.getText().toString() + chip.getId(), Toast.LENGTH_SHORT).show();
+                                        currentGroup.setText(chip.getText().toString());
+                                        currentGroup.setCloseIconVisible(true);
+                                        currentGroup.setOnCloseIconClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                chip.setText("");
+                                                AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.delete(friendGroupNo), empty -> {
+                                                    System.out.println("刪除好友目前群組成功!!!");
+                                                });
+                                            }
+                                        });
+                                        updateGroupNo = chip.getId();
+                                    }
+                                });
                                 chipGroup.addView(chip);
                                 if (alertDialog.isShowing()) {
                                     alertDialog.dismiss();
@@ -232,6 +272,10 @@ public class EditProfileFragment extends Fragment {
 
             }
         });
+
+
+
+        // 更新好友備忘錄
         addProfileContent = (EditText) view.findViewById(R.id.addProfileContent_input);
         remark = getActivity().getIntent().getStringExtra("remark");
         if (remark != null && remark != "") {
