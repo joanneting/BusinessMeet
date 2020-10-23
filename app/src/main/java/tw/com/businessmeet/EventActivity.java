@@ -55,10 +55,8 @@ public class EventActivity extends AppCompatActivity {
         participantIcon = findViewById(R.id.participant_icon);
         tagIcon = findViewById(R.id.tag_icon);
         AsyncTaskHelper.execute(() -> TimelineServiceImpl.getById(timelineNo), timelineBean -> {
-            System.out.println(timelineBean.getCreateDateStr());
             event.setText(timelineBean.getTitle());
             eventLocation.setText(timelineBean.getPlace());
-            System.out.println("timelineBean.getRemark() = " + timelineBean.getRemark());
             addEventMemo.setText(timelineBean.getRemark());
             if (timelineBean.getTimelinePropertiesNo() == 1) {
                 meet = false;
@@ -148,7 +146,6 @@ public class EventActivity extends AppCompatActivity {
                                 .show();
                         break;
                     case R.id.menu_toolbar_search:
-                        System.out.println(event.getText().toString());//偵測按下去的事件
                         Intent intent = new Intent();
                         intent.setClass(EventActivity.this, EditEventActivity.class);
                         Bundle bundle = new Bundle();

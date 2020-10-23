@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.io.IOException;
 
@@ -33,7 +32,6 @@ public class NotificationService extends Service {
 
     @Override
     public void onCreate() {
-        Log.e("service ", "serviceStart");
 //        try {
 //            connectServer = new BluetoothConnectServer(this);
 //            connectServer.start();
@@ -49,7 +47,7 @@ public class NotificationService extends Service {
             finder.find(new BackgroundActionHandlerSupplier(this, finder));
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            sharedPreferences.edit().putBoolean("KEY_NOTIFICATION", true).apply();
+            sharedPreferences.edit().putBoolean(KEY_NOTIFICATION, true).apply();
         }
 
         super.onCreate();

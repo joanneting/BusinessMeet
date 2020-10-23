@@ -11,7 +11,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -99,58 +98,57 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
                 (friendBeanList.size() == 1 && friendBeanList.get(0).getCreateDate() != null)
         ) {
 
-            if (distance <= 10000) {
-                if (ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            if (distance <= 100000) {
+            if (ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-                    return;
-                }
+                return;
+            }
 
-                //更新位置
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                TimelineBean timelineBean = new TimelineBean();
-                timelineBean.setFriendId(friendBean.getFriendId());
-                timelineBean.setMatchmakerId(friendBean.getMatchmakerId());
-                Geocoder gc = new Geocoder(notificationService, Locale.TRADITIONAL_CHINESE);
+            //更新位置
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            TimelineBean timelineBean = new TimelineBean();
+            timelineBean.setFriendId(friendBean.getFriendId());
+            timelineBean.setMatchmakerId(friendBean.getMatchmakerId());
+            Geocoder gc = new Geocoder(notificationService, Locale.TRADITIONAL_CHINESE);
 
 
-                try {
-                    longitude = location.getLongitude();        //取得經度
-                    latitude = location.getLatitude();
-                    List<Address> lstAddress = gc.getFromLocation(latitude, longitude, 1);
+            try {
+                longitude = location.getLongitude();        //取得經度
+                latitude = location.getLatitude();
+                List<Address> lstAddress = gc.getFromLocation(latitude, longitude, 1);
 //                    Toast.makeText(
 //                            notificationService.getBaseContext(),
 //                            lstAddress.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
-                    timelineBean.setPlace(lstAddress.get(0).getAddressLine(0));
-                    locationManager.removeUpdates(locationListener);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    timelineBean.setPlace("室內");
-                }
+                timelineBean.setPlace(lstAddress.get(0).getAddressLine(0));
+                locationManager.removeUpdates(locationListener);
+            } catch (Exception e) {
+                e.printStackTrace();
+                timelineBean.setPlace("室內");
+            }
 //                    if (!Geocoder.isPresent()){ //Since: API Level 9
 //                        returnAddress = "Sorry! Geocoder service not Present.";
 //                    }
-                timelineBean.setTimelinePropertiesNo(2);
+            timelineBean.setTimelinePropertiesNo(2);
 
-                timelineBean.setTitle(timelineBean.getPlace());
-                Log.d("place", timelineBean.getPlace());
-                TimelineDAO timelineDAO = new TimelineDAO(dbHelper);
-                TimelineBean searchBean = new TimelineBean();
-                searchBean.setFriendId(friendBean.getFriendId());
-                searchBean.setMatchmakerId(friendBean.getMatchmakerId());
-                Cursor cursor = timelineDAO.search(searchBean);
-                String lastMeetPlace = "";
-                if (cursor != null && cursor.moveToLast()) {
-                    lastMeetPlace = cursor.getString(cursor.getColumnIndex("place"));
-                }
-                AsyncTaskHelper.execute(
-                        () -> TimelineServiceImpl.add(timelineBean),
-                        timelineDAO::add
-                );
-
-                notificationHelper.sendBackgroundMessage(userInformationBean, lastMeetPlace);
+            timelineBean.setTitle(timelineBean.getPlace());
+            TimelineDAO timelineDAO = new TimelineDAO(dbHelper);
+            TimelineBean searchBean = new TimelineBean();
+            searchBean.setFriendId(friendBean.getFriendId());
+            searchBean.setMatchmakerId(friendBean.getMatchmakerId());
+            Cursor cursor = timelineDAO.search(searchBean);
+            String lastMeetPlace = "";
+            if (cursor != null && cursor.moveToLast()) {
+                lastMeetPlace = cursor.getString(cursor.getColumnIndex("place"));
             }
+            AsyncTaskHelper.execute(
+                    () -> TimelineServiceImpl.add(timelineBean),
+                    timelineDAO::add
+            );
+
+            notificationHelper.sendBackgroundMessage(userInformationBean, lastMeetPlace);
         }
+//        }
     }
 
     private class MyLocationListener implements LocationListener {

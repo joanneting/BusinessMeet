@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -106,7 +105,6 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
             friendNo = friendBeanList.get(0).getFriendNo();
             FriendCustomizationBean fcb = new FriendCustomizationBean();
             fcb.setFriendNo(friendNo);
-            System.out.println("friendNo = " + friendNo);
             AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.search(fcb), friendCustomizationBeans -> {
                 if (friendCustomizationBeans.size() > 1 || (friendCustomizationBeans.size() == 1 && (friendCustomizationBeans.get(0).getCreateDate() != null && !friendCustomizationBeans.get(0).equals("")))) {
                     friendCustomizationBeanList.addAll(friendCustomizationBeans);
@@ -159,7 +157,6 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
     }
 
     private void openDB() {
-        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
     }
@@ -173,7 +170,6 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
     public View.OnClickListener deleteListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            System.out.println("friendNo = " + friendNo);
             AsyncTaskHelper.execute(() -> FriendServiceImpl.delete(friendNo), empty -> {
                 Intent intent = new Intent();
                 intent.setClass(FriendsIntroductionActivity.this, FriendSearchActivity.class);

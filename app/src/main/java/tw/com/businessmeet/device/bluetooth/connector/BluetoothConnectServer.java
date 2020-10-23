@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
@@ -68,7 +67,6 @@ public class BluetoothConnectServer extends Thread implements Closeable {
                 this.input = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
 
                 String deviceJsonString = input.readLine();
-                Log.d("BluetoothConnectServer", "連線成功：" + deviceJsonString);
                 JSONObject device = new JSONObject(deviceJsonString);
                 String action = device.getString("action");
                 switch (action) {
