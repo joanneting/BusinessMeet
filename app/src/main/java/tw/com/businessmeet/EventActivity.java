@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +35,7 @@ public class EventActivity extends AppCompatActivity {
     private Boolean meet = true;
     private String friendId;
     private TimelineBean activityBean;
-    private ImageView participantAvatar, tagIcon, participantIcon;
+    private ImageView  tagIcon, participantIcon;
     private UserInformationDAO userInformationDAO;
 
     @Override
@@ -101,7 +102,6 @@ public class EventActivity extends AppCompatActivity {
                 eventTag.setVisibility(View.GONE);
                 eventTime.setVisibility(View.GONE);
                 participantIcon.setVisibility(View.GONE);
-                participantAvatar.setVisibility(View.GONE);
                 eventParticipant.setVisibility(View.GONE);
                 eventDate.setText(timelineBean.getCreateDateStr());
             }
@@ -125,7 +125,7 @@ public class EventActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.menu_toolbar_delete:
-                        new AlertDialog.Builder(EventActivity.this)
+                        AlertDialog dialog = new AlertDialog.Builder(EventActivity.this)
                                 .setTitle("刪除確認")
                                 .setMessage("確定要刪除嗎?一但刪除便無法復原。")
                                 .setPositiveButton("確定", new DialogInterface.OnClickListener() {
@@ -143,8 +143,12 @@ public class EventActivity extends AppCompatActivity {
                                         }
                                         startActivity(intent);
                                     }
-                                }).setNegativeButton("取消", null).create()
-                                .show();
+                                }).setNegativeButton("取消", null).create();
+                                dialog.show();
+                                dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY);
+                                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.GRAY);
+
+
                         break;
                     case R.id.menu_toolbar_search:
                         Intent intent = new Intent();
