@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -46,7 +45,6 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     private void openDB() {
-        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
     }

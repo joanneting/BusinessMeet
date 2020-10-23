@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "947648592689",
+    "firebase_url": "https://bemet-837e6.firebaseio.com",
+    "project_id": "bemet-837e6",
+    "storage_bucket": "bemet-837e6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947648592689:android:71912f11e886e51f11ce10",
+        "android_client_info": {
+          "package_name": "tw.com.businessmeet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "947648592689-pkgv0n3pe9nehlo9t6sut0hc5b5f82v3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUllx5ro72d0mWkWToziueICqiGtXPf9g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "947648592689-pkgv0n3pe9nehlo9t6sut0hc5b5f82v3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

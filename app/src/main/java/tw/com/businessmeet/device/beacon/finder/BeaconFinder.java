@@ -29,18 +29,18 @@ public class BeaconFinder implements DeviceFinder {
 
     @Override
     public void find(ActionHandlerSupplier actionHandlerSupplier, ActionListener actionListener) {
+        ActionHandler foundActionHandler = actionHandlerSupplier.get(FindAction.FOUND);
+        ActionHandler finishActionHandler = actionHandlerSupplier.get(FindAction.FINISH);
         beaconHelper.addRangeNotifier((beaconCollection, region) -> {
             for (Beacon beacon : beaconCollection) {
                 if (foundedBeacon.add(beacon.getId1().toString())) {
-                    ActionHandler actionHandler = actionHandlerSupplier.get(FindAction.FOUND);
                     Intent intent = new Intent();
                     FoundedDeviceDetail deviceDetail = new BeaconDeviceDetail(beacon);
                     intent.putExtra(DeviceFinder.EXTRA_FOUNDED_DEVICE_DETAIL, deviceDetail);
-                    actionHandler.handle(context, intent);
+                    foundActionHandler.handle(context, intent);
                 }
             }
-            ActionHandler actionHandler = actionHandlerSupplier.get(FindAction.FINISH);
-            actionHandler.handle(context, new Intent());
+            finishActionHandler.handle(context, new Intent());
         });
 
         beaconHelper.bind();

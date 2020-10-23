@@ -4,7 +4,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.IntentFilter;
 import android.os.Build;
-import android.util.Log;
 
 import tw.com.businessmeet.background.NotificationService;
 import tw.com.businessmeet.device.ActionListener;
@@ -24,7 +23,6 @@ public class BackgroundBluetoothDeviceFinder implements DeviceFinder {
     public void find(ActionHandlerSupplier actionHandlerSupplier, ActionListener actionListener) {
         BluetoothHelper.startDiscovery();
 
-        Log.e("service ", "searchBlueToothInBackground");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel CHANNEL_1_ID =
                     new NotificationChannel("MyNotifications", "MyNotifications", NotificationManager.IMPORTANCE_DEFAULT);

@@ -7,7 +7,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -74,14 +73,12 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
         UserInformationBean ufb = new UserInformationBean();
         ufb.setUserId(DeviceHelper.getUserId(this));
         Cursor result = userInformationDAO.searchAll(ufb);
-        Log.e("result", String.valueOf(result));
 
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
         createRecyclerViewFriends();
         AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.searchFriendByGroup(groupNo), friendGroupBeanList -> {
-            Log.e("FriendBean", "success");
             if (friendGroupBeanList.size() > 0) {
                 for (FriendGroupBean friendGroupBean : friendGroupBeanList) {
                     UserInformationBean userInformationBean = new UserInformationBean();
@@ -97,7 +94,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
     }
 
     private void openDB() {
-        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
     }
@@ -109,7 +105,6 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
         recyclerViewFriends.setAdapter(friendsRecyclerViewAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerViewFriends.getContext(), DividerItemDecoration.VERTICAL);
         recyclerViewFriends.addItemDecoration(dividerItemDecoration);
-        Log.d("resultMainAdapter", String.valueOf(friendsRecyclerViewAdapter.getItemCount()));
     }
 
     @Override

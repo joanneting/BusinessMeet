@@ -2,12 +2,7 @@ package tw.com.businessmeet;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,20 +10,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 
-
-import java.util.List;
-
-import retrofit2.Call;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.FriendGroupBean;
 import tw.com.businessmeet.bean.GroupsBean;
-import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
-import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
 import tw.com.businessmeet.service.Impl.FriendGroupServiceImpl;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 import tw.com.businessmeet.service.Impl.GroupsServiceImpl;
@@ -92,7 +83,6 @@ public class EditProfileFragment extends Fragment {
             if (friendGroupBeanList.size() > 0 || (friendGroupBeanList.size() == 1 && friendGroupBeanList.get(0).getCreateDate() != null)) {
                 gb.setGroupNo(friendGroupBeanList.get(0).getGroupNo());
                 friendGroupNo = friendGroupBeanList.get(0).getFriendGroupNo();
-                System.out.println("friendGroupNo = " + friendGroupNo);
             }
             AsyncTaskHelper.execute(() -> GroupsServiceImpl.search(gb), groupsBeanList -> {
                 String chipIndex;
@@ -104,7 +94,6 @@ public class EditProfileFragment extends Fragment {
                         ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(getActivity(), null, 0, R.style.Widget_MaterialComponents_Chip_Action);
                         chip.setChipDrawable(chipDrawable);
                         chip.setId(groupsBeanList.get(i).getGroupNo());
-                        System.out.println("chipId = " + chip.getId());
                         chip.setText(groupsBeanList.get(i).getName());
                         chip.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -120,7 +109,6 @@ public class EditProfileFragment extends Fragment {
                 }
                 for (int i = 0; i < groupsBeanList.size(); i++) {
                     if (groupsBeanList.get(i).getGroupNo() == gb.getGroupNo()) {
-                        System.out.println(groupsBeanList.get(i).getName());
                         currentGroup.setText(groupsBeanList.get(i).getName());
                         currentGroupNo = groupsBeanList.get(i).getGroupNo();
                     }
@@ -196,9 +184,6 @@ public class EditProfileFragment extends Fragment {
                 updateFriendGroupBean.setFriendGroupNo(friendGroupNo);
                 updateFriendGroupBean.setGroupNo(updateGroupNo);
                 updateFriendGroupBean.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
-                System.out.println("updateFriendGroupBean.getFriendGroupNo() = " + updateFriendGroupBean.getFriendGroupNo());
-                System.out.println("updateFriendGroupBean.getGroupNo() = " + updateFriendGroupBean.getGroupNo());
-                System.out.println("updateFriendGroupBean.getFriendNo() = " + updateFriendGroupBean.getFriendNo());
                 AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.update(updateFriendGroupBean), friendGroupBean -> {
                 });
             }

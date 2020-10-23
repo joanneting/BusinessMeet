@@ -5,20 +5,16 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import tw.com.businessmeet.bean.UserInformationBean;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.chip.Chip;
 
+import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.DBHelper;
 
@@ -26,6 +22,7 @@ public class FriendsFilterActivity extends AppCompatActivity {
     private tw.com.businessmeet.dao.UserInformationDAO userInformationDAO;
     private DBHelper DH = null;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friends_filter);
@@ -45,7 +42,6 @@ public class FriendsFilterActivity extends AppCompatActivity {
     }
 
     private void openDB() {
-        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new tw.com.businessmeet.dao.UserInformationDAO(DH);
         //matchedDAO = new tw.com.bussinessmeet.dao.MatchedDAO(DH);
