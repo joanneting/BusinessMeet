@@ -172,6 +172,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "modify_date datetime" +
                 ");";
         db.execSQL(SQL);
+        db.close();
     }
 
     @Override

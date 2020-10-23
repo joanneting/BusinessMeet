@@ -34,10 +34,11 @@ public class ActivityMessageService extends FirebaseMessagingService {
     private static RemoteMessage remoteMessage = null;
     private static final LinkedList<FriendBean> inviteRequestList = new LinkedList<>();
 
-//    @Override
-//    public void onCreate() {
-//        super.onCreate();
-//    }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -103,7 +104,7 @@ public class ActivityMessageService extends FirebaseMessagingService {
         bundle.putString("friendId", friendId);
         intent.putExtras(bundle);
         PendingIntent pendingIntent =
-                PendingIntent.getBroadcast(this, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent.getActivity(this, notificationId, intent, 0);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NotificationHelper.CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.applogo)
                 .setContentTitle("好友同意")
