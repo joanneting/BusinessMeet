@@ -28,16 +28,16 @@ public class ActivityMessageService extends FirebaseMessagingService {
     private static final String ACTION_OK = "tw.com.businessmeet.action.notification.bluetooth.ok";
     private static final String ACTION_DENIED = "tw.com.businessmeet.action.notification.bluetooth.denied";
     private static Notification ACTIVE_NOTIFICATION;
-    private static Notification Accept_NOTIFICATION;
+    //    private static Notification Accept_NOTIFICATION;
     private int notificationId = 0;
     private NotificationManagerCompat notificationManager;
     private static RemoteMessage remoteMessage = null;
     private static final LinkedList<FriendBean> inviteRequestList = new LinkedList<>();
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
+//    @Override
+//    public void onCreate() {
+//        super.onCreate();
+//    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {

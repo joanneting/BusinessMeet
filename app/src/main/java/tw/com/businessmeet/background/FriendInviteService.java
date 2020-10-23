@@ -53,7 +53,7 @@ public class FriendInviteService extends Service {
             channel1.setDescription("This is channel 1");
             channel1.enableLights(true);
             channel1.enableVibration(true);
-//            notificationManager.createNotificationChannel(channel1);
+            notificationManager.createNotificationChannel(channel1);
         }
 //        Thread invite = new Thread() {
 //            @Override
