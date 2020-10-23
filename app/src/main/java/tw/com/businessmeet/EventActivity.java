@@ -51,7 +51,6 @@ public class EventActivity extends AppCompatActivity {
         eventParticipant = findViewById(R.id.event_participant);
         eventTag = findViewById(R.id.event_label);
         addEventMemo = findViewById(R.id.add_event_memo);
-        participantAvatar = findViewById(R.id.participant_avatar);
         participantIcon = findViewById(R.id.participant_icon);
         tagIcon = findViewById(R.id.tag_icon);
         AsyncTaskHelper.execute(() -> TimelineServiceImpl.getById(timelineNo), timelineBean -> {
@@ -115,6 +114,8 @@ public class EventActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //do back
+                Intent intent = new Intent(activity,SelfIntroductionActivity.class);
+                startActivity(intent);
             }
         });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
