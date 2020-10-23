@@ -37,23 +37,6 @@ public class EditFriendMemoActivity extends AppCompatActivity {
     private FriendCustomizationBean friendCustomizationBean = new FriendCustomizationBean();
     private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
 
-//    private AsyncTaskHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean> editResponseListener = new AsyncTaskHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean>() {
-//
-//        @Override
-//        public Call<ResponseBody<FriendCustomizationBean>> request(FriendCustomizationBean... friendCustomizationBeans) {
-//            return friendCustomizationServiceImpl.update(friendCustomizationBeans[0]);
-//        }
-//
-//        @Override
-//        public void onSuccess(FriendCustomizationBean friendCustomizationBeans) {
-//            changeToAnotherPage();
-//        }
-//
-//        @Override
-//        public void onFail(int status, String message) {
-//        }
-//    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,17 +99,20 @@ public class EditFriendMemoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 originalChipContentSplit = originalChipContent.split(",");
-                deleteChipContentSplit = deleteChipContent.split(",");
-                for (int i = 1; i < originalChipContentSplit.length; i++) {
-                    for (int j = 1; j < deleteChipContentSplit.length; j++) {
-                        System.out.println("original = " + originalChipContentSplit[i] + "   delete = " + deleteChipContentSplit[j]);
-                        if (originalChipContentSplit[i].equals(deleteChipContentSplit[j])) {
-                            break;
+                if (deleteChipContent != null) {
+                    deleteChipContentSplit = deleteChipContent.split(",");
+                    for (int i = 1; i < originalChipContentSplit.length; i++) {
+                        for (int j = 1; j < deleteChipContentSplit.length; j++) {
+                            System.out.println("original = " + originalChipContentSplit[i] + "   delete = " + deleteChipContentSplit[j]);
+                            if (originalChipContentSplit[i].equals(deleteChipContentSplit[j])) {
+                                break;
+                            }
+                            updateChipContent = updateChipContent + "," + originalChipContentSplit[i];
                         }
-                        updateChipContent = updateChipContent + "," + originalChipContentSplit[i];
                     }
+                } else {
+                    updateChipContent = originalChipContent;
                 }
-
                 fcb.setFriendCustomizationNo(getIntent().getIntExtra("friendCustomizationNo", 0));
                 fcb.setFriendNo(getIntent().getIntExtra("friendNo", 0));
                 fcb.setName(addColumnMemo.getText().toString());

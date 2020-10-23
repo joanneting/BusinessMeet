@@ -11,8 +11,8 @@
 
     <ImageButton
         android:id="@+id/friends_edit_profile_memo_recycleView_column_removeColumn"
-        android:layout_width="14dp"
-        android:layout_height="18dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@color/trasparent"
         android:src="@drawable/ic_remove_circle_outline_black_16dp"
         app:layout_constraintStart_toStartOf="parent"

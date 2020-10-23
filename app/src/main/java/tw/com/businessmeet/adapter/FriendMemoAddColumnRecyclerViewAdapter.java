@@ -1,6 +1,7 @@
 package tw.com.businessmeet.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +19,16 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 
+import tw.com.businessmeet.FriendSearchActivity;
+import tw.com.businessmeet.FriendsIntroductionActivity;
 import tw.com.businessmeet.R;
 import tw.com.businessmeet.bean.Empty;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
 import tw.com.businessmeet.service.Impl.FriendGroupServiceImpl;
+import tw.com.businessmeet.service.Impl.FriendServiceImpl;
+import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 
 public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter<FriendMemoAddColumnRecyclerViewAdapter.ViewHolder> {
 
@@ -32,24 +37,6 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
     private ClickListener clickListener;
     private Integer friendCustomizationNo;
     private List<FriendCustomizationBean> friendCustomizationBeanList;
-    private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
-
-//    private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, Empty> deleteResponseListener = new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, Empty>() {
-//        @Override
-//        public Call<ResponseBody<Empty>> request(FriendCustomizationBean... friendCustomizationBeans) {
-//            return friendCustomizationServiceImpl.delete(friendCustomizationNo);
-//        }
-//
-//        @Override
-//        public void onSuccess(Empty empty) {
-//
-//        }
-//
-//        @Override
-//        public void onFail(int status, String message) {
-//
-//        }
-//    };
 
     //創建構造函數
     public FriendMemoAddColumnRecyclerViewAdapter(Context context, List<FriendCustomizationBean> friendCustomizationBeanList, ClickListener clickListener) {
@@ -89,16 +76,17 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
                 ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(context, null, 0, R.style.Widget_MaterialComponents_Chip_Action);
                 chip.setChipDrawable(chipDrawable);
                 chip.setText(chipContent[j]);
-                chip.setCloseIconVisible(true);
                 holder.chipGroup.addView(chip);
             }
+            holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println("HERE!!!");
+                    System.out.println(friendCustomizationNo);
+                    AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.delete(friendCustomizationNo));
+                }
+            });
         }
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.delete(friendCustomizationNo));
-            }
-        });
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
