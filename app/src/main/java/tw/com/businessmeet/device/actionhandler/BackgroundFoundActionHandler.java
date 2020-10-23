@@ -60,7 +60,7 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
             Toast.makeText(notificationService, "請至設定開啟定位功能", Toast.LENGTH_SHORT).show();
             return;
         }
-        this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+        this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1800000, 0, locationListener);
         this.dbHelper = dbHelper;
     }
 
