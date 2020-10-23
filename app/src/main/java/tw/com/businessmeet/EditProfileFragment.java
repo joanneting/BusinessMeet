@@ -1,13 +1,6 @@
 package tw.com.businessmeet;
 
-import android.app.AlertDialog;
-import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,62 +8,45 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.FriendGroupBean;
 import tw.com.businessmeet.bean.GroupsBean;
-import tw.com.businessmeet.bean.ResponseBody;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
-import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
 import tw.com.businessmeet.service.Impl.FriendGroupServiceImpl;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 import tw.com.businessmeet.service.Impl.GroupsServiceImpl;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EditProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class EditProfileFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private View view;
-    private EditText addProfileContent, editGroupDialogInput;
-    private String friendNo, remark, matchMakerId, friendId;
-    private Button confirmButton, confirmDialogButton, cancelDialogButton, deleteDialogButton;
-    private Chip addGroupButton, currentGroup;
+    private Chip currentGroupChip;
     private ChipGroup chipGroup;
-    private FriendBean fb = new FriendBean();
-    private Integer friendGroupNo, currentGroupNo, updateGroupNo;
+    private EditText remark;
+    private Button editProfileConfirmBtn;
 
+    private Integer currentFriendGroupNo, currentGroupNo;
+    private String remarkContent;
+
+    private List<GroupsBean> groupsBeansList = new ArrayList<>();
+    private Boolean currentGroupChipFlag = false;
 
     public EditProfileFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment fragment_editProfile.
-     */
-    // TODO: Rename and change types and number of parameters
     public static EditProfileFragment newInstance(String param1, String param2) {
         EditProfileFragment fragment = new EditProfileFragment();
         Bundle args = new Bundle();
@@ -83,242 +59,133 @@ public class EditProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
-        currentGroup = (Chip) view.findViewById(R.id.currentGroupTitleChip);
+        currentGroupChip = (Chip) view.findViewById(R.id.currentGroupTitleChip);
         chipGroup = (ChipGroup) view.findViewById(R.id.chooseGroup_chipGroup);
-        FriendGroupBean fgb = new FriendGroupBean();
-        fgb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
-        GroupsBean gb = new GroupsBean();
-        // 搜尋好友目前的群組編號
-        AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.search(fgb), friendGroupBeanList -> {
-            if (friendGroupBeanList.size() > 0) {
-                gb.setGroupNo(friendGroupBeanList.get(0).getGroupNo());
-                friendGroupNo = friendGroupBeanList.get(0).getFriendGroupNo();
-                System.out.println("friendGroupNo = " + friendGroupNo);
-            }
-        });
-        AsyncTaskHelper.execute(() -> GroupsServiceImpl.search(gb), groupsBeanList -> {
-            // 搜尋好友目前的群組名稱
-            for (int i = 0; i < groupsBeanList.size(); i++) {
-                if (groupsBeanList.get(i).getGroupNo() == gb.getGroupNo()) {
-                    System.out.println(groupsBeanList.get(i).getName());
-                    currentGroup.setText(groupsBeanList.get(i).getName());
-                    currentGroupNo = groupsBeanList.get(i).getGroupNo();
-                }
-            }
-            // 設定所有群組
-            String chipIndex;
-            for (int i = 0; i < groupsBeanList.size(); i++) {
-                if (groupsBeanList.get(i).getUserId().equals(getActivity().getIntent().getStringExtra("userId"))) {
-                    groupsBeanList.get(i).getGroupNo();
-                    LayoutInflater chipInflater = LayoutInflater.from(getActivity());
-                    Chip chip = new Chip(getActivity());
-                    ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(getActivity(), null, 0, R.style.Widget_MaterialComponents_Chip_Action);
-                    chip.setChipDrawable(chipDrawable);
-                    chip.setId(groupsBeanList.get(i).getGroupNo());
-                    System.out.println("chipId = " + chip.getId());
-                    chip.setText(groupsBeanList.get(i).getName());
-                    chip.setCloseIconVisible(true);
-                    // 編輯所有群組
-                    chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            LayoutInflater inflater = getActivity().getLayoutInflater();
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            View view = inflater.inflate(R.layout.friend_editndelete_group, null);
-                            builder.setView(view);
-                            builder.create();
-                            AlertDialog alertDialog = builder.show();
-                            editGroupDialogInput = (EditText) view.findViewById(R.id.editGroup_dialog_Input);
-                            confirmDialogButton = (Button) view.findViewById(R.id.editGroup_dialog_confirmButton);
-                            confirmDialogButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    GroupsBean gb = new GroupsBean();
-                                    if (editGroupDialogInput.getText().toString() != null || !editGroupDialogInput.getText().toString().equals("")) {
-                                        gb.setGroupNo(chip.getId());
-                                        System.out.println("gb.getGroupNo() = " + gb.getGroupNo());
-                                        gb.setName(editGroupDialogInput.getText().toString());
-                                        gb.setUserId(getActivity().getIntent().getStringExtra("userId"));
-                                        // 群組名稱重新命名
-                                        AsyncTaskHelper.execute(() -> GroupsServiceImpl.update(gb), groupsBean -> {
-                                            System.out.println("Rename group name success!!!");
-                                            if(alertDialog.isShowing()){
-                                                alertDialog.dismiss();
-                                            }
-                                        });
-                                    } else {
-                                        Toast.makeText(getContext(), "未輸入群組名稱", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                            deleteDialogButton = (Button) view.findViewById(R.id.editGroup_dialog_deleteButton);
-                            deleteDialogButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    // 刪除群組
-                                    // 把好友從群組刪除
-                                    AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.delete(friendGroupNo), friendGroupNo -> {
-                                        System.out.println("delete friend group success!!!");
-//                                        AsyncTaskHelper.execute(() -> GroupsServiceImpl.delete);
-                                    });
-                                }
-                            });
-                            cancelDialogButton = (Button) view.findViewById(R.id.editGroup_dialog_cancelButton);
-                            cancelDialogButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (alertDialog.isShowing()) {
-                                        alertDialog.dismiss();
-                                    }
-                                }
-                            });
-                        }
-                    });
-                    // 點擊選取目前好友群組
-                    chip.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Toast.makeText(getContext(), chip.getText().toString() + chip.getId(), Toast.LENGTH_SHORT).show();
-                            currentGroup.setText(chip.getText().toString());
-                            currentGroup.setCloseIconVisible(true);
-                            currentGroup.setOnCloseIconClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    chip.setText("");
-                                    AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.delete(friendGroupNo), empty -> {
-                                        System.out.println("刪除好友目前群組成功!!!");
-                                    });
-                                }
-                            });
-                            updateGroupNo = chip.getId();
-                        }
-                    });
-                    chipGroup.addView(chip);
+        remark = (EditText) view.findViewById(R.id.addProfileContent_input);
+        remark.append(getActivity().getIntent().getStringExtra("remark"));
+        editProfileConfirmBtn = (Button) view.findViewById(R.id.addColumn_dialog_confirmButton);
 
-                }
-            }
-
-        });
-        // 新增群組
-        addGroupButton = (Chip) view.findViewById(R.id.addGroupButton);
-        addGroupButton.setOnClickListener(new View.OnClickListener() {
+        // 頁面一進去一開始搜尋好友目前群組
+        FriendGroupBean friendGroupBean = new FriendGroupBean();
+        friendGroupBean.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
+        searchFriendGroup(friendGroupBean);
+        // 頁面一進去一開始搜尋使用者新增的所有群組
+        GroupsBean groupsBean = new GroupsBean();
+        groupsBean.setUserId(getActivity().getIntent().getStringExtra("userId"));
+        searchAllGroup(groupsBean);
+        // 更新編輯後的整個頁面
+        editProfileConfirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                View view = inflater.inflate(R.layout.friend_edit_group, null);
-                builder.setView(view);
-                builder.create();
-                AlertDialog alertDialog = builder.show();
-                editGroupDialogInput = (EditText) view.findViewById(R.id.editGroup_dialog_Input);
-                confirmDialogButton = (Button) view.findViewById(R.id.editGroup_dialog_confirmButton);
-                confirmDialogButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        GroupsBean gb = new GroupsBean();
-                        if (editGroupDialogInput.getText().toString() != null || !editGroupDialogInput.getText().toString().equals("")) {
-                            gb.setName(editGroupDialogInput.getText().toString());
-                            gb.setUserId(getActivity().getIntent().getStringExtra("userId"));
-                            AsyncTaskHelper.execute(() -> GroupsServiceImpl.add(gb), groupsBean -> {
-                                LayoutInflater chipInflater = LayoutInflater.from(getActivity());
-                                Chip chip = new Chip(getActivity());
-                                ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(getActivity(), null, 0, R.style.Widget_MaterialComponents_Chip_Action);
-                                chip.setChipDrawable(chipDrawable);
-                                chip.setText(gb.getName());
-                                chip.setCloseIconVisible(true);
-                                chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-
-                                    }
-                                });
-                                chip.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Toast.makeText(getContext(), chip.getText().toString() + chip.getId(), Toast.LENGTH_SHORT).show();
-                                        currentGroup.setText(chip.getText().toString());
-                                        currentGroup.setCloseIconVisible(true);
-                                        currentGroup.setOnCloseIconClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                chip.setText("");
-                                                AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.delete(friendGroupNo), empty -> {
-                                                    System.out.println("刪除好友目前群組成功!!!");
-                                                });
-                                            }
-                                        });
-                                        updateGroupNo = chip.getId();
-                                    }
-                                });
-                                chipGroup.addView(chip);
-                                if (alertDialog.isShowing()) {
-                                    alertDialog.dismiss();
-                                }
-                            });
-                        } else {
-                            Toast.makeText(getContext(), "未輸入群組名稱", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                cancelDialogButton = (Button) view.findViewById(R.id.editGroup_dialog_cancelButton);
-                cancelDialogButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (alertDialog.isShowing()) {
-                            alertDialog.dismiss();
-                        }
-                    }
-                });
-
+                addRemark();
+                updateFriendGroup(friendGroupBean);
             }
         });
 
-
-
-        // 更新好友備忘錄
-        addProfileContent = (EditText) view.findViewById(R.id.addProfileContent_input);
-        remark = getActivity().getIntent().getStringExtra("remark");
-        if (remark != null && remark != "") {
-            addProfileContent.append(remark);
-        }
-        confirmButton = (Button) view.findViewById(R.id.addColumn_dialog_confirmButton);
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fb.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
-                fb.setMatchmakerId(getActivity().getIntent().getStringExtra("matchmakerId"));
-                fb.setFriendId(getActivity().getIntent().getStringExtra("friendId"));
-                fb.setRemark(addProfileContent.getText().toString());
-                AsyncTaskHelper.execute(() -> FriendServiceImpl.update(fb), friendBean -> {
-                    changeToSelfIntroductionPage();
-                });
-                FriendGroupBean updateFriendGroupBean = new FriendGroupBean();
-                updateFriendGroupBean.setFriendGroupNo(friendGroupNo);
-                updateFriendGroupBean.setGroupNo(updateGroupNo);
-                updateFriendGroupBean.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
-                System.out.println("updateFriendGroupBean.getFriendGroupNo() = " + updateFriendGroupBean.getFriendGroupNo());
-                System.out.println("updateFriendGroupBean.getGroupNo() = " + updateFriendGroupBean.getGroupNo());
-                System.out.println("updateFriendGroupBean.getFriendNo() = " + updateFriendGroupBean.getFriendNo());
-                if (updateFriendGroupBean.getFriendGroupNo() == null) {
-                    AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.add(updateFriendGroupBean), friendGroupBean -> {
-                        System.out.println("add friend group success!!!");
-                    });
-                } else {
-                    AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.update(updateFriendGroupBean), friendGroupBean -> {
-                        System.out.println("update friend group success!!!");
-                    });
-                }
-            }
-        });
         return view;
     }
 
-    private void changeToSelfIntroductionPage() {
-        Intent intent = new Intent(getActivity(), FriendsIntroductionActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("friendId", getActivity().getIntent().getStringExtra("friendId"));
-        bundle.putInt("friendNo", getActivity().getIntent().getIntExtra("friendNo", 0));
-        intent.putExtras(bundle);
-        startActivity(intent);
+    // 頁面一進去搜尋好友目前群組
+    private void searchFriendGroup(FriendGroupBean friendGroupBean) {
+        AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.search(friendGroupBean), fgb -> {
+            if (fgb.size() > 0) {
+                currentFriendGroupNo = fgb.get(0).getFriendGroupNo();
+                currentGroupNo = fgb.get(0).getGroupNo();
+            }
+        });
+    }
+
+    // 頁面一進去搜尋使用者所有群組
+    private void searchAllGroup(GroupsBean groupsBean) {
+        AsyncTaskHelper.execute(() -> GroupsServiceImpl.search(groupsBean), gbl -> {
+            for (int i = 0; i < gbl.size(); i++) {
+                groupsBeansList.add(gbl.get(i));
+                if (currentGroupNo == gbl.get(i).getGroupNo()) {
+                    currentCloseIconOnclick(currentGroupChip, gbl.get(i).getName(), gbl.get(i).getGroupNo());
+                }
+            }
+            createGroupChip(groupsBeansList);
+        });
+    }
+
+    // 所有新增的群組變成chip
+    private void createGroupChip(List<GroupsBean> groupsBeansList) {
+        if (groupsBeansList != null) {
+            for (int i = 0; i < groupsBeansList.size(); i++) {
+                LayoutInflater chipInflater = LayoutInflater.from(getActivity());
+                Chip chip = new Chip(getActivity());
+                ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(getActivity(), null, 0, R.style.Widget_MaterialComponents_Chip_Action);
+                chip.setChipDrawable(chipDrawable);
+                chip.setId(groupsBeansList.get(i).getGroupNo());
+                chip.setText(groupsBeansList.get(i).getName());
+                chip.setCloseIconVisible(true);
+                chooseCurrentGroup(chip);
+                chipGroup.addView(chip);
+            }
+        }
+    }
+
+    // 所有新增的群組變成chip-設定好友目前群組
+    private void chooseCurrentGroup(Chip chip) {
+        chip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), chip.getText().toString() + " " + chip.getId(), Toast.LENGTH_SHORT).show();
+                currentCloseIconOnclick(currentGroupChip, chip.getText().toString(), chip.getId());
+            }
+        });
+    }
+
+    // 新增備忘錄
+    private void addRemark() {
+        FriendBean friendBean = new FriendBean();
+        remarkContent = remark.getText().toString();
+        friendBean.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
+        friendBean.setMatchmakerId(getActivity().getIntent().getStringExtra("userId"));
+        friendBean.setFriendId(getActivity().getIntent().getStringExtra("friendId"));
+        friendBean.setRemark(remarkContent);
+        AsyncTaskHelper.execute(() -> FriendServiceImpl.update(friendBean), fb -> {
+            System.out.println("!!!add remark success!!!");
+        });
+    }
+
+    // current group close action
+    private void currentCloseIconOnclick(Chip chip, String text, Integer groupNo) {
+        chip.setCloseIconVisible(true);
+        chip.setText(text);
+        chip.setId(groupNo);
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentGroupChipFlag = true;
+                chip.setText("");
+                chip.setCloseIconVisible(false);
+            }
+        });
+    }
+
+    //編輯群組名稱
+
+
+
+    // 新增、編輯、刪除好友群組
+    private void updateFriendGroup(FriendGroupBean friendGroupBean) {
+        friendGroupBean.setGroupNo(currentGroupChip.getId());
+        if (currentFriendGroupNo == null) {
+            AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.add(friendGroupBean), fgb -> {
+                System.out.println("!!!update friend group - add success!!!");
+            });
+        } else {
+            friendGroupBean.setFriendGroupNo(currentFriendGroupNo);
+            AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.update(friendGroupBean), fgb -> {
+                System.out.println("!!!update friend group - update success!!!");
+            });
+        }
+        if (currentGroupChipFlag == true) {
+            AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.delete(currentFriendGroupNo), fgb -> {
+                System.out.println("!!!current close icon onclick success!!!");
+            });
+        }
+        getActivity().finish();
     }
 }
