@@ -1,4 +1,4 @@
-﻿.gradle
+.gradle
 .idea
 *.iml
 
@@ -7,3 +7,19 @@ local.properties
 .settings/org.eclipse.buildship.core.prefs
 
 .project
+
+applicationContext/gradle/wrapper/
+
+applicationContext/gradlew
+
+applicationContext/gradlew.bat
+
+
+app/gradlew
+
+app/gradlew.bat
+
+gradle.properties
+
+
+app/gradle/wrapper/

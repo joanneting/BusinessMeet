@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="16dp"
+    tools:context=".EventSearch">
+
+
+
+    <TextView
+        android:id="@+id/event_searchbar"
+        style="@style/searchBar"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/event_searchbar_icon"
+        style="@style/search_icon"
+        app:layout_constraintBottom_toBottomOf="@id/event_searchbar"
+        app:layout_constraintStart_toStartOf="@id/event_searchbar"
+        app:layout_constraintTop_toTopOf="@id/event_searchbar" />
+
+    <TextView
+        android:id="@+id/friends_searchbar_text"
+        style="@style/search_text"
+        app:layout_constraintBottom_toBottomOf="@id/event_searchbar_icon"
+        app:layout_constraintStart_toStartOf="@id/event_searchbar_icon"
+        app:layout_constraintTop_toTopOf="@id/event_searchbar_icon" />
+
+    <ImageView
+        android:id="@+id/friends_searchbar_cancelIcon"
+        style="@style/search_cancel"
+        app:layout_constraintBottom_toBottomOf="@id/event_searchbar"
+        app:layout_constraintEnd_toEndOf="@id/event_searchbar"
+        app:layout_constraintTop_toTopOf="@id/event_searchbar" />
+
+    <CalendarView
+        android:id="@+id/date_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:selectedWeekBackgroundColor="@color/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/event_searchbar"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/text_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="標籤"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_select"
+        tools:ignore="MissingConstraints" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/text_tag"
+        app:layout_constraintStart_toStartOf="@+id/text_tag"
+        tools:ignore="MissingConstraints" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
