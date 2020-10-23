@@ -229,7 +229,7 @@
             android:height="48sp"
             android:background="@drawable/button_radius"
             android:text="確認"
-            android:textColor="#F5F5F5"
+            android:textColor="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
