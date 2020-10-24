@@ -63,7 +63,7 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
         recyclerViewProfileTimeline = findViewById(R.id.profile_timeline_view);
 //        qBadgeView = new QBadgeView(content);
 //        qBadgeView.bindTarget(view);
-        qBadgeView.hide(true);//隐藏Badge
+//        qBadgeView.hide(true);//隐藏Badge
         //toolbar
         toolbar = findViewById(R.id.toolbar);
         //toolbarMenu
