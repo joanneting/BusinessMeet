@@ -98,7 +98,6 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
                 (friendBeanList.size() == 1 && friendBeanList.get(0).getCreateDate() != null)
         ) {
 
-//            if (distance <= 100000) {
             if (ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                 return;
@@ -117,18 +116,12 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
                 longitude = location.getLongitude();        //取得經度
                 latitude = location.getLatitude();
                 List<Address> lstAddress = gc.getFromLocation(latitude, longitude, 1);
-//                    Toast.makeText(
-//                            notificationService.getBaseContext(),
-//                            lstAddress.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
                 timelineBean.setPlace(lstAddress.get(0).getAddressLine(0));
                 locationManager.removeUpdates(locationListener);
             } catch (Exception e) {
                 e.printStackTrace();
                 timelineBean.setPlace("室內");
             }
-//                    if (!Geocoder.isPresent()){ //Since: API Level 9
-//                        returnAddress = "Sorry! Geocoder service not Present.";
-//                    }
             timelineBean.setTimelinePropertiesNo(2);
 
             timelineBean.setTitle(timelineBean.getPlace());

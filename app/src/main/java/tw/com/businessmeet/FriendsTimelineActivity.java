@@ -93,8 +93,9 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //do back
-                onBackPressed();
+                Intent intent = new Intent();
+                intent.setClass(FriendsTimelineActivity.this, FriendSearchActivity.class);
+                startActivity(intent);
             }
         });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {

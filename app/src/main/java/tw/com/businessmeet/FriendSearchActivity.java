@@ -144,4 +144,9 @@ public class FriendSearchActivity extends AppCompatActivity {
 
             });
 
+    @Override
+    public void onBackPressed() {
+//        鎖住Back鍵
+        return;
+    }
 }

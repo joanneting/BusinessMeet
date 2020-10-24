@@ -59,7 +59,7 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
         goProfile.setOnClickListener(goProfileClick);
         menu = findViewById(R.id.bottom_navigation);
         recyclerViewProfileTimeline = findViewById(R.id.profile_timeline_view);
-       
+
         //toolbar
         toolbar = findViewById(R.id.toolbar);
         //toolbarMenu
@@ -194,5 +194,8 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
 
             });
 
-
+    @Override
+    public void onBackPressed() {
+        return;
+    }
 }

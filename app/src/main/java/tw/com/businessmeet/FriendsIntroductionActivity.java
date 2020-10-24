@@ -152,7 +152,13 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent = new Intent();
+                intent.setClass(FriendsIntroductionActivity.this, FriendsTimelineActivity.class);
+                String friendId = getIntent().getStringExtra("friendId");
+                Bundle bundle = new Bundle();
+                bundle.putString("friendId", friendId);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }
@@ -218,4 +224,11 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
                     return false;
                 }
             });
+
+    @Override
+    public void onBackPressed() {
+//        鎖住Back鍵
+//        如tbtn被選的話，不執行super 就可以把Back預設行為無效
+        return;
+    }
 }

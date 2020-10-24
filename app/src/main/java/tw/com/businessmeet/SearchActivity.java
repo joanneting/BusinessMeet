@@ -207,4 +207,8 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
                 }
             });
 
+    @Override
+    public void onBackPressed() {
+        return;
+    }
 }
