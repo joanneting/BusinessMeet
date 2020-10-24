@@ -23,6 +23,7 @@ public class AddCookiesInterceptor implements Interceptor {
                 builder.addHeader("Cookie", cookie);
             }
         }
+        builder.addHeader("X-Requested-With", "App");
         return chain.proceed(builder.build());
     }
 }
