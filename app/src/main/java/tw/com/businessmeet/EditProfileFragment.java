@@ -1,6 +1,7 @@
 package tw.com.businessmeet;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.FriendGroupBean;
 import tw.com.businessmeet.bean.GroupsBean;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
+import tw.com.businessmeet.helper.DeviceHelper;
 import tw.com.businessmeet.service.Impl.FriendGroupServiceImpl;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 import tw.com.businessmeet.service.Impl.GroupsServiceImpl;
@@ -71,7 +73,7 @@ public class EditProfileFragment extends Fragment {
         addGroupChip = (Chip) view.findViewById(R.id.addGroupButton);
         chipGroup = (ChipGroup) view.findViewById(R.id.chooseGroup_chipGroup);
         remark = (EditText) view.findViewById(R.id.addProfileContent_input);
-        if (getActivity().getIntent().getStringExtra("remark") != null || !getActivity().getIntent().getStringExtra("remark").equals("")) {
+        if (getActivity().getIntent().getStringExtra("remark") != null) {
             remark.append(getActivity().getIntent().getStringExtra("remark"));
         }
         editProfileConfirmBtn = (Button) view.findViewById(R.id.addColumn_dialog_confirmButton);
@@ -79,10 +81,12 @@ public class EditProfileFragment extends Fragment {
         // 頁面一進去一開始搜尋好友目前群組
         FriendGroupBean friendGroupBean = new FriendGroupBean();
         friendGroupBean.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
+        System.out.println("friendGroupBean.getFriendNo() = " + friendGroupBean.getFriendNo());
         searchFriendGroup(friendGroupBean);
         // 頁面一進去一開始搜尋使用者新增的所有群組
         GroupsBean groupsBean = new GroupsBean();
-        groupsBean.setUserId(getActivity().getIntent().getStringExtra("userId"));
+        groupsBean.setUserId(DeviceHelper.getUserId(getContext()));
+        System.out.println("DeviceHelper.getUserId(getContext()) = " + DeviceHelper.getUserId(getContext()));
         searchAllGroup(groupsBean);
         // 新增群組
         addGroup();
@@ -104,6 +108,7 @@ public class EditProfileFragment extends Fragment {
             if (fgb.size() > 0) {
                 currentFriendGroupNo = fgb.get(0).getFriendGroupNo();
                 currentGroupNo = fgb.get(0).getGroupNo();
+                System.out.println("!!!search friend group success!!!");
             }
         });
     }
@@ -112,6 +117,7 @@ public class EditProfileFragment extends Fragment {
     private void searchAllGroup(GroupsBean groupsBean) {
         AsyncTaskHelper.execute(() -> GroupsServiceImpl.search(groupsBean), gbl -> {
             for (int i = 0; i < gbl.size(); i++) {
+                System.out.println("gbl.get(i).getUserId() = " + gbl.get(i).getUserId());
                 groupsBeansList.add(gbl.get(i));
                 if (currentGroupNo == gbl.get(i).getGroupNo()) {
                     currentCloseIconOnclick(currentGroupChip, gbl.get(i).getName(), gbl.get(i).getGroupNo());
@@ -120,18 +126,6 @@ public class EditProfileFragment extends Fragment {
             createGroupChip(groupsBeansList);
         });
     }
-
-//    private searchRemark(String remark) {
-//        FriendBean friendBean = new FriendBean();
-//        friendBean.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
-//        AsyncTaskHelper.execute(() -> FriendServiceImpl.search(friendBean), fb -> {
-//            for(int i = 0; i)
-//            if (getActivity().getIntent().getIntExtra("friendNo", 0) == fb.get(i)) {
-//                fb.get
-//            }
-//        });
-//        return remark;
-//    }
 
     // 所有新增的群組變成chip
     private void createGroupChip(List<GroupsBean> groupsBeansList) {
@@ -148,7 +142,7 @@ public class EditProfileFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         System.out.println("chip.getId() = " + chip.getId());
-                        editGroup(chip.getId());
+                        editGroup(chip.getId(), chip);
                     }
                 });
                 chooseCurrentGroup(chip);
@@ -235,70 +229,77 @@ public class EditProfileFragment extends Fragment {
     }
 
     //刪除、編輯群組
-    private void editGroup(Integer groupNo) {
-        addGroupChip.setOnClickListener(new View.OnClickListener() {
+    private void editGroup(Integer groupNo, Chip chip) {
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View view = inflater.inflate(R.layout.friend_editndelete_group, null);
+        builder.setView(view);
+        builder.create();
+        AlertDialog alertDialog = builder.show();
+        renameGroupDialogInput = (EditText) view.findViewById(R.id.editGroup_dialog_Input);
+        renameGroupDialogInput.append(chip.getText());
+        // 重新命名
+        renameGroupDialogConfirmBtn = (Button) view.findViewById(R.id.editGroup_dialog_confirmButton);
+        renameGroupDialogConfirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater inflater = getActivity().getLayoutInflater();
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                View view = inflater.inflate(R.layout.friend_editndelete_group, null);
-                builder.setView(view);
-                builder.create();
-                AlertDialog alertDialog = builder.show();
-                renameGroupDialogInput = (EditText) view.findViewById(R.id.editGroup_dialog_Input);
-                // 重新命名
-                renameGroupDialogConfirmBtn = (Button) view.findViewById(R.id.editGroup_dialog_confirmButton);
-                renameGroupDialogConfirmBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (renameGroupDialogInput.getText().toString() != null || !renameGroupDialogInput.getText().toString().equals("")) {
-                            GroupsBean groupsBean = new GroupsBean();
-                            groupsBean.setGroupNo(groupNo);
-                            System.out.println("groupsBean.getGroupNo() = " + groupsBean.getGroupNo());
-                            groupsBean.setUserId(getActivity().getIntent().getStringExtra("userId"));
-                            groupsBean.setName(renameGroupDialogInput.getText().toString());
-                            AsyncTaskHelper.execute(() -> GroupsServiceImpl.update(groupsBean), gb -> {
-                                System.out.println("!!!update group name success!!!");
-                            });
-                        } else {
-                            Toast.makeText(getContext(), "未輸入群組名稱", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                // 刪除群組
-                renameGroupDialogDeleteBtn = (Button) view.findViewById(R.id.editGroup_dialog_deleteButton);
-                renameGroupDialogDeleteBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.searchFriendByGroup(groupNo), fgl -> {
-                            if (fgl.size() == 0) {
-                                AsyncTaskHelper.execute(() -> GroupsServiceImpl.delete(groupNo), empty -> {
-                                    System.out.println("!!!delete group success!!!");
-                                });
-                            } else {
-                                for (int i = 0; i < fgl.size(); i++) {
-                                    int finalI = i;
-                                    System.out.println("fgl.get(i).getFriendGroupNo() = " + fgl.get(i).getFriendGroupNo());
-                                    AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.delete(fgl.get(finalI).getFriendGroupNo()), empty -> {
-                                        System.out.println("!!!delete friendGroupNo=" + fgl.get(finalI).getFriendGroupNo() + "success");
-                                    });
-                                }
-                            }
-                        });
-                    }
-                });
-                // 取消編輯
-                renameGroupDialogCancelBtn = (Button) view.findViewById(R.id.editGroup_dialog_cancelButton);
-                renameGroupDialogCancelBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                if (renameGroupDialogInput.getText().toString() != null || !renameGroupDialogInput.getText().toString().equals("")) {
+                    GroupsBean groupsBean = new GroupsBean();
+                    groupsBean.setGroupNo(groupNo);
+                    groupsBean.setUserId(getActivity().getIntent().getStringExtra("userId"));
+                    groupsBean.setName(renameGroupDialogInput.getText().toString());
+                    AsyncTaskHelper.execute(() -> GroupsServiceImpl.update(groupsBean), gb -> {
+                        chip.setText(renameGroupDialogInput.getText().toString());
+                        System.out.println("!!!update group name success!!!");
                         if (alertDialog.isShowing()) {
                             alertDialog.dismiss();
+                        }
+                    });
+                } else {
+                    Toast.makeText(getContext(), "未輸入群組名稱", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        // 刪除群組
+        renameGroupDialogDeleteBtn = (Button) view.findViewById(R.id.editGroup_dialog_deleteButton);
+        renameGroupDialogDeleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.searchFriendByGroup(groupNo), fgl -> {
+                    if (fgl.size() == 0) {
+                        AsyncTaskHelper.execute(() -> GroupsServiceImpl.delete(groupNo), empty -> {
+                            chipGroup.removeView(chip);
+                            System.out.println("!!!delete group success!!!");
+                            closeDialog(alertDialog);
+                        });
+                    } else {
+                        for (int i = 0; i < fgl.size(); i++) {
+                            int finalI = i;
+                            AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.delete(fgl.get(finalI).getFriendGroupNo()), empty -> {
+                                chipGroup.removeView(chip);
+                                System.out.println("!!!delete friendGroupNo=" + fgl.get(finalI).getFriendGroupNo() + "success");
+                                closeDialog(alertDialog);
+                            });
                         }
                     }
                 });
             }
         });
+        // 取消編輯
+        renameGroupDialogCancelBtn = (Button) view.findViewById(R.id.editGroup_dialog_cancelButton);
+        renameGroupDialogCancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeDialog(alertDialog);
+            }
+        });
+    }
+
+    // 關閉對話框
+    private void closeDialog(AlertDialog alertDialog) {
+        if (alertDialog.isShowing()) {
+            alertDialog.dismiss();
+        }
     }
 
     // 新增、編輯、刪除好友群組
@@ -319,6 +320,16 @@ public class EditProfileFragment extends Fragment {
                 System.out.println("!!!current close icon onclick success!!!");
             });
         }
-        getActivity().finish();
+        changePage();
+    }
+
+    //跳頁傳送資料
+    public void changePage() {
+        Intent intent = new Intent(getActivity(), FriendsIntroductionActivity.class);
+        Bundle bundle = new Bundle();
+        System.out.println(getActivity().getIntent().getStringExtra("friendId"));
+        bundle.putString("friendId", getActivity().getIntent().getStringExtra("friendId"));
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }
