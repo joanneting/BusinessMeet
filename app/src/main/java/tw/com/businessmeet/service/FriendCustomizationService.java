@@ -18,6 +18,6 @@ public interface FriendCustomizationService {
     Call<ResponseBody<FriendCustomizationBean>> add(@Body FriendCustomizationBean friendCustomizationBean);
     @POST(baseRoute+"update")
     Call<ResponseBody<FriendCustomizationBean>> update (@Body FriendCustomizationBean friendCustomizationBean);
-    @POST(baseRoute+"{friendCustomizationNo}/delete")
+    @POST(baseRoute+"delete/{friendCustomizationNo}")
     Call<ResponseBody<Empty>> delete (@Path("friendCustomizationNo") Integer friendCustomizationNo);
 }

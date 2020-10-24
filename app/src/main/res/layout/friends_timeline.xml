@@ -21,34 +21,14 @@
 
             <EditText
                 android:id="@+id/searchBar"
-                style="@style/searchBar"
-                android:layout_width="match_parent"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                style="@style/search_fill"
+                android:layout_margin="10dp"
+
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:hint="Search"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="MissingConstraints" />
-
-            <ImageView
-                android:id="@+id/event_searchbar_icon"
-                style="@style/search_icon"
-                app:layout_constraintBottom_toBottomOf="@id/searchBar"
-                app:layout_constraintStart_toStartOf="@id/searchBar"
-                app:layout_constraintTop_toTopOf="@id/searchBar" />
-
-            <TextView
-                android:id="@+id/friends_searchbar_text"
-                style="@style/search_text"
-                app:layout_constraintBottom_toBottomOf="@id/event_searchbar_icon"
-                app:layout_constraintStart_toStartOf="@id/event_searchbar_icon"
-                app:layout_constraintTop_toTopOf="@id/event_searchbar_icon" />
-
-            <ImageView
-                android:id="@+id/friends_searchbar_cancelIcon"
-                style="@style/search_cancel"
-                app:layout_constraintBottom_toBottomOf="@id/searchBar"
-                app:layout_constraintEnd_toEndOf="@id/searchBar"
-                app:layout_constraintTop_toTopOf="@id/searchBar" />
+                />
 
             <ImageView
                 android:id="@+id/friends_photo"

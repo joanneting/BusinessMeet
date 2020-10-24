@@ -96,11 +96,12 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
             avatar.setImageBitmap(AvatarHelper.getImageResource(userInformationBean.getAvatar()));
         });
         friendBean.setFriendId(friendId);
-        friendBean.setMatchmakerId(DeviceHelper.getUserId(this, userInformationDAO));
+        friendBean.setMatchmakerId(DeviceHelper.getUserId(this));
         AsyncTaskHelper.execute(() -> FriendServiceImpl.search(friendBean), friendBeanList -> {
             if (friendBeanList.get(0).getRemark() != null) {
                 content = friendBeanList.get(0).getRemark();
-                remark.append(friendBeanList.get(0).getRemark());
+                System.out.println(content);
+                remark.append(content);
             }
 
             friendNo = friendBeanList.get(0).getFriendNo();
@@ -192,6 +193,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         bundle.putString("friendId", getIntent().getStringExtra("friendId"));
         bundle.putString("userId", friendBean.getMatchmakerId());
         bundle.putInt("friendNo", friendNo);
+        System.out.println("friendNo = " + friendNo);
         bundle.putString("remark", content);
         bundle.putString("matchmakerId", friendBean.getMatchmakerId());
 

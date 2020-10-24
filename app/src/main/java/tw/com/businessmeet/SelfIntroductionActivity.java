@@ -12,17 +12,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import q.rorbin.badgeview.QBadgeView;
 import tw.com.businessmeet.adapter.ProfileTimelineRecyclerViewAdapter;
 import tw.com.businessmeet.background.NotificationService;
 import tw.com.businessmeet.bean.TimelineBean;
@@ -46,6 +46,8 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
     private RecyclerView recyclerViewProfileTimeline;
     private ProfileTimelineRecyclerViewAdapter profileTimelineRecyclerViewAdapter;
     private final List<TimelineBean> timelineBeanList = new ArrayList<>();
+    private QBadgeView qBadgeView;
+
 
 
     @Override
@@ -59,7 +61,9 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
         goProfile.setOnClickListener(goProfileClick);
         menu = findViewById(R.id.bottom_navigation);
         recyclerViewProfileTimeline = findViewById(R.id.profile_timeline_view);
-
+//        qBadgeView = new QBadgeView(content);
+//        qBadgeView.bindTarget(view);
+        qBadgeView.hide(true);//隐藏Badge
         //toolbar
         toolbar = findViewById(R.id.toolbar);
         //toolbarMenu
@@ -168,6 +172,10 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
 
     }
 
+
+    public void getView(){
+
+    }
 
     //Perform ItemSelectedListener
     BottomNavigationView.OnNavigationItemSelectedListener navListener =
