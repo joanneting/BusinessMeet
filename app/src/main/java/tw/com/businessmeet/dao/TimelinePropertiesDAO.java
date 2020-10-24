@@ -35,14 +35,12 @@ public class TimelinePropertiesDAO {
         ContentValues values = putValues(timelinePropertiesBean);
         values.put("create_date", dataFormat.format(new Date()));
         db.insert(tableName, null, values);
-        db.close();
     }
 
     public void update(TimelinePropertiesBean timelinePropertiesBean) {
         ContentValues values = putValues(timelinePropertiesBean);
         values.put("modify_date", dataFormat.format(new Date()));
         db.update(tableName, values, whereClause, new String[]{String.valueOf(timelinePropertiesBean.getTimelinePropertiesNo())});
-        db.close();
     }
 
     public Cursor search(TimelinePropertiesBean timelinePropertiesBean) {

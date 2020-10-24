@@ -36,14 +36,12 @@ public class FriendGroupDAO {
         ContentValues values = putValues(friendGroupBean);
         values.put("create_date", dataFormat.format(new Date()));
         db.insert(tableName, null, values);
-        db.close();
     }
 
     public void update(FriendGroupBean friendGroupBean) {
         ContentValues values = putValues(friendGroupBean);
         values.put("modify_date", dataFormat.format(new Date()));
         db.update(tableName, values, whereClause, new String[]{String.valueOf(friendGroupBean.getFriendGroupNo())});
-        db.close();
     }
 
     public Cursor search(FriendGroupBean friendGroupBean) {

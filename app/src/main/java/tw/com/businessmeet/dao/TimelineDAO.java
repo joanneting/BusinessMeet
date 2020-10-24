@@ -43,14 +43,12 @@ public class TimelineDAO {
         ContentValues values = putValues(timelineBean);
 
         db.insert(tableName, null, values);
-        db.close();
     }
 
     public void update(TimelineBean timelineBean) {
         timelineBean.setModifyDateStr(dateFormat.format(new Date()));
         ContentValues values = putValues(timelineBean);
         db.update(tableName, values, whereClause, new String[]{String.valueOf(timelineBean.getTimelineNo())});
-        db.close();
     }
 
     public Cursor search(TimelineBean timelineBean) {

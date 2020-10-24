@@ -36,14 +36,12 @@ public class ActivityLabelDAO {
         ContentValues values = putValues(activityLabelBean);
         values.put("create_date", dataFormat.format(new Date()));
         db.insert(tableName, null, values);
-        db.close();
     }
 
     public void update(ActivityLabelBean activityLabelBean) {
         ContentValues values = putValues(activityLabelBean);
         values.put("modify_date", dataFormat.format(new Date()));
         db.update(tableName, values, whereClause, new String[]{String.valueOf(activityLabelBean.getActivityLabelNo())});
-        db.close();
     }
 
     public Cursor search(ActivityLabelBean activityLabelBean) {

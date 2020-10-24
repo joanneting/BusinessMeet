@@ -190,6 +190,7 @@ public class ActivityMessageService extends FirebaseMessagingService {
                 .setContentTitle("好友同意")
                 .setContentText(friendName + "同意了好友邀請")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
         ACTIVE_NOTIFICATION = builder.build();

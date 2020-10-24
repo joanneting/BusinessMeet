@@ -36,14 +36,12 @@ public class ActivityDateDAO {
         ContentValues values = putValues(activityInviteBean);
         values.put("create_date", dataFormat.format(new Date()));
         db.insert(tableName, null, values);
-        db.close();
     }
 
     public void update(ActivityInviteBean activityInviteBean) {
         ContentValues values = putValues(activityInviteBean);
         values.put("modify_date", dataFormat.format(new Date()));
         db.update(tableName, values, whereClause, new String[]{String.valueOf(activityInviteBean.getActivityInviteNo())});
-        db.close();
     }
 
     public Cursor search(ActivityInviteBean activityInviteBean) {
