@@ -17,6 +17,7 @@ import java.util.List;
 
 import tw.com.businessmeet.EventActivity;
 import tw.com.businessmeet.R;
+import tw.com.businessmeet.SelfIntroductionActivity;
 import tw.com.businessmeet.bean.ActivityInviteBean;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.service.ActivityInviteService;
@@ -89,7 +90,21 @@ private List<ActivityInviteBean> activityInviteBeanList;
                         intent.setClass(context, EventActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putString("timelineNo",activityNo.toString());
+                        bundle.putString("page","self");
                         intent.putExtras(bundle);
+                        context.startActivity(intent);
+                        ((Activity)context).finish();
+                    });
+
+                }
+            });
+            selfInviteDecline.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ActivityInviteBean activityInviteBean = new ActivityInviteBean();
+                    AsyncTaskHelper.execute(() -> activityInviteService.delete(inviteNo),resultBean -> {
+                        Intent intent = new Intent();
+                        intent.setClass(context, SelfIntroductionActivity.class);
                         context.startActivity(intent);
                         ((Activity)context).finish();
                     });
