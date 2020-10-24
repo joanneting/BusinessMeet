@@ -192,6 +192,7 @@ public class EditEventActivity extends AppCompatActivity {
                                     if (updateAction.equals("meet")) {
                                         bundle.putString("friendId", getIntent().getExtras().getString("friendId"));
                                     }
+                                    bundle.putString("page", getIntent().getExtras().getString("page"));
                                     intent.putExtras(bundle);
                                     startActivity(intent);
                                     finish();
@@ -238,6 +239,7 @@ public class EditEventActivity extends AppCompatActivity {
                                     if (updateAction.equals("meet")) {
                                         bundle.putString("friendId", getIntent().getExtras().getString("friendId"));
                                     }
+                                    bundle.putString("page", getIntent().getExtras().getString("page"));
                                     intent.putExtras(bundle);
                                     startActivity(intent);
                                     finish();

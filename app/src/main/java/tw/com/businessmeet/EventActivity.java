@@ -168,6 +168,7 @@ public class EventActivity extends AppCompatActivity {
                         bundle.putString("place", eventLocation.getText().toString());
                         bundle.putString("addEventMemo", addEventMemo.getText().toString());
                         bundle.putString("timelineNo", timelineNo.toString());
+                        bundle.putString("page", getIntent().getExtras().getString("page"));
                         if (meet) {
                             bundle.putString("action", "meet");
                             bundle.putString("friendId", friendId);
