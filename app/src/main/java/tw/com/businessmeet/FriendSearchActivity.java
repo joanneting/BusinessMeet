@@ -62,6 +62,7 @@ public class FriendSearchActivity extends AppCompatActivity {
 
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
+        result.close();
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.search_friend_tabs);
@@ -143,4 +144,9 @@ public class FriendSearchActivity extends AppCompatActivity {
 
             });
 
+    @Override
+    public void onBackPressed() {
+//        鎖住Back鍵
+        return;
+    }
 }

@@ -83,6 +83,7 @@ public class SelfInviteActivity extends AppCompatActivity implements ProfileTime
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
+        result.close();
     }
 
 

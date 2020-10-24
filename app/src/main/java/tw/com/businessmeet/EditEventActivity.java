@@ -411,28 +411,41 @@ public class EditEventActivity extends AppCompatActivity {
             addActivityLabel = (EditText) view.findViewById(R.id.addTag_dialog_Input);
             String[] split = updateContent.split(",");
             chipGroup = (ChipGroup) view.findViewById(R.id.addTag_dialog_selectedBox);
-
-            for (String nowChip : split) {
-                Chip chip = new Chip(EditEventActivity.this);
-                ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(EditEventActivity.this, null, 0, R.style.Widget_MaterialComponents_Chip_Action);
-                chip.setChipDrawable(chipDrawable);
-                chip.setText(nowChip);
-                chip.setCloseIconVisible(true);
-                chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        chipGroup.removeView(chip);
-                        updateContent = updateContent.replaceAll(chip.getText().toString() + ",", "");
-                        updateContent = updateContent.replaceAll("," + chip.getText().toString(), "");
-                        updateContent = updateContent.replaceAll(chip.getText().toString(), "");
-                    }
-                });
-                chipGroup.addView(chip);
+            if (!updateContent.equals("")) {
+                for (String nowChip : split) {
+                    Chip chip = new Chip(EditEventActivity.this);
+                    ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(EditEventActivity.this, null, 0, R.style.Widget_MaterialComponents_Chip_Action);
+                    chip.setChipDrawable(chipDrawable);
+                    chip.setText(nowChip);
+                    chip.setCloseIconVisible(true);
+                    chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            chipGroup.removeView(chip);
+                            String[] contentString = updateContent.split(",");
+                            String deleteContent = "";
+                            for (String s : contentString) {
+                                if (!chip.getText().equals(s)) {
+                                    deleteContent += deleteContent.equals("") ? s : "," + s;
+                                }
+                            }
+                            updateContent = deleteContent;
+                        }
+                    });
+                    chipGroup.addView(chip);
+                }
             }
             addActivityLabel.setOnKeyListener(new View.OnKeyListener() {
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN && !addActivityLabel.getText().toString().equals("")) {
+                        String[] repeatCheckArray = updateContent.split(",");
+                        for (String repeatCheckString : repeatCheckArray) {
+                            if (repeatCheckString.equals(addActivityLabel.getText().toString())) {
+                                Toast.makeText(EditEventActivity.this, "標籤已使用", Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+                        }
                         if (updateContent == null || updateContent.equals("")) {
                             updateContent = addActivityLabel.getText().toString();
                         } else {
@@ -449,9 +462,14 @@ public class EditEventActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 chipGroup.removeView(chip);
-                                updateContent = updateContent.replaceAll(chip.getText().toString() + ",", "");
-                                updateContent = updateContent.replaceAll("," + chip.getText().toString(), "");
-                                updateContent = updateContent.replaceAll(chip.getText().toString(), "");
+                                String[] contentString = updateContent.split(",");
+                                String deleteContent = "";
+                                for (String s : contentString) {
+                                    if (!chip.getText().equals(s)) {
+                                        deleteContent += deleteContent.equals("") ? s : "," + s;
+                                    }
+                                }
+                                updateContent = deleteContent;
                             }
                         });
                         chipGroup.addView(chip);
@@ -474,11 +492,13 @@ public class EditEventActivity extends AppCompatActivity {
                         Toast.makeText(EditEventActivity.this, "請輸入標籤內容，輸入完標籤內容，請先按下鍵盤輸入鍵", Toast.LENGTH_LONG).show();
                         return;
                     }
+                    chipContent = updateContent;
+                    ActivityLabelBean activityLabelBean = new ActivityLabelBean();
+                    activityLabelBean.setContent(chipContent);
                     eventTag.removeAllViews();
                     chipContent = updateContent;
                     eventTag.setVisibility(View.VISIBLE);
-                    ActivityLabelBean activityLabelBean = new ActivityLabelBean();
-                    activityLabelBean.setContent(chipContent);
+
                     String[] contentArray = chipContent.split(",");
 
                     for (int i = 0; i < contentArray.length; i++) {

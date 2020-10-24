@@ -93,8 +93,9 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //do back
-                onBackPressed();
+                Intent intent = new Intent();
+                intent.setClass(FriendsTimelineActivity.this, FriendSearchActivity.class);
+                startActivity(intent);
             }
         });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -138,7 +139,7 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
-
+        result.close();
         if (getIntent().hasExtra("avatar")) {
             ImageView photo = findViewById(R.id.friends_photo);
             Bitmap profilePhoto = BitmapFactory.decodeByteArray(

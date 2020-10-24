@@ -1,13 +1,21 @@
 package tw.com.businessmeet.background;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -15,14 +23,21 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import tw.com.businessmeet.FriendsIntroductionActivity;
 import tw.com.businessmeet.R;
 import tw.com.businessmeet.bean.FriendBean;
+import tw.com.businessmeet.bean.TimelineBean;
+import tw.com.businessmeet.dao.TimelineDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
+import tw.com.businessmeet.helper.DBHelper;
+import tw.com.businessmeet.helper.DeviceHelper;
 import tw.com.businessmeet.helper.NotificationHelper;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
+import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 
 public class ActivityMessageService extends FirebaseMessagingService {
     private static final String ACTION_OK = "tw.com.businessmeet.action.notification.bluetooth.ok";
@@ -32,12 +47,36 @@ public class ActivityMessageService extends FirebaseMessagingService {
     private int notificationId = 0;
     private NotificationManagerCompat notificationManager;
     private static RemoteMessage remoteMessage = null;
+    private LocationManager locationManager;
+    private double longitude;
+    private double latitude;
+    private LocationListener locationListener = new MyLocationListener();
     private static final LinkedList<FriendBean> inviteRequestList = new LinkedList<>();
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+    }
+
+    private class MyLocationListener implements LocationListener {
+        @Override
+        public void onLocationChanged(Location loc) {
+            longitude = loc.getLongitude();
+            latitude = loc.getLatitude();
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
     }
 
     @Override
@@ -54,9 +93,10 @@ public class ActivityMessageService extends FirebaseMessagingService {
                     FriendBean friendBean = new FriendBean();
                     String friendId = data.get("friendId");
                     String friendName = data.get("friendName");
-                    System.out.println("MessagefriendId = " + friendId);
+                    System.out.println("friendName = " + friendName);
                     friendBean.setFriendId(friendId);
                     friendBean.setFriendName(friendName);
+                    addTimeline(friendId, friendName);
 //                    inviteRequestList.add(friendBean);
                     createInviteFriendNotification(friendBean);
 //                    Looper.loop();
@@ -64,13 +104,53 @@ public class ActivityMessageService extends FirebaseMessagingService {
                 case "acceptFriendInvite":
 
                     String acceptFriendId = data.get("friendId");
-                    System.out.println("acceptFriendId = " + acceptFriendId);
                     String acceptFriendName = data.get("friendName");
+                    addTimeline(acceptFriendId, acceptFriendName);
                     createAccrptFriendNotification(acceptFriendId, acceptFriendName);
             }
 
         }
 
+    }
+
+    private void addTimeline(String acceptFriendId, String acceptFriendName) {
+        TimelineBean timelineBean = new TimelineBean();
+        timelineBean.setMatchmakerId(DeviceHelper.getUserId(this));
+        timelineBean.setFriendId(acceptFriendId);
+        Geocoder gc = new Geocoder(this, Locale.TRADITIONAL_CHINESE);
+        //更新位置
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+
+        try {
+            longitude = location.getLongitude();        //取得經度
+            latitude = location.getLatitude();
+            List<Address> lstAddress = gc.getFromLocation(latitude, longitude, 1);
+//                    Toast.makeText(
+//                            notificationService.getBaseContext(),
+//                            lstAddress.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
+            timelineBean.setPlace(lstAddress.get(0).getAddressLine(0));
+            locationManager.removeUpdates(locationListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+            timelineBean.setPlace("室內");
+        }
+        timelineBean.setTimelinePropertiesNo(2);
+
+        timelineBean.setTitle(timelineBean.getPlace());
+        DBHelper dbHelper = new DBHelper(this);
+        TimelineDAO timelineDAO = new TimelineDAO(dbHelper);
+        TimelineBean searchBean = new TimelineBean();
+        searchBean.setFriendId(acceptFriendId);
+        searchBean.setMatchmakerId(DeviceHelper.getUserId(this));
+        AsyncTaskHelper.execute(
+                () -> TimelineServiceImpl.add(timelineBean),
+                timelineDAO::add
+        );
     }
 
     private void createInviteFriendNotification(FriendBean friendBean) {
@@ -162,6 +242,7 @@ public class ActivityMessageService extends FirebaseMessagingService {
                         ActivityMessageService.ACTIVE_NOTIFICATION = null;
                     }
             );
+
         }
     }
 

@@ -85,6 +85,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
                 userInformationBean.setMail(cursor.getString(cursor.getColumnIndex("mail")));
                 userInformationBean.setTel(cursor.getString(cursor.getColumnIndex("tel")));
                 userInformationBean.setAvatar(cursor.getString(cursor.getColumnIndex("avatar")));
+                cursor.close();
             }
             id.append(userInformationBean.getUserId());
             userName.append(userInformationBean.getName());
@@ -143,7 +144,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
-
+        result.close();
         toolbar = (Toolbar) findViewById(R.id.friends_profile_topAppBar);
         //toolbarMenu
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_ios_24px);  //back
@@ -151,7 +152,13 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent = new Intent();
+                intent.setClass(FriendsIntroductionActivity.this, FriendsTimelineActivity.class);
+                String friendId = getIntent().getStringExtra("friendId");
+                Bundle bundle = new Bundle();
+                bundle.putString("friendId", friendId);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }
@@ -217,4 +224,11 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
                     return false;
                 }
             });
+
+    @Override
+    public void onBackPressed() {
+//        鎖住Back鍵
+//        如tbtn被選的話，不執行super 就可以把Back預設行為無效
+        return;
+    }
 }

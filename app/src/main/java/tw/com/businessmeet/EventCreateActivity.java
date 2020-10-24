@@ -1,7 +1,6 @@
 package tw.com.businessmeet;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -33,9 +32,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import retrofit2.Call;
 import tw.com.businessmeet.bean.ActivityInviteBean;
 import tw.com.businessmeet.bean.ActivityLabelBean;
 import tw.com.businessmeet.bean.TimelineBean;
@@ -148,7 +144,7 @@ public class EventCreateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        EventCreateActivity.this,R.style.MyDatePicker, new DatePickerDialog.OnDateSetListener() {
+                        EventCreateActivity.this, R.style.MyDatePicker, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                         calendar.set(year, month, day);
@@ -300,8 +296,8 @@ public class EventCreateActivity extends AppCompatActivity {
                             String[] contentString = updateContent.split(",");
                             String deleteContent = "";
                             for (String s : contentString) {
-                                if(!chip.getText().equals(s)){
-                                    deleteContent += deleteContent.equals("")?s:","+s;
+                                if (!chip.getText().equals(s)) {
+                                    deleteContent += deleteContent.equals("") ? s : "," + s;
                                 }
                             }
                             updateContent = deleteContent;
@@ -314,6 +310,13 @@ public class EventCreateActivity extends AppCompatActivity {
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+                        String[] repeatCheckArray = updateContent.split(",");
+                        for (String repeatCheckString : repeatCheckArray) {
+                            if (repeatCheckString.equals(addActivityLabel.getText().toString())) {
+                                Toast.makeText(EventCreateActivity.this, "標籤已使用", Toast.LENGTH_SHORT).show();
+                                return false;
+                            }
+                        }
                         if (updateContent == null || updateContent.equals("")) {
                             updateContent = addActivityLabel.getText().toString();
                         } else {
@@ -332,8 +335,8 @@ public class EventCreateActivity extends AppCompatActivity {
                                 String[] contentString = updateContent.split(",");
                                 String deleteContent = "";
                                 for (String s : contentString) {
-                                    if(!chip.getText().equals(s)){
-                                        deleteContent += deleteContent.equals("")?s:","+s;
+                                    if (!chip.getText().equals(s)) {
+                                        deleteContent += deleteContent.equals("") ? s : "," + s;
                                     }
                                 }
                                 updateContent = deleteContent;

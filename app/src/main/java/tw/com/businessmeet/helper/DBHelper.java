@@ -14,7 +14,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context) {
         super(context, _DBName, null, _DBVersion);
         this.context = context;
-        SQLiteDatabase db = getWritableDatabase();
     }
 
     @Override

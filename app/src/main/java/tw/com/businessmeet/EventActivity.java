@@ -11,14 +11,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import tw.com.businessmeet.bean.ActivityInviteBean;
 import tw.com.businessmeet.bean.ActivityLabelBean;
 import tw.com.businessmeet.bean.TimelineBean;
@@ -35,7 +36,7 @@ public class EventActivity extends AppCompatActivity {
     private Boolean meet = true;
     private String friendId;
     private TimelineBean activityBean;
-    private ImageView  tagIcon, participantIcon;
+    private ImageView tagIcon, participantIcon;
     private UserInformationDAO userInformationDAO;
 
     @Override
@@ -114,8 +115,9 @@ public class EventActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //do back
-                Intent intent = new Intent(activity,SelfIntroductionActivity.class);
+                Intent intent = new Intent(activity, SelfIntroductionActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -144,9 +146,9 @@ public class EventActivity extends AppCompatActivity {
                                         startActivity(intent);
                                     }
                                 }).setNegativeButton("取消", null).create();
-                                dialog.show();
-                                dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY);
-                                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.GRAY);
+                        dialog.show();
+                        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY);
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.GRAY);
 
 
                         break;

@@ -31,7 +31,6 @@ import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.helper.DeviceHelper;
-import tw.com.businessmeet.service.FriendService;
 import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 
 public class SelfIntroductionActivity extends AppCompatActivity implements ProfileTimelineRecyclerViewAdapter.ClickListener {
@@ -60,11 +59,7 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
         goProfile.setOnClickListener(goProfileClick);
         menu = findViewById(R.id.bottom_navigation);
         recyclerViewProfileTimeline = findViewById(R.id.profile_timeline_view);
-        //this.personal = personal;
-        Intent intent = new Intent(this, NotificationService.class);
-        Intent friendIntent = new Intent(this, FriendService.class);
-        this.startService(intent);
-        this.startService(friendIntent);
+
         //toolbar
         toolbar = findViewById(R.id.toolbar);
         //toolbarMenu
@@ -114,7 +109,7 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
-
+        result.close();
     }
 
 
@@ -126,10 +121,6 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
     public void searchUserInformation() {
 
         Cursor result = userInformationDAO.getById(DeviceHelper.getUserId(this));
-
-        for (int i = 0; i < result.getColumnCount(); i++) {
-        }
-
 
         if (result.moveToFirst()) {
             userName.append(result.getString(result.getColumnIndex("name")));
@@ -203,5 +194,8 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
 
             });
 
-
+    @Override
+    public void onBackPressed() {
+        return;
+    }
 }
