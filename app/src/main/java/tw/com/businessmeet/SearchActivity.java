@@ -127,28 +127,7 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
-        Boolean matched = false;
-        String userId = DeviceHelper.getUserId(this, userInformationDAO);
-//        Timer timer = new Timer(true);
-//        timer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                for (UserInformationBean userInformationBean : unmatchedList) {
-//                    FriendBean friendBean = new FriendBean();
-//                    friendBean.setFriendId(userInformationBean.getUserId());
-//                    friendBean.setMatchmakerId(userId);
-//                    AsyncTaskHelper.execute(() -> FriendServiceImpl.search(friendBean), friendBeanList -> {
-//                        if (friendBeanList.size() == 1 && friendBeanList.get(0).getStatus() != null) {
-//                            Intent intent = new Intent(SearchActivity.this, FriendsIntroductionActivity.class);
-//                            intent.putExtra("friendId", userInformationBean.getUserId());
-//                            startActivity(intent);
-//                            finish();
-//                            timer.cancel();
-//                        }
-//                    });
-//                }
-//            }
-//        }, 1_000, 1_000);
+        result.close();
     }
 
     private void openDB() {
@@ -184,8 +163,7 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
         bundle.putString("friendId", matchedRecyclerViewAdapter.getUserInformation(position).getUserId());
         intent.putExtras(bundle);
         startActivity(intent);
-        //NotificationHelper notificationHelper = new NotificationHelper(this);
-        //notificationHelper.sendMessage(address);
+        finish();
     }
 
     @Override
@@ -195,6 +173,10 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
         friendBean.setFriendId(userInformationBean.getUserId());
         friendBean.setMatchmakerId(DeviceHelper.getUserId(this));
         AsyncTaskHelper.execute(() -> FriendServiceImpl.add(friendBean));
+        Intent intent = new Intent();
+        intent.setClass(SearchActivity.this, FriendSearchActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 

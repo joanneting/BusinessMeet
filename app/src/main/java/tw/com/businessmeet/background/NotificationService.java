@@ -8,15 +8,12 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 
-import java.io.IOException;
-
 import tw.com.businessmeet.device.DeviceFinder;
 import tw.com.businessmeet.device.DeviceFinderCompat;
 import tw.com.businessmeet.device.actionhandler.supplier.BackgroundActionHandlerSupplier;
 import tw.com.businessmeet.device.bluetooth.connector.BluetoothConnectServer;
 import tw.com.businessmeet.device.discover.DiscoverServer;
 import tw.com.businessmeet.device.discover.DiscoverServerCompat;
-import tw.com.businessmeet.exception.BluetoothServerStartException;
 
 public class NotificationService extends Service {
     private final LocalBinder mLocBin = new LocalBinder();
@@ -49,28 +46,27 @@ public class NotificationService extends Service {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             sharedPreferences.edit().putBoolean(KEY_NOTIFICATION, true).apply();
         }
-
         super.onCreate();
     }
 
     @Override
     public void onDestroy() {
-        try {
-            connectServer.close();
-        } catch (IOException e) {
-            throw new BluetoothServerStartException(e);
-        }
+//        try {
+//            connectServer.close();
+//        } catch (IOException e) {
+//            throw new BluetoothServerStartException(e);
+//        }
 
         super.onDestroy();
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        try {
-            connectServer.close();
-        } catch (IOException e) {
-            throw new BluetoothServerStartException(e);
-        }
+//        try {
+//            connectServer.close();
+//        } catch (IOException e) {
+//            throw new BluetoothServerStartException(e);
+//        }
 
         return super.onUnbind(intent);
     }

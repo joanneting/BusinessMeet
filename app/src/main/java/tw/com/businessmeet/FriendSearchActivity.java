@@ -7,9 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -64,6 +62,7 @@ public class FriendSearchActivity extends AppCompatActivity {
 
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
+        result.close();
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.search_friend_tabs);

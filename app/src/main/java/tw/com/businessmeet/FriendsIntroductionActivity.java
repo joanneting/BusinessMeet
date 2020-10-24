@@ -85,6 +85,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
                 userInformationBean.setMail(cursor.getString(cursor.getColumnIndex("mail")));
                 userInformationBean.setTel(cursor.getString(cursor.getColumnIndex("tel")));
                 userInformationBean.setAvatar(cursor.getString(cursor.getColumnIndex("avatar")));
+                cursor.close();
             }
             id.append(userInformationBean.getUserId());
             userName.append(userInformationBean.getName());
@@ -143,7 +144,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
-
+        result.close();
         toolbar = (Toolbar) findViewById(R.id.friends_profile_topAppBar);
         //toolbarMenu
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_ios_24px);  //back

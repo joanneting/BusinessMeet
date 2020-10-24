@@ -78,6 +78,7 @@ public class FriendsActivity extends AppCompatActivity implements FriendsRecycle
         Bitmap myPhoto = avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
         createRecyclerViewFriends();
+        result.close();
         AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.searchFriendByGroup(groupNo), friendGroupBeanList -> {
             if (friendGroupBeanList.size() > 0) {
                 for (FriendGroupBean friendGroupBean : friendGroupBeanList) {

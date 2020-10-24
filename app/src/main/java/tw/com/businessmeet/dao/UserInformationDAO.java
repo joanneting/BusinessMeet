@@ -77,7 +77,7 @@ public class UserInformationDAO {
         String createDate = dateFormat.format(new Date());
         values.put("create_date", createDate);
         db.insert(tableName, null, values);
-
+        db.close();
     }
 
     public void update(UserInformationBean userInformationBean) {
