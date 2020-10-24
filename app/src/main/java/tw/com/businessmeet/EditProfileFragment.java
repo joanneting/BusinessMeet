@@ -156,7 +156,6 @@ public class EditProfileFragment extends Fragment {
         chip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), chip.getText().toString() + " " + chip.getId(), Toast.LENGTH_SHORT).show();
                 currentCloseIconOnclick(currentGroupChip, chip.getText().toString(), chip.getId());
             }
         });
