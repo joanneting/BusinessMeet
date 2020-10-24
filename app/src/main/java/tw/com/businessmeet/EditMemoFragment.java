@@ -79,27 +79,6 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
         friendCustomizationDAO = new FriendCustomizationDAO(dh);
     }
 
-//    private AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>> searchResponseListener = new AsyncTasKHelper.OnResponseListener<FriendCustomizationBean, List<FriendCustomizationBean>>() {
-//
-//        @Override
-//        public Call<ResponseBody<List<FriendCustomizationBean>>> request(FriendCustomizationBean... friendCustomizationBeans) {
-//            return friendCustomizationServiceImpl.search(friendCustomizationBeans[0]);
-//        }
-//
-//        @Override
-//        public void onSuccess(List<FriendCustomizationBean> friendCustomizationBeans) {
-//            if (friendCustomizationBeans.size() > 1 || (friendCustomizationBeans.size() == 1 && (friendCustomizationBeans.get(0).getCreateDate() != null && !friendCustomizationBeans.get(0).equals("")))) {
-//                for (int i = 0; i < friendCustomizationBeans.size(); i++) {
-//                    friendCustomizationBeanList.add(friendCustomizationBeans.get(i));
-//                }
-//            }
-//        }
-//
-//        @Override
-//        public void onFail(int status, String message) {
-//        }
-//    };
-
     public EditMemoFragment() {
         // Required empty public constructor
     }
