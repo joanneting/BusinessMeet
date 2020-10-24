@@ -12,9 +12,10 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.core.app.NotificationCompat;
+
 import java.io.ByteArrayOutputStream;
 
-import androidx.core.app.NotificationCompat;
 import tw.com.businessmeet.FriendsTimelineActivity;
 import tw.com.businessmeet.R;
 import tw.com.businessmeet.background.NotificationService;

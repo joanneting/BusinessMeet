@@ -37,14 +37,12 @@ public class UserCustomizationDAO {
         ContentValues values = putValues(userCustomizationBean);
         values.put("create_date", dataFormat.format(new Date()));
         db.insert(tableName, null, values);
-        db.close();
     }
 
     public void update(UserCustomizationBean userCustomizationBean) {
         ContentValues values = putValues(userCustomizationBean);
         values.put("modify_date", dataFormat.format(new Date()));
         db.update(tableName, values, whereClause, new String[]{String.valueOf(userCustomizationBean.getUserCustomizationNo())});
-        db.close();
     }
 
     public Cursor search(UserCustomizationBean userCustomizationBean) {

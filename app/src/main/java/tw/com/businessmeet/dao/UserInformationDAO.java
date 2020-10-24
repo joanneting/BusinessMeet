@@ -77,7 +77,6 @@ public class UserInformationDAO {
         String createDate = dateFormat.format(new Date());
         values.put("create_date", createDate);
         db.insert(tableName, null, values);
-        db.close();
     }
 
     public void update(UserInformationBean userInformationBean) {
@@ -90,13 +89,11 @@ public class UserInformationDAO {
 //        String whereClause1 = DatabaseSchema.TABLE_TALKS.COLUMN_TID + "=? AND " + DatabaseSchema.TABLE_TALKS.COLUMN_STORAGEID + "=?";
 //        db.update(DatabaseSchema.TABLE_TALKS.NAME, values1, whereClause1, whereArgs1);
         db.update(tableName, values, whereClause, new String[]{userInformationBean.getUserId()});
-        db.close();
     }
 
     public void delete(String identifier) {
 
         db.delete(tableName, whereClause, new String[]{identifier});
-        db.close();
     }
 
     public Cursor getById(String userId) {

@@ -36,14 +36,12 @@ public class GroupsDAO {
         ContentValues values = putValues(groupsBean);
         values.put(column[4], dataFormat.format(new Date()));
         db.insert(tableName, null, values);
-        db.close();
     }
 
     public void update(GroupsBean groupsBean) {
         ContentValues values = putValues(groupsBean);
         values.put(column[5], dataFormat.format(new Date()));
         db.update(tableName, values, whereClause, new String[]{String.valueOf(groupsBean.getGroupNo())});
-        db.close();
     }
 
     public Cursor search(GroupsBean groupsBean) {

@@ -36,14 +36,12 @@ public class ActivityRemindDAO {
         ContentValues values = putValues(activityRemindBean);
         values.put("create_date", dataFormat.format(new Date()));
         db.insert(tableName, null, values);
-        db.close();
     }
 
     public void update(ActivityRemindBean activityRemindBean) {
         ContentValues values = putValues(activityRemindBean);
         values.put("modify_date", dataFormat.format(new Date()));
         db.update(tableName, values, whereClause, new String[]{String.valueOf(activityRemindBean.getActivityRemindNo())});
-        db.close();
     }
 
     public Cursor search(ActivityRemindBean activityRemindBean) {
