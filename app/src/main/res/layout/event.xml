@@ -16,14 +16,15 @@
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="1dp">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorAlmostBlack"
-        android:id="@+id/toolbar_title"
-        android:text=""
-        android:textStyle="bold"
-        tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAlmostBlack"
+            android:id="@+id/toolbar_title"
+            android:text=""
+            android:textStyle="bold"
+            tools:ignore="MissingConstraints" />
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
@@ -45,8 +46,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
 
 
                 <ImageView
@@ -55,7 +55,7 @@
                     android:layout_height="20dp"
                     android:layout_marginLeft="24dp"
                     android:layout_marginTop="4dp"
-                    android:background="@drawable/shape_radius_green"/>
+                    android:background="@drawable/shape_radius_green" />
 
                 <LinearLayout
                     android:layout_height="wrap_content"
@@ -64,11 +64,11 @@
                     android:layout_weight="1"
                     android:layout_marginLeft="16dp"
                     android:layout_marginBottom="16dp">
+
                     <TextView
                         android:id="@+id/event"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="討論下半年演藝活動"
                         android:textSize="20dp"
                         android:textColor="@color/colorAlmostBlack"
                         tools:ignore="MissingConstraints,Suspicious0dp" />
@@ -79,8 +79,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:textColor="@color/grey_60"
-                        android:text="123"
-                        android:textSize="14dp"/>
+                        android:textSize="14dp" />
 
                     <TextView
                         android:id="@+id/event_time"
@@ -88,11 +87,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:textColor="@color/grey_60"
-                        android:text="123"
                         android:textSize="14dp"
                         tools:ignore="MissingConstraints" />
                 </LinearLayout>
-
 
 
             </LinearLayout>
@@ -116,6 +113,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="24dp"
                     android:src="@drawable/ic_local_offer_24px" />
+
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/event_label"
                     android:layout_width="wrap_content"
@@ -133,83 +131,82 @@
             </LinearLayout>
 
 
-
             <!-- tag-->
 
             <!-- place-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
-            <ImageView
-                android:id="@+id/location_icon"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_place_24px"
-                android:layout_marginLeft="24dp" />
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
 
-            <TextView
-                android:id="@+id/event_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="123456"
-                android:textSize="14dp"
-                android:layout_marginLeft="16dp"
-                android:textColor="@color/colorAlmostBlack" />
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/location_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_place_24px"
+                    android:layout_marginLeft="24dp" />
+
+                <TextView
+                    android:id="@+id/event_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14dp"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="@color/colorAlmostBlack" />
+            </LinearLayout>
 
 
             <!-- people-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
-            <ImageView
-                android:id="@+id/participant_icon"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_people_24px"
-                android:layout_marginLeft="24dp" />
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
 
-            <TextView
-                android:id="@+id/event_participant"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:text="123456"
-                android:textSize="14dp"
-                android:textColor="@color/colorAlmostBlack" />
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/participant_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_people_24px"
+                    android:layout_marginLeft="24dp" />
+
+                <TextView
+                    android:id="@+id/event_participant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:textSize="14dp"
+                    android:textColor="@color/colorAlmostBlack" />
+            </LinearLayout>
 
             <!-- people-->
 
 
             <!--  note-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
-            <ImageView
-                android:id="@+id/memo_icon"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_format_align_left_24px"
-                android:layout_marginLeft="24dp" />
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
 
-            <TextView
-                android:id="@+id/add_event_memo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:textSize="14dp"
-                android:text="123456789"
-                android:textColor="@color/colorAlmostBlack" />
-            <!--note-->
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/memo_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_format_align_left_24px"
+                    android:layout_marginLeft="24dp" />
+
+                <TextView
+                    android:id="@+id/add_event_memo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:textSize="14dp"
+                    android:textColor="@color/colorAlmostBlack" />
+                <!--note-->
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
