@@ -2,11 +2,12 @@ package tw.com.businessmeet;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -72,6 +73,8 @@ public class AddIntroductionActivity extends AppCompatActivity {
             ufb.setAvatar(AvatarHelper.setImageResource(avatar));
             ufb.setIdentifier(DeviceHelper.getIdentifier(this));
             ufb.setRoleNo(3);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            ufb.setFirebaseToken(sharedPreferences.getString("firebaseToken", null));
             if (checkData(ufb)) {
                 AsyncTaskHelper.execute(() -> UserInformationServiceImpl.add(ufb), userInformationBean -> {
                     userInformationDAO.add(userInformationBean);
@@ -93,14 +96,12 @@ public class AddIntroductionActivity extends AppCompatActivity {
         if (requestCode != RESULT_CANCELED) {
             if (resultCode == RESULT_OK) {
                 Uri uri = data.getData();
-                Log.d("resultUri", uri.toString());
                 ContentResolver cr = this.getContentResolver();
                 try {
                     Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
 
                     avatar.setImageBitmap(AvatarHelper.toCircle(bitmap));
                 } catch (Exception e) {
-                    Log.d("Exception", e.getMessage());
                 }
             }
         }
@@ -108,7 +109,6 @@ public class AddIntroductionActivity extends AppCompatActivity {
     }
 
     private void openDB() {
-        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
     }

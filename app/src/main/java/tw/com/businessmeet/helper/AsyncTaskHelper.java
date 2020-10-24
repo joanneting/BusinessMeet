@@ -55,7 +55,6 @@ public class AsyncTaskHelper<R> extends AsyncTask<Void, Void, Response<ResponseB
         super.onPostExecute(response);
         if (response != null && response.isSuccessful()) {
             ResponseBody<R> body = response.body();
-            System.out.println("response : " + body.getMessage());
             if (body.getSuccess()) {
                 onSuccess.accept(body.getData());
             } else {
@@ -64,9 +63,6 @@ public class AsyncTaskHelper<R> extends AsyncTask<Void, Void, Response<ResponseB
         } else {
             try {
                 JSONObject errorBody = new JSONObject(response.errorBody().string());
-                System.out.println("errorBody = " + errorBody);
-
-                System.out.println("errorBody.getJSONObject(\"text\").getString(\"message\") = " + errorBody.getString("message"));
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (IOException e) {

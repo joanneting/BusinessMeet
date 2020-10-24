@@ -1,11 +1,20 @@
 package tw.com.businessmeet;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import tw.com.businessmeet.background.FriendInviteService;
 import tw.com.businessmeet.background.NotificationService;
@@ -22,6 +31,7 @@ import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
 public class MainActivity extends AppCompatActivity {
     private boolean permission = false;
     private UserInformationDAO userInformationDAO;
+    private String TAG = "MainActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,6 +46,27 @@ public class MainActivity extends AppCompatActivity {
         PermissionHelper.requestGPSPermission(this);
         PermissionHelper.requestBluetoothAddressPermission(this);
         permission = false;
+        FirebaseApp.initializeApp(this);
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("MainActivity", "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        sharedPreferences.edit().putString("firebaseToken", token).apply();
+                        // Log and toast
+                        String msg = getString(R.string.msg_token_fmt, token);
+                        Log.d(TAG, msg);
+//                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
         Thread checkPermission = new Thread() {
             @Override
             public void run() {
@@ -69,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }
-                Log.d("resultthread", String.valueOf(permission));
             }
         };
         checkPermission.start();

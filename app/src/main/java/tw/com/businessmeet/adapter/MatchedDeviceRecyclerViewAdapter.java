@@ -2,7 +2,6 @@ package tw.com.businessmeet.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +21,15 @@ import tw.com.businessmeet.helper.AvatarHelper;
 public class MatchedDeviceRecyclerViewAdapter extends RecyclerView.Adapter<MatchedDeviceRecyclerViewAdapter.ViewHolder> {
     private LayoutInflater layoutInflater;
     private Context context;
-    private  List<UserInformationBean> userInformationBeanList;
+    private List<UserInformationBean> userInformationBeanList;
     private SearchClickListener searchClickListener;
+
     public MatchedDeviceRecyclerViewAdapter(Context context, List<UserInformationBean> userInformationBeanList) {
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
         this.userInformationBeanList = userInformationBeanList;
     }
+
     private UserInformationBean ufb;
 
     @NonNull
@@ -57,7 +58,6 @@ public class MatchedDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Match
         TextView search_name;
 
 
-
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             search_pro_pic_small = itemView.findViewById(R.id.search_pro_pic_small);
@@ -65,31 +65,34 @@ public class MatchedDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Match
             itemView.setOnClickListener(this);
         }
 
-        void bindInformation(String userName, Bitmap avatar){
+        void bindInformation(String userName, Bitmap avatar) {
             search_name.setText(userName);
             search_pro_pic_small.setImageBitmap(avatar);
         }
 
         @Override
         public void onClick(View v) {
-            if(searchClickListener != null){
-                searchClickListener.onSearchClick(v,getAdapterPosition());
+            if (searchClickListener != null) {
+                searchClickListener.onSearchClick(v, getAdapterPosition());
             }
         }
 
     }
-    public UserInformationBean getUserInformation(int position){
+
+    public UserInformationBean getUserInformation(int position) {
         return userInformationBeanList.get(position);
     }
-    public void  setClickListener(SearchClickListener searchClickLinster){
+
+    public void setClickListener(SearchClickListener searchClickLinster) {
         this.searchClickListener = searchClickLinster;
     }
-    public void dataInsert(UserInformationBean userInformationBean){
-        Log.d("resultDataInsert",userInformationBean.getIdentifier());
+
+    public void dataInsert(UserInformationBean userInformationBean) {
         userInformationBeanList.add(userInformationBean);
         notifyItemInserted(getItemCount());
     }
-    public interface SearchClickListener{
+
+    public interface SearchClickListener {
         void onSearchClick(View view, int position);
     }
 

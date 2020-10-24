@@ -2,7 +2,6 @@ package tw.com.businessmeet.device.actionhandler;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import java.util.HashSet;
 import java.util.List;
@@ -49,7 +48,6 @@ public class ForegroundFoundActionHandler extends AbstractFoundActionHandler {
     }
 
     private void searchFriend(UserInformationBean userInformationBean) {
-        Log.d("blueToothSearch", "success");
         UserInformationDAO userInformationDAO = new UserInformationDAO(dbHelper);
         String userId = userInformationDAO.getId(userInformationBean.getIdentifier());
         if (userId == null) {

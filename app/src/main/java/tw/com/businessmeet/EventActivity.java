@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +36,7 @@ public class EventActivity extends AppCompatActivity {
     private Boolean meet = true;
     private String friendId;
     private TimelineBean activityBean;
-    private ImageView participantAvatar, tagIcon, participantIcon;
+    private ImageView tagIcon, participantIcon;
     private UserInformationDAO userInformationDAO;
 
     @Override
@@ -52,14 +53,11 @@ public class EventActivity extends AppCompatActivity {
         eventParticipant = findViewById(R.id.event_participant);
         eventTag = findViewById(R.id.event_label);
         addEventMemo = findViewById(R.id.add_event_memo);
-        participantAvatar = findViewById(R.id.participant_avatar);
         participantIcon = findViewById(R.id.participant_icon);
         tagIcon = findViewById(R.id.tag_icon);
         AsyncTaskHelper.execute(() -> TimelineServiceImpl.getById(timelineNo), timelineBean -> {
-            System.out.println(timelineBean.getCreateDateStr());
             event.setText(timelineBean.getTitle());
             eventLocation.setText(timelineBean.getPlace());
-            System.out.println("timelineBean.getRemark() = " + timelineBean.getRemark());
             addEventMemo.setText(timelineBean.getRemark());
             if (timelineBean.getTimelinePropertiesNo() == 1) {
                 meet = false;
@@ -105,7 +103,6 @@ public class EventActivity extends AppCompatActivity {
                 eventTag.setVisibility(View.GONE);
                 eventTime.setVisibility(View.GONE);
                 participantIcon.setVisibility(View.GONE);
-                participantAvatar.setVisibility(View.GONE);
                 eventParticipant.setVisibility(View.GONE);
                 eventDate.setText(timelineBean.getCreateDateStr());
             }
@@ -118,6 +115,9 @@ public class EventActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //do back
+                Intent intent = new Intent(activity, SelfIntroductionActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -127,7 +127,7 @@ public class EventActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.menu_toolbar_delete:
-                        new AlertDialog.Builder(EventActivity.this)
+                        AlertDialog dialog = new AlertDialog.Builder(EventActivity.this)
                                 .setTitle("刪除確認")
                                 .setMessage("確定要刪除嗎?一但刪除便無法復原。")
                                 .setPositiveButton("確定", new DialogInterface.OnClickListener() {
@@ -145,11 +145,14 @@ public class EventActivity extends AppCompatActivity {
                                         }
                                         startActivity(intent);
                                     }
-                                }).setNegativeButton("取消", null).create()
-                                .show();
+                                }).setNegativeButton("取消", null).create();
+                        dialog.show();
+                        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY);
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.GRAY);
+
+
                         break;
                     case R.id.menu_toolbar_search:
-                        System.out.println(event.getText().toString());//偵測按下去的事件
                         Intent intent = new Intent();
                         intent.setClass(EventActivity.this, EditEventActivity.class);
                         Bundle bundle = new Bundle();

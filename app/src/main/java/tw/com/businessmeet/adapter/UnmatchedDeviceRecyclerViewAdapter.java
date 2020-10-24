@@ -1,7 +1,6 @@
 package tw.com.businessmeet.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +20,10 @@ import tw.com.businessmeet.helper.AvatarHelper;
 public class UnmatchedDeviceRecyclerViewAdapter extends RecyclerView.Adapter<UnmatchedDeviceRecyclerViewAdapter.ViewHolder> {
     private LayoutInflater layoutInflater;
     private Context context;
-    private  List<UserInformationBean> userInformationBeanList;
+    private List<UserInformationBean> userInformationBeanList;
     private MatchedClickListener matchedClickListener;
     private AvatarHelper avatarHelper = new AvatarHelper();
+
     public UnmatchedDeviceRecyclerViewAdapter(Context context, List<UserInformationBean> userInformationBeanList) {
         this.layoutInflater = LayoutInflater.from(context);
         this.context = context;
@@ -40,7 +40,7 @@ public class UnmatchedDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Unm
     @Override
     public void onBindViewHolder(@NonNull UnmatchedDeviceRecyclerViewAdapter.ViewHolder holder, int position) {
         UserInformationBean ufb = userInformationBeanList.get(position);
-        holder.bindInformation(ufb.getName(),ufb.getAvatar());
+        holder.bindInformation(ufb.getName(), ufb.getAvatar());
 
     }
 
@@ -55,7 +55,6 @@ public class UnmatchedDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Unm
         TextView search_name;
 
 
-
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             search_pro_pic_small = itemView.findViewById(R.id.search_pro_pic_small);
@@ -63,7 +62,7 @@ public class UnmatchedDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Unm
             itemView.setOnClickListener(this);
         }
 
-        void bindInformation(String userName, String avatar){
+        void bindInformation(String userName, String avatar) {
             search_name.setText(userName);
             search_pro_pic_small.setImageBitmap(avatarHelper.getImageResource(avatar));
 
@@ -71,26 +70,27 @@ public class UnmatchedDeviceRecyclerViewAdapter extends RecyclerView.Adapter<Unm
 
         @Override
         public void onClick(View v) {
-            Log.d("results","unmatched1");
-            if(matchedClickListener != null){
-                Log.d("results","unmatched");
-                matchedClickListener.onMatchedClick(v,getAdapterPosition());
+            if (matchedClickListener != null) {
+                matchedClickListener.onMatchedClick(v, getAdapterPosition());
             }
         }
 
     }
-    public void  setClickListener(MatchedClickListener searchClickLinster){
+
+    public void setClickListener(MatchedClickListener searchClickLinster) {
         this.matchedClickListener = searchClickLinster;
     }
-    public UserInformationBean getUserInformation(int position){
+
+    public UserInformationBean getUserInformation(int position) {
         return userInformationBeanList.get(position);
     }
-    public void dataInsert(UserInformationBean userInformationBean){
-        Log.d("resultDataInsert",userInformationBean.getIdentifier());
+
+    public void dataInsert(UserInformationBean userInformationBean) {
         userInformationBeanList.add(userInformationBean);
         notifyItemInserted(getItemCount());
     }
-    public interface MatchedClickListener{
+
+    public interface MatchedClickListener {
         void onMatchedClick(View view, int position);
     }
 

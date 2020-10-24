@@ -2,7 +2,6 @@ package tw.com.businessmeet;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -30,7 +29,6 @@ public class FriendsMemoActivity extends AppCompatActivity {
         setContentView(R.layout.friends_edit_introduction);
 
         friendId = getIntent().getStringExtra("friendId");
-//        Log.d("memo", blueToothAddress);
         memo = findViewById(R.id.friends_memo);
         editProfileConfirmButtom = findViewById(R.id.editProfileConfirmButtom);
         editProfileConfirmButtom.setOnClickListener(editConfirmClick);
@@ -55,10 +53,8 @@ public class FriendsMemoActivity extends AppCompatActivity {
         public void onClick(View v) {
             FriendBean friendBean = new FriendBean();
             friendBean.setMatchmakerId(DeviceHelper.getUserId(FriendsMemoActivity.this));
-            Log.e("getMyBuleTooth()", DeviceHelper.getUserId(FriendsMemoActivity.this));
             friendBean.setFriendId(friendId);
             friendBean.setRemark(memo.getText().toString());
-            Log.d("String.valueOf", String.valueOf(memo.getText()));
             AsyncTaskHelper.execute(() -> FriendServiceImpl.update(friendBean), updateFriendBean -> {
                 friendDAO.update(updateFriendBean);
                 Intent intent = new Intent();

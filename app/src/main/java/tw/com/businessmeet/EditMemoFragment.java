@@ -159,7 +159,6 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
                         chip.setOnCloseIconClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                System.out.println("chip.getText() = " + chip.getText());
                                 chipGroup.removeView(chip);
                             }
                         });

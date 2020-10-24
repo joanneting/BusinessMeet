@@ -8,12 +8,11 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import tw.com.businessmeet.R;
 import tw.com.businessmeet.bean.RecyclerViewFilterBean;
 import tw.com.businessmeet.bean.TimelineBean;
@@ -105,7 +104,6 @@ public class FriendsTimelineRecyclerViewAdapter extends RecyclerView.Adapter<Fri
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String filterString = charSequence.toString();
-                System.out.println("filterString = " + filterString);
                 if (filterString.isEmpty()) {
                     List<RecyclerViewFilterBean<TimelineBean>> filterInviteList = new ArrayList<>();
                     //沒有過濾的內容

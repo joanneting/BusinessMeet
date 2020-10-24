@@ -3,7 +3,6 @@ package tw.com.businessmeet.helper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -15,13 +14,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context) {
         super(context, _DBName, null, _DBVersion);
         this.context = context;
-        SQLiteDatabase db = getWritableDatabase();
-        Log.d("add", context.toString());
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("add", "create");
         String SQL = "create table if not exists " + _TableName[0] + "(" +
                 "user_id varchar(100) not null  primary key," +
                 "password varchar(64) not null," +
@@ -33,6 +29,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "tel varchar(20), " +
                 "role_no int not null," +
                 "identifier varchar(36) not null," +
+                "firebase_token varchar(255)," +
                 "create_date datetime not null," +
                 "modify_date datetime" +
                 ");";
@@ -174,6 +171,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "modify_date datetime" +
                 ");";
         db.execSQL(SQL);
+
     }
 
     @Override

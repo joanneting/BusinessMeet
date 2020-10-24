@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,10 +14,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import tw.com.businessmeet.bean.UserInformationBean;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.DBHelper;
 
@@ -29,6 +27,7 @@ public class OpenActivityFriendsSearchActivity extends AppCompatActivity {
     private tw.com.businessmeet.dao.UserInformationDAO userInformationDAO;
     private DBHelper DH = null;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.open_activity_friends_search);
@@ -49,10 +48,10 @@ public class OpenActivityFriendsSearchActivity extends AppCompatActivity {
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
+        result.close();
     }
 
     private void openDB() {
-        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new tw.com.businessmeet.dao.UserInformationDAO(DH);
         //matchedDAO = new tw.com.bussinessmeet.dao.MatchedDAO(DH);

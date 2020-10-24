@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -84,6 +83,7 @@ public class SelfInviteActivity extends AppCompatActivity implements ProfileTime
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
+        result.close();
     }
 
 
@@ -113,7 +113,6 @@ public class SelfInviteActivity extends AppCompatActivity implements ProfileTime
             });
 
     private void openDB() {
-        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
     }
