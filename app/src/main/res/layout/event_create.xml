@@ -297,6 +297,7 @@
                 android:layout_marginTop="30dp"
                 android:hint="新增說明"
                 android:minWidth="250dp"
+                android:textSize="14dp"
                 android:textColor="@color/colorAlmostBlack"
                 app:layout_constraintStart_toStartOf="@+id/add_color"
                 app:layout_constraintTop_toBottomOf="@+id/add_color"
