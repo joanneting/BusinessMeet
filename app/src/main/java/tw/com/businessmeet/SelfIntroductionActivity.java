@@ -166,6 +166,7 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
         intent.setClass(this, EventActivity.class); //改到活動事件內容
         Bundle bundle = new Bundle();
         bundle.putString("timelineNo", profileTimelineRecyclerViewAdapter.getTimelineBean(position).getTimelineNo().toString());
+        bundle.putString("page", "self");
         intent.putExtras(bundle);
         startActivity(intent);
 

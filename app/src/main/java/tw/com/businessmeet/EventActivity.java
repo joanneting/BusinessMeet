@@ -114,10 +114,18 @@ public class EventActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String page = getIntent().getStringExtra("page");
+                switch (page) {
+                    case "self":
+                        Intent selfIntent = new Intent(activity, SelfIntroductionActivity.class);
+                        startActivity(selfIntent);
+                        finish();
+                        break;
+                    case "friend":
+                        onBackPressed();
+                        finish();
+                }
                 //do back
-                Intent intent = new Intent(activity, SelfIntroductionActivity.class);
-                startActivity(intent);
-                finish();
             }
         });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
