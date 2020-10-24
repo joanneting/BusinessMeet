@@ -46,7 +46,7 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
     private RecyclerView recyclerViewProfileTimeline;
     private ProfileTimelineRecyclerViewAdapter profileTimelineRecyclerViewAdapter;
     private final List<TimelineBean> timelineBeanList = new ArrayList<>();
-    private QBadgeView qBadgeView;
+//    private QBadgeView qBadgeView;
 
 
 

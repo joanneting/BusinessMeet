@@ -81,11 +81,14 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
             holder.deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    System.out.println("HERE!!!");
                     System.out.println(friendCustomizationNo);
-                    AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.delete(friendCustomizationNo)
+                    AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.delete(friendCustomizationNo), empty -> {
+                        friendCustomizationBeanList.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, friendCustomizationBeanList.size());
+                        System.out.println("!!!deleteButton success!!!");
 
-                    );
+                    });
                 }
             });
         }
