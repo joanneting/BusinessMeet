@@ -1,5 +1,6 @@
 package tw.com.businessmeet;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,11 +33,18 @@ public class EditProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    // 主頁面
     private View view;
-    private Chip currentGroupChip;
+    private Chip currentGroupChip, addGroupChip;
     private ChipGroup chipGroup;
     private EditText remark;
     private Button editProfileConfirmBtn;
+    // 新增群組對話框
+    private EditText editGroupDialogInput;
+    private Button editGroupDialogConfirmBtn, editGroupDialogcancelBtn;
+    // 編輯群組對話框
+    private EditText renameGroupDialogInput;
+    private Button renameGroupDialogConfirmBtn, renameGroupDialogDeleteBtn, renameGroupDialogCancelBtn;
 
     private Integer currentFriendGroupNo, currentGroupNo;
     private String remarkContent;
@@ -60,9 +68,12 @@ public class EditProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
         currentGroupChip = (Chip) view.findViewById(R.id.currentGroupTitleChip);
+        addGroupChip = (Chip) view.findViewById(R.id.addGroupButton);
         chipGroup = (ChipGroup) view.findViewById(R.id.chooseGroup_chipGroup);
         remark = (EditText) view.findViewById(R.id.addProfileContent_input);
-        remark.append(getActivity().getIntent().getStringExtra("remark"));
+        if (getActivity().getIntent().getStringExtra("remark") != null || !getActivity().getIntent().getStringExtra("remark").equals("")) {
+            remark.append(getActivity().getIntent().getStringExtra("remark"));
+        }
         editProfileConfirmBtn = (Button) view.findViewById(R.id.addColumn_dialog_confirmButton);
 
         // 頁面一進去一開始搜尋好友目前群組
@@ -73,6 +84,8 @@ public class EditProfileFragment extends Fragment {
         GroupsBean groupsBean = new GroupsBean();
         groupsBean.setUserId(getActivity().getIntent().getStringExtra("userId"));
         searchAllGroup(groupsBean);
+        // 新增群組
+        addGroup();
         // 更新編輯後的整個頁面
         editProfileConfirmBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +121,18 @@ public class EditProfileFragment extends Fragment {
         });
     }
 
+//    private searchRemark(String remark) {
+//        FriendBean friendBean = new FriendBean();
+//        friendBean.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
+//        AsyncTaskHelper.execute(() -> FriendServiceImpl.search(friendBean), fb -> {
+//            for(int i = 0; i)
+//            if (getActivity().getIntent().getIntExtra("friendNo", 0) == fb.get(i)) {
+//                fb.get
+//            }
+//        });
+//        return remark;
+//    }
+
     // 所有新增的群組變成chip
     private void createGroupChip(List<GroupsBean> groupsBeansList) {
         if (groupsBeansList != null) {
@@ -119,6 +144,13 @@ public class EditProfileFragment extends Fragment {
                 chip.setId(groupsBeansList.get(i).getGroupNo());
                 chip.setText(groupsBeansList.get(i).getName());
                 chip.setCloseIconVisible(true);
+                chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        System.out.println("chip.getId() = " + chip.getId());
+                        editGroup(chip.getId());
+                    }
+                });
                 chooseCurrentGroup(chip);
                 chipGroup.addView(chip);
             }
@@ -164,9 +196,110 @@ public class EditProfileFragment extends Fragment {
         });
     }
 
-    //編輯群組名稱
+    //新增群組
+    private void addGroup() {
+        addGroupChip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View view = inflater.inflate(R.layout.friend_edit_group, null);
+                builder.setView(view);
+                builder.create();
+                AlertDialog alertDialog = builder.show();
+                editGroupDialogInput = (EditText) view.findViewById(R.id.editGroup_dialog_Input);
+                editGroupDialogConfirmBtn = (Button) view.findViewById(R.id.editGroup_dialog_confirmButton);
+                editGroupDialogConfirmBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (editGroupDialogInput.getText().toString() != null || !editGroupDialogInput.getText().toString().equals("")) {
+                            GroupsBean groupsBean = new GroupsBean();
+                            groupsBean.setUserId(getActivity().getIntent().getStringExtra("userId"));
+                            groupsBean.setName(editGroupDialogInput.getText().toString());
+                            AsyncTaskHelper.execute(() -> GroupsServiceImpl.add(groupsBean), gb -> {
+                                List<GroupsBean> groupsBeanList = new ArrayList<>();
+                                groupsBeanList.add(gb);
+                                createGroupChip(groupsBeanList);
+                                if (alertDialog.isShowing()) {
+                                    alertDialog.dismiss();
+                                }
+                                System.out.println("!!!add group success!!!");
+                            });
+                        } else {
+                            Toast.makeText(getContext(), "未輸入群組名稱", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+    }
 
-
+    //刪除、編輯群組
+    private void editGroup(Integer groupNo) {
+        addGroupChip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View view = inflater.inflate(R.layout.friend_editndelete_group, null);
+                builder.setView(view);
+                builder.create();
+                AlertDialog alertDialog = builder.show();
+                renameGroupDialogInput = (EditText) view.findViewById(R.id.editGroup_dialog_Input);
+                // 重新命名
+                renameGroupDialogConfirmBtn = (Button) view.findViewById(R.id.editGroup_dialog_confirmButton);
+                renameGroupDialogConfirmBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (renameGroupDialogInput.getText().toString() != null || !renameGroupDialogInput.getText().toString().equals("")) {
+                            GroupsBean groupsBean = new GroupsBean();
+                            groupsBean.setGroupNo(groupNo);
+                            System.out.println("groupsBean.getGroupNo() = " + groupsBean.getGroupNo());
+                            groupsBean.setUserId(getActivity().getIntent().getStringExtra("userId"));
+                            groupsBean.setName(renameGroupDialogInput.getText().toString());
+                            AsyncTaskHelper.execute(() -> GroupsServiceImpl.update(groupsBean), gb -> {
+                                System.out.println("!!!update group name success!!!");
+                            });
+                        } else {
+                            Toast.makeText(getContext(), "未輸入群組名稱", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                // 刪除群組
+                renameGroupDialogDeleteBtn = (Button) view.findViewById(R.id.editGroup_dialog_deleteButton);
+                renameGroupDialogDeleteBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.searchFriendByGroup(groupNo), fgl -> {
+                            if (fgl.size() == 0) {
+                                AsyncTaskHelper.execute(() -> GroupsServiceImpl.delete(groupNo), empty -> {
+                                    System.out.println("!!!delete group success!!!");
+                                });
+                            } else {
+                                for (int i = 0; i < fgl.size(); i++) {
+                                    int finalI = i;
+                                    System.out.println("fgl.get(i).getFriendGroupNo() = " + fgl.get(i).getFriendGroupNo());
+                                    AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.delete(fgl.get(finalI).getFriendGroupNo()), empty -> {
+                                        System.out.println("!!!delete friendGroupNo=" + fgl.get(finalI).getFriendGroupNo() + "success");
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+                // 取消編輯
+                renameGroupDialogCancelBtn = (Button) view.findViewById(R.id.editGroup_dialog_cancelButton);
+                renameGroupDialogCancelBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (alertDialog.isShowing()) {
+                            alertDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+    }
 
     // 新增、編輯、刪除好友群組
     private void updateFriendGroup(FriendGroupBean friendGroupBean) {
