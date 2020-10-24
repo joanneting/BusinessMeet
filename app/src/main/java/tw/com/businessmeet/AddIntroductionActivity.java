@@ -44,13 +44,7 @@ public class AddIntroductionActivity extends AppCompatActivity {
         profession = findViewById(R.id.add_profile_profession);
         tel = findViewById(R.id.add_profile_tel);
         mail = findViewById(R.id.add_profile_mail);
-        userId.setText("1");
-        password.setText("1");
-        userName.setText("名字");
-        gender.setText("女");
-        profession.setText("職業");
-        tel.setText("電話");
-        mail.setText("信箱");
+        
         avatar = findViewById(R.id.add_photo_button);
         openDB();
 //        //啟動藍芽
@@ -117,6 +111,7 @@ public class AddIntroductionActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setClass(AddIntroductionActivity.this, classname);
         startActivity(intent);
+        finish();
     }
 
     private boolean checkData(UserInformationBean userInformationBean) {
@@ -150,4 +145,9 @@ public class AddIntroductionActivity extends AppCompatActivity {
         return false;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DH.close();
+    }
 }

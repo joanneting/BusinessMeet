@@ -171,6 +171,7 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         bundle.putString("timelineNo", friendsTimelineRecyclerViewAdapter.getTimelineBean(position).getTimelineNo().toString());
         String friendId = getIntent().getStringExtra("friendId");
         bundle.putString("friendId", friendId);
+        bundle.putString("page", "friend");
         intent.putExtras(bundle);
         startActivity(intent);
 
