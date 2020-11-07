@@ -5,12 +5,11 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
 import java.util.List;
 
 public class TimelineBean implements Parcelable {
-    private static String[] column = new String[]{"timeline_no","matchmaker_id","friend_id",
-            "place","title","remark","timeline_properties_no","color","create_date","modify_date"};
+    private static String[] column = new String[]{"timeline_no", "matchmaker_id", "friend_id",
+            "place", "title", "remark", "timeline_properties_no", "color", "create_date", "modify_date"};
     private Integer timelineNo;
     private String matchmakerId;
     private String friendId;
@@ -28,6 +27,7 @@ public class TimelineBean implements Parcelable {
     private String endDate;
     private ActivityLabelBean activityLabelBean;
     private List<ActivityInviteBean> activityInviteBeanList;
+    private ActivityDateBean activityDateBean;
     private Integer statusCode;
 
     public TimelineBean() {
@@ -226,7 +226,6 @@ public class TimelineBean implements Parcelable {
     }
 
 
-
     public ActivityLabelBean getActivityLabelBean() {
         return activityLabelBean;
     }
@@ -241,6 +240,14 @@ public class TimelineBean implements Parcelable {
 
     public void setActivityInviteBeanList(List<ActivityInviteBean> activityInviteBeanList) {
         this.activityInviteBeanList = activityInviteBeanList;
+    }
+
+    public ActivityDateBean getActivityDateBean() {
+        return activityDateBean;
+    }
+
+    public void setActivityDateBean(ActivityDateBean activityDateBean) {
+        this.activityDateBean = activityDateBean;
     }
 
     public Integer getStatusCode() {

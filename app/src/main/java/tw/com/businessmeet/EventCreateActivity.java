@@ -35,6 +35,8 @@ import java.util.List;
 import tw.com.businessmeet.bean.ActivityInviteBean;
 import tw.com.businessmeet.bean.ActivityLabelBean;
 import tw.com.businessmeet.bean.TimelineBean;
+import tw.com.businessmeet.dao.ActivityDateDAO;
+import tw.com.businessmeet.dao.ActivityInviteDAO;
 import tw.com.businessmeet.dao.ActivityLabelDAO;
 import tw.com.businessmeet.dao.TimelineDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
@@ -52,6 +54,9 @@ public class EventCreateActivity extends AppCompatActivity {
     private final Calendar calendar = Calendar.getInstance();
     private Context context;
     private TimelineDAO timelineDAO;
+    private ActivityLabelDAO activityLabelDAO;
+    private ActivityDateDAO activityDateDAO;
+    private ActivityInviteDAO activityInviteDAO;
     private List<ActivityInviteBean> activityInviteBeanList = new ArrayList<>();
     //chip
     private ChipGroup chipGroup, eventLabel;
@@ -66,6 +71,9 @@ public class EventCreateActivity extends AppCompatActivity {
         context = this;
         DBHelper dbHelper = new DBHelper(this);
         timelineDAO = new TimelineDAO(dbHelper);
+        activityDateDAO = new ActivityDateDAO(dbHelper);
+        activityInviteDAO = new ActivityInviteDAO(dbHelper);
+        activityLabelDAO = new ActivityLabelDAO(dbHelper);
         ActivityLabelDAO activityLabelDAO = new ActivityLabelDAO(dbHelper);
         //Event = (TextView) findViewById(R.);
 //        addEventLocation = findViewById(R.id.add_event_location);
@@ -125,7 +133,15 @@ public class EventCreateActivity extends AppCompatActivity {
                 activityLabelBean.setContent(chipContent);
                 timelineBean.setActivityLabelBean(activityLabelBean);
                 timelineBean.setActivityInviteBeanList(activityInviteBeanList);
-                AsyncTaskHelper.execute(() -> TimelineServiceImpl.add(timelineBean), timelineDAO::add);
+                AsyncTaskHelper.execute(() -> TimelineServiceImpl.add(timelineBean), resultTimelineBean -> {
+                    timelineDAO.add(resultTimelineBean);
+                    for (ActivityInviteBean activityInviteBean : resultTimelineBean.getActivityInviteBeanList()) {
+                        activityInviteDAO.add(activityInviteBean);
+                    }
+
+                    activityLabelDAO.add(resultTimelineBean.getActivityLabelBean());
+                    activityDateDAO.add(resultTimelineBean.getActivityDateBean());
+                });
                 Intent intent = new Intent();
                 intent.setClass(this, SelfIntroductionActivity.class);
                 startActivity(intent);

@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import tw.com.businessmeet.bean.GroupsBean;
 import tw.com.businessmeet.helper.DBHelper;
@@ -34,13 +33,11 @@ public class GroupsDAO {
 
     public void add(GroupsBean groupsBean) {
         ContentValues values = putValues(groupsBean);
-        values.put(column[4], dataFormat.format(new Date()));
         db.insert(tableName, null, values);
     }
 
     public void update(GroupsBean groupsBean) {
         ContentValues values = putValues(groupsBean);
-        values.put(column[5], dataFormat.format(new Date()));
         db.update(tableName, values, whereClause, new String[]{String.valueOf(groupsBean.getGroupNo())});
     }
 
@@ -67,17 +64,9 @@ public class GroupsDAO {
         }
     }
 
-    // getById
 
-//    public String getById(String blueTooth) {
-//        Cursor cursor = db.query(tableName, null, "blue_tooth = ?", new String[]{blueTooth}, null, null, null);
-//        cursor.moveToFirst();
-//        int index = cursor.getColumnIndex("blue_tooth");
-//        try {
-//            return cursor.getString(cursor.getColumnIndex("blue_tooth"));
-//        } catch (Exception e) {
-//            return null;
-//        }
-//    }
+    public void delete(Integer groupNo) {
+        db.delete(tableName, "group_no = ?", new String[]{groupNo.toString()});
+    }
 
 }

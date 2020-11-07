@@ -51,6 +51,10 @@ public class TimelineDAO {
         db.update(tableName, values, whereClause, new String[]{String.valueOf(timelineBean.getTimelineNo())});
     }
 
+    public void delete(Integer timelineNo) {
+        db.delete(tableName, whereClause, new String[]{timelineNo.toString()});
+    }
+
     public Cursor search(TimelineBean timelineBean) {
         String matchmakerId = timelineBean.getMatchmakerId();
         String friendId = timelineBean.getFriendId();

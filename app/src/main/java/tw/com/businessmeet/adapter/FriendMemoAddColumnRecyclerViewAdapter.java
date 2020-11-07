@@ -1,14 +1,11 @@
 package tw.com.businessmeet.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,16 +16,12 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 
-import tw.com.businessmeet.FriendSearchActivity;
-import tw.com.businessmeet.FriendsIntroductionActivity;
 import tw.com.businessmeet.R;
-import tw.com.businessmeet.bean.Empty;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
+import tw.com.businessmeet.dao.FriendCustomizationDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
+import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
-import tw.com.businessmeet.service.Impl.FriendGroupServiceImpl;
-import tw.com.businessmeet.service.Impl.FriendServiceImpl;
-import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 
 public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter<FriendMemoAddColumnRecyclerViewAdapter.ViewHolder> {
 
@@ -36,6 +29,8 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
     private Context context;
     private ClickListener clickListener;
     private Integer friendCustomizationNo;
+    private FriendCustomizationDAO friendCustomizationDAO;
+    private DBHelper dbHelper;
     private List<FriendCustomizationBean> friendCustomizationBeanList;
 
     //創建構造函數
@@ -44,6 +39,8 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
         this.context = context;
         this.clickListener = clickListener;
         this.friendCustomizationBeanList = friendCustomizationBeanList;
+        dbHelper = new DBHelper(context);
+        friendCustomizationDAO = new FriendCustomizationDAO(dbHelper);
     }
 
     @NonNull
@@ -83,6 +80,7 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
                 public void onClick(View v) {
                     System.out.println(friendCustomizationNo);
                     AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.delete(friendCustomizationNo), empty -> {
+                        friendCustomizationDAO.delete(friendCustomizationNo);
                         friendCustomizationBeanList.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, friendCustomizationBeanList.size());

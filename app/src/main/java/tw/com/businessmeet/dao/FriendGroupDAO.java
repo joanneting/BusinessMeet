@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import tw.com.businessmeet.bean.FriendGroupBean;
 import tw.com.businessmeet.helper.DBHelper;
@@ -34,13 +33,11 @@ public class FriendGroupDAO {
 
     public void add(FriendGroupBean friendGroupBean) {
         ContentValues values = putValues(friendGroupBean);
-        values.put("create_date", dataFormat.format(new Date()));
         db.insert(tableName, null, values);
     }
 
     public void update(FriendGroupBean friendGroupBean) {
         ContentValues values = putValues(friendGroupBean);
-        values.put("modify_date", dataFormat.format(new Date()));
         db.update(tableName, values, whereClause, new String[]{String.valueOf(friendGroupBean.getFriendGroupNo())});
     }
 
@@ -68,17 +65,8 @@ public class FriendGroupDAO {
         }
     }
 
-    // getById
-
-//    public String getById(String blueTooth) {
-//        Cursor cursor = db.query(tableName, null, "blue_tooth = ?", new String[]{blueTooth}, null, null, null);
-//        cursor.moveToFirst();
-//        int index = cursor.getColumnIndex("blue_tooth");
-//        try {
-//            return cursor.getString(cursor.getColumnIndex("blue_tooth"));
-//        } catch (Exception e) {
-//            return null;
-//        }
-//    }
+    public void delete(Integer friendGroupNo) {
+        db.delete(tableName, whereClause, new String[]{friendGroupNo.toString()});
+    }
 
 }

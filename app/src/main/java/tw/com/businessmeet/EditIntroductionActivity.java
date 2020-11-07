@@ -94,7 +94,7 @@ public class EditIntroductionActivity extends AppCompatActivity {
             ufb.setTel(tel.getText().toString());
             ufb.setAvatar(AvatarHelper.setImageResource(avatar));
             userInformationDAO.update(ufb);
-            AsyncTaskHelper.execute(() -> UserInformationServiceImpl.update(ufb));
+            AsyncTaskHelper.execute(() -> UserInformationServiceImpl.update(ufb), userInformationDAO::update);
             changeToSelfIntroductionPage();
             finish();
         }

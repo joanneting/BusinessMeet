@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -22,6 +23,7 @@ import tw.com.businessmeet.background.NotificationService;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.TimelineBean;
 import tw.com.businessmeet.bean.UserInformationBean;
+import tw.com.businessmeet.dao.FriendDAO;
 import tw.com.businessmeet.dao.TimelineDAO;
 import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.device.DeviceFinder;
@@ -30,6 +32,7 @@ import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.helper.DeviceHelper;
 import tw.com.businessmeet.helper.NotificationHelper;
+import tw.com.businessmeet.network.ApplicationContext;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
@@ -43,6 +46,8 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
     private LocationListener locationListener = new MyLocationListener();
     private double longitude;
     private double latitude;
+    private FriendDAO friendDAO;
+    private UserInformationDAO userInformationDAO;
 
     public BackgroundFoundActionHandler(NotificationService notificationService) {
         this(notificationService, null);
@@ -62,6 +67,11 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
         }
         this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1800000, 0, locationListener);
         this.dbHelper = dbHelper;
+        if (dbHelper == null) {
+            dbHelper = new DBHelper(ApplicationContext.get());
+        }
+        friendDAO = new FriendDAO(dbHelper);
+        userInformationDAO = new UserInformationDAO(dbHelper);
     }
 
     @Override
@@ -73,10 +83,24 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
         if (deviceDetail != null) {
             String identifier = deviceDetail.getIdentifier();
             distance = (int) deviceDetail.getDistance();
-            AsyncTaskHelper.execute(
-                    () -> UserInformationServiceImpl.getByIdentifier(identifier),
-                    this::searchFriend
-            );
+            String userId = userInformationDAO.getId(identifier);
+            if (userId != null) {
+                Cursor cursor = userInformationDAO.getById(userId);
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                String avatar = cursor.getString(cursor.getColumnIndex("avatar"));
+                String profession = cursor.getString(cursor.getColumnIndex("profession"));
+                UserInformationBean userInformationBean = new UserInformationBean();
+                userInformationBean.setUserId(userId);
+                userInformationBean.setProfession(profession);
+                userInformationBean.setName(name);
+                userInformationBean.setAvatar(avatar);
+                searchFriend(userInformationBean);
+            } else {
+                AsyncTaskHelper.execute(
+                        () -> UserInformationServiceImpl.getByIdentifier(identifier),
+                        this::searchFriend
+                );
+            }
         }
     }
 
@@ -86,10 +110,21 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
         UserInformationDAO userInformationDAO = new UserInformationDAO(dbHelper);
         friendBean.setMatchmakerId(DeviceHelper.getUserId(dbHelper.getContext(), userInformationDAO));
         friendBean.setFriendId(searchId);
-        AsyncTaskHelper.execute(
-                () -> FriendServiceImpl.search(friendBean),
-                friendBeanList -> checkFriendMatched(userInformationBean, friendBeanList)
-        );
+        Cursor cursor = friendDAO.search(friendBean);
+        if (cursor != null) {
+            String friendNo = cursor.getString(cursor.getColumnIndex("friend_no"));
+            String remark = cursor.getString(cursor.getColumnIndex("remark"));
+            friendBean.setFriendNo(Integer.parseInt(friendNo));
+            friendBean.setRemark(remark);
+            List<FriendBean> friendBeanList = new ArrayList<>();
+            friendBeanList.add(friendBean);
+            checkFriendMatched(userInformationBean, friendBeanList);
+        } else {
+            AsyncTaskHelper.execute(
+                    () -> FriendServiceImpl.search(friendBean),
+                    friendBeanList -> checkFriendMatched(userInformationBean, friendBeanList)
+            );
+        }
     }
 
     private void checkFriendMatched(UserInformationBean userInformationBean, List<FriendBean> friendBeanList) {

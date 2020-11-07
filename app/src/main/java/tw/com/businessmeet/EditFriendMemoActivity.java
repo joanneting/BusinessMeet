@@ -17,7 +17,9 @@ import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 
 import tw.com.businessmeet.bean.FriendCustomizationBean;
+import tw.com.businessmeet.dao.FriendCustomizationDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
+import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
 
 public class EditFriendMemoActivity extends AppCompatActivity {
@@ -29,6 +31,8 @@ public class EditFriendMemoActivity extends AppCompatActivity {
     private String originalChipContent, updateChipContent, deleteChipContent;
     private String[] originalChipContentSplit, updateChipContentSplit, deleteChipContentSplit;
     private FriendCustomizationBean fcb = new FriendCustomizationBean();
+    private FriendCustomizationDAO friendCustomizationDAO;
+    private DBHelper dbHelper;
     private FriendCustomizationBean friendCustomizationBean = new FriendCustomizationBean();
     private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
 
@@ -114,7 +118,9 @@ public class EditFriendMemoActivity extends AppCompatActivity {
                 fcb.setContent(updateChipContent);
                 if (checkData(fcb)) {
                     AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.update(fcb), friendCustomizationBean -> {
+                        friendCustomizationDAO.update(friendCustomizationBean);
                         changeToAnotherPage();
+
                     });
                     originalChipContent = "";
                     deleteChipContent = "";
@@ -137,6 +143,11 @@ public class EditFriendMemoActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void openDB() {
+        dbHelper = new DBHelper(this);
+        friendCustomizationDAO = new FriendCustomizationDAO(dbHelper);
     }
 
     private boolean checkData(FriendCustomizationBean friendCustomizationBean) {

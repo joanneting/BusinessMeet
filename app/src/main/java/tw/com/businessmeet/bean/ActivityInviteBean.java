@@ -1,20 +1,15 @@
 package tw.com.businessmeet.bean;
 
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.ByteArrayOutputStream;
-import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-public class ActivityInviteBean  implements Parcelable {
+public class ActivityInviteBean implements Parcelable {
     public static List<ActivityInviteBean> inviteBean;
-    private static String[] column = new String[]{"activityInvite_no","user_no","activity_no","create_date","modify_date"};
+    private static String[] column = new String[]{"activity_invite_no", "user_Id", "activity_no", "create_date", "modify_date"};
     private Integer activityInviteNo;
     private String userId;
     private Integer activityNo;
@@ -30,6 +25,7 @@ public class ActivityInviteBean  implements Parcelable {
     private String title;
     private String place;
     private String activityDate;
+
     public ActivityInviteBean() {
     }
 

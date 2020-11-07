@@ -18,7 +18,9 @@ import java.util.LinkedList;
 
 import tw.com.businessmeet.FriendsIntroductionActivity;
 import tw.com.businessmeet.bean.FriendBean;
+import tw.com.businessmeet.dao.FriendDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
+import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.helper.NotificationHelper;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 
@@ -64,11 +66,15 @@ public class FriendInviteService extends Service {
     }
 
     public static class FriendInviteBroadcastReceiver extends BroadcastReceiver {
+        private FriendDAO friendDAO;
+        private DBHelper dbHelper;
 
         @Override
         public void onReceive(Context context, Intent intent) {
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.cancelAll();
+            dbHelper = new DBHelper(context);
+            friendDAO = new FriendDAO(dbHelper);
             String action = intent.getAction();
             String friendId = intent.getStringExtra("friendId");
             FriendBean friendBean = new FriendBean();
@@ -77,6 +83,7 @@ public class FriendInviteService extends Service {
             AsyncTaskHelper.execute(
                     () -> FriendServiceImpl.createInviteNotification(friendBean),
                     newFriendBean -> {
+                        friendDAO.add(newFriendBean);
                         FriendInviteService.ACTIVE_NOTIFICATION = null;
                         if (action.equals(ACTION_OK)) {
                             Intent startActivityIntent = new Intent(context, FriendsIntroductionActivity.class);

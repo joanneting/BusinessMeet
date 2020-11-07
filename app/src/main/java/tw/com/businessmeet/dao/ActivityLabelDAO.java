@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import tw.com.businessmeet.bean.ActivityLabelBean;
 import tw.com.businessmeet.helper.DBHelper;
@@ -34,13 +33,11 @@ public class ActivityLabelDAO {
 
     public void add(ActivityLabelBean activityLabelBean) {
         ContentValues values = putValues(activityLabelBean);
-        values.put("create_date", dataFormat.format(new Date()));
         db.insert(tableName, null, values);
     }
 
     public void update(ActivityLabelBean activityLabelBean) {
         ContentValues values = putValues(activityLabelBean);
-        values.put("modify_date", dataFormat.format(new Date()));
         db.update(tableName, values, whereClause, new String[]{String.valueOf(activityLabelBean.getActivityLabelNo())});
     }
 

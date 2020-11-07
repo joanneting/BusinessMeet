@@ -23,8 +23,10 @@ import java.util.List;
 import tw.com.businessmeet.bean.ActivityInviteBean;
 import tw.com.businessmeet.bean.ActivityLabelBean;
 import tw.com.businessmeet.bean.TimelineBean;
+import tw.com.businessmeet.dao.TimelineDAO;
 import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
+import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.helper.DeviceHelper;
 import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 
@@ -38,12 +40,14 @@ public class EventActivity extends AppCompatActivity {
     private TimelineBean activityBean;
     private ImageView tagIcon, participantIcon;
     private UserInformationDAO userInformationDAO;
+    private TimelineDAO timelineDAO;
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event);
-
+        openDB();
         Integer timelineNo = Integer.parseInt(getIntent().getStringExtra("timelineNo"));
 
         event = findViewById(R.id.event);
@@ -141,7 +145,8 @@ public class EventActivity extends AppCompatActivity {
                                 .setPositiveButton("確定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        AsyncTaskHelper.execute(() -> TimelineServiceImpl.delete(timelineNo));
+                                        AsyncTaskHelper.execute(() -> TimelineServiceImpl.delete(timelineNo), empty -> timelineDAO.delete(timelineNo));
+
                                         Intent intent = new Intent();
                                         if (meet) {
                                             intent.setClass(EventActivity.this, FriendsTimelineActivity.class);
@@ -189,6 +194,11 @@ public class EventActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void openDB() {
+        dbHelper = new DBHelper(this);
+        timelineDAO = new TimelineDAO(dbHelper);
     }
 
 }
