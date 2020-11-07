@@ -60,7 +60,7 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
 
     //edit
     private ImageButton editButton;
-
+    private FriendCustomizationDAO friendCustomizationDAO;
     // MemoFragment
     private final FriendCustomizationBean fcb = new FriendCustomizationBean();
     private RecyclerView recyclerViewMemo;
@@ -70,7 +70,6 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
     // dialog
     private Button confirm, cancel;
     private EditText addColumnMemo, addChipMemo;
-    private FriendCustomizationDAO friendCustomizationDAO;
     private DBHelper dh = null;
     private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
 
@@ -116,7 +115,7 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
         // floating button
         extendedFloatingActionButton = (ExtendedFloatingActionButton) view.findViewById(R.id.memo_addColumn);
         extendedFloatingActionButton.setOnClickListener(dialogClick);
-
+        openDB();
         return view;
     }
 
@@ -182,16 +181,8 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
                     fcb.setContent(originalChipContent);
                     if (checkData(fcb)) {
                         AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.add(fcb), friendCustomizationBean -> {
+                            friendCustomizationDAO.add(friendCustomizationBean);
                             friendsearchMemo(friendCustomizationBean);
-
-
-
-//                            AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.search(fcb), friendCustomizationBeanList -> {
-//                                if (friendCustomizationBeanList.size() > 1 || (friendCustomizationBeanList.size() == 1 && friendCustomizationBeanList.get(0).getCreateDate() != null)) {
-//                                    EditMemoFragment.this.friendCustomizationBeanList.addAll(friendCustomizationBeanList);
-//
-//                                }
-//                            });
                         });
                         if (alertDialog.isShowing()) {
                             alertDialog.dismiss();

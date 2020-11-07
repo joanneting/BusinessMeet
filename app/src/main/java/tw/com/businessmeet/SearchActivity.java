@@ -172,7 +172,7 @@ public class SearchActivity extends AppCompatActivity implements MatchedDeviceRe
         FriendBean friendBean = new FriendBean();
         friendBean.setFriendId(userInformationBean.getUserId());
         friendBean.setMatchmakerId(DeviceHelper.getUserId(this));
-        AsyncTaskHelper.execute(() -> FriendServiceImpl.add(friendBean));
+        AsyncTaskHelper.execute(() -> FriendServiceImpl.add(friendBean), friendDAO::add);
         Intent intent = new Intent();
         intent.setClass(SearchActivity.this, FriendSearchActivity.class);
         startActivity(intent);

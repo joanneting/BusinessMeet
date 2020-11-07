@@ -1,9 +1,7 @@
 package tw.com.businessmeet.bean;
 
-import java.util.Date;
-
 public class ActivityRemindBean {
-    private static String[] column = new String[]{"activityRemind_no","time","activity_no","create_date","modify_date"};
+    private static String[] column = new String[]{"activity_remind_no", "time", "activity_no", "create_date", "modify_date"};
     private Integer activityRemindNo;
     private String time;
     private Integer activityNo;

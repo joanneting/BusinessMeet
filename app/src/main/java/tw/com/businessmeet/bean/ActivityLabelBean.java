@@ -3,10 +3,8 @@ package tw.com.businessmeet.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Date;
-
 public class ActivityLabelBean implements Parcelable {
-    private static String[] column = new String[]{"activityLabel_no","activity_no","content","create_date","modify_date"};
+    private static String[] column = new String[]{"activity_label_no", "activity_no", "content", "create_date", "modify_date"};
     private Integer activityLabelNo;
     private Integer activityNo;
     private String content;

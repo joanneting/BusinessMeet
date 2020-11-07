@@ -22,7 +22,11 @@ import java.util.List;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.FriendGroupBean;
 import tw.com.businessmeet.bean.GroupsBean;
+import tw.com.businessmeet.dao.FriendDAO;
+import tw.com.businessmeet.dao.FriendGroupDAO;
+import tw.com.businessmeet.dao.GroupsDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
+import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.helper.DeviceHelper;
 import tw.com.businessmeet.service.Impl.FriendGroupServiceImpl;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
@@ -53,8 +57,19 @@ public class EditProfileFragment extends Fragment {
 
     private List<GroupsBean> groupsBeansList = new ArrayList<>();
     private Boolean currentGroupChipFlag = false;
+    private FriendDAO friendDAO;
+    private DBHelper dbHelper;
+    private GroupsDAO groupsDAO;
+    private FriendGroupDAO friendGroupDAO;
 
     public EditProfileFragment() {
+    }
+
+    private void openDB() {
+        dbHelper = new DBHelper(getActivity());
+        friendDAO = new FriendDAO(dbHelper);
+        groupsDAO = new GroupsDAO(dbHelper);
+        friendGroupDAO = new FriendGroupDAO(dbHelper);
     }
 
     public static EditProfileFragment newInstance(String param1, String param2) {
@@ -81,12 +96,10 @@ public class EditProfileFragment extends Fragment {
         // 頁面一進去一開始搜尋好友目前群組
         FriendGroupBean friendGroupBean = new FriendGroupBean();
         friendGroupBean.setFriendNo(getActivity().getIntent().getIntExtra("friendNo", 0));
-        System.out.println("friendGroupBean.getFriendNo() = " + friendGroupBean.getFriendNo());
         searchFriendGroup(friendGroupBean);
         // 頁面一進去一開始搜尋使用者新增的所有群組
         GroupsBean groupsBean = new GroupsBean();
         groupsBean.setUserId(DeviceHelper.getUserId(getContext()));
-        System.out.println("DeviceHelper.getUserId(getContext()) = " + DeviceHelper.getUserId(getContext()));
         searchAllGroup(groupsBean);
         // 新增群組
         addGroup();
@@ -98,7 +111,7 @@ public class EditProfileFragment extends Fragment {
                 updateFriendGroup(friendGroupBean);
             }
         });
-
+        openDB();
         return view;
     }
 
@@ -169,9 +182,7 @@ public class EditProfileFragment extends Fragment {
         friendBean.setMatchmakerId(getActivity().getIntent().getStringExtra("userId"));
         friendBean.setFriendId(getActivity().getIntent().getStringExtra("friendId"));
         friendBean.setRemark(remarkContent);
-        AsyncTaskHelper.execute(() -> FriendServiceImpl.update(friendBean), fb -> {
-            System.out.println("!!!add remark success!!!");
-        });
+        AsyncTaskHelper.execute(() -> FriendServiceImpl.update(friendBean), friendDAO::update);
     }
 
     // current group close action
@@ -210,6 +221,7 @@ public class EditProfileFragment extends Fragment {
                             groupsBean.setUserId(getActivity().getIntent().getStringExtra("userId"));
                             groupsBean.setName(editGroupDialogInput.getText().toString());
                             AsyncTaskHelper.execute(() -> GroupsServiceImpl.add(groupsBean), gb -> {
+                                groupsDAO.add(gb);
                                 List<GroupsBean> groupsBeanList = new ArrayList<>();
                                 groupsBeanList.add(gb);
                                 createGroupChip(groupsBeanList);
@@ -249,7 +261,7 @@ public class EditProfileFragment extends Fragment {
                     groupsBean.setName(renameGroupDialogInput.getText().toString());
                     AsyncTaskHelper.execute(() -> GroupsServiceImpl.update(groupsBean), gb -> {
                         chip.setText(renameGroupDialogInput.getText().toString());
-                        System.out.println("!!!update group name success!!!");
+                        groupsDAO.update(gb);
                         if (alertDialog.isShowing()) {
                             alertDialog.dismiss();
                         }
@@ -267,14 +279,15 @@ public class EditProfileFragment extends Fragment {
                 AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.searchFriendByGroup(groupNo), fgl -> {
                     if (fgl.size() == 0) {
                         AsyncTaskHelper.execute(() -> GroupsServiceImpl.delete(groupNo), empty -> {
+                            groupsDAO.delete(groupNo);
                             chipGroup.removeView(chip);
-                            System.out.println("!!!delete group success!!!");
                             closeDialog(alertDialog);
                         });
                     } else {
                         for (int i = 0; i < fgl.size(); i++) {
                             int finalI = i;
                             AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.delete(fgl.get(finalI).getFriendGroupNo()), empty -> {
+                                friendGroupDAO.delete(fgl.get(finalI).getFriendGroupNo());
                                 chipGroup.removeView(chip);
                                 System.out.println("!!!delete friendGroupNo=" + fgl.get(finalI).getFriendGroupNo() + "success");
                                 closeDialog(alertDialog);
@@ -304,19 +317,17 @@ public class EditProfileFragment extends Fragment {
     // 新增、編輯、刪除好友群組
     private void updateFriendGroup(FriendGroupBean friendGroupBean) {
         friendGroupBean.setGroupNo(currentGroupChip.getId());
+        System.out.println("currentFriendGroupNo = " + currentFriendGroupNo);
         if (currentFriendGroupNo == null) {
-            AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.add(friendGroupBean), fgb -> {
-                System.out.println("!!!update friend group - add success!!!");
-            });
+            System.out.println("\"add\" = " + "add");
+            AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.add(friendGroupBean), friendGroupDAO::add);
         } else {
             friendGroupBean.setFriendGroupNo(currentFriendGroupNo);
-            AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.update(friendGroupBean), fgb -> {
-                System.out.println("!!!update friend group - update success!!!");
-            });
+            AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.update(friendGroupBean), friendGroupDAO::update);
         }
         if (currentGroupChipFlag == true) {
             AsyncTaskHelper.execute(() -> FriendGroupServiceImpl.delete(currentFriendGroupNo), fgb -> {
-                System.out.println("!!!current close icon onclick success!!!");
+                friendGroupDAO.delete(currentFriendGroupNo);
             });
         }
         changePage();

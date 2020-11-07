@@ -40,7 +40,6 @@ public class ActivityInviteDAO {
 
     public void update(ActivityInviteBean activityInviteBean) {
         ContentValues values = putValues(activityInviteBean);
-        values.put("modify_date", dataFormat.format(new Date()));
         db.update(tableName, values, whereClause, new String[]{String.valueOf(activityInviteBean.getActivityInviteNo())});
     }
 

@@ -26,9 +26,10 @@ public class FriendCustomizationDAO {
         ContentValues values = new ContentValues();
         values.put(column[0], friendCustomizationBean.getFriendCustomizationNo());
         values.put(column[1], friendCustomizationBean.getName());
-        values.put(column[2], friendCustomizationBean.getFriendNo());
-        values.put(column[3], friendCustomizationBean.getCreateDate());
-        values.put(column[4], friendCustomizationBean.getModifyDate());
+        values.put(column[2], friendCustomizationBean.getContent());
+        values.put(column[3], friendCustomizationBean.getFriendNo());
+        values.put(column[4], friendCustomizationBean.getCreateDate());
+        values.put(column[5], friendCustomizationBean.getModifyDate());
         return values;
     }
 
@@ -42,6 +43,10 @@ public class FriendCustomizationDAO {
         ContentValues values = putValues(friendCustomizationBean);
         values.put("modify_date", dataFormat.format(new Date()));
         db.update(tableName, values, whereClause, new String[]{String.valueOf(friendCustomizationBean.getFriendCustomizationNo())});
+    }
+
+    public void delete(Integer friendCustomizationNo) {
+        db.delete(tableName, whereClause, new String[]{friendCustomizationNo.toString()});
     }
 
     public Cursor search(FriendCustomizationBean friendCustomizationBean) {

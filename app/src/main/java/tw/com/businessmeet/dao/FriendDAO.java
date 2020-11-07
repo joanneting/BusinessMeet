@@ -49,6 +49,10 @@ public class FriendDAO {
         db.update(tableName, values, whereClause, new String[]{String.valueOf(friendBean.getFriendNo())});
     }
 
+    public void delete(Integer friendNo) {
+        db.delete(tableName, whereClause, new String[]{friendNo.toString()});
+    }
+
     public Cursor search(FriendBean friendBean) {
         String matchmakerId = friendBean.getMatchmakerId();
         String friendId = friendBean.getFriendId();

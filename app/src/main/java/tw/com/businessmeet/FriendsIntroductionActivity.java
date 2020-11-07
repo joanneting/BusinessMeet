@@ -27,6 +27,7 @@ import tw.com.businessmeet.adapter.FriendProfileListViewAdapter;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
 import tw.com.businessmeet.bean.UserInformationBean;
+import tw.com.businessmeet.dao.FriendDAO;
 import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.helper.AvatarHelper;
@@ -45,9 +46,11 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
     private String friendId, content;
     private Integer friendNo;
     private UserInformationDAO userInformationDAO;
-    private DBHelper DH;
+    private DBHelper dbHelper;
     private final FriendBean friendBean = new FriendBean();
     private final ArrayList<FriendCustomizationBean> friendCustomizationBeanList = new ArrayList<FriendCustomizationBean>();
+    private FriendDAO friendDAO;
+
 
     private static void setListViewHeight(ListView listView) {
         if (listView == null) {
@@ -165,8 +168,9 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
     }
 
     private void openDB() {
-        DH = new DBHelper(this);
-        userInformationDAO = new UserInformationDAO(DH);
+        dbHelper = new DBHelper(this);
+        userInformationDAO = new UserInformationDAO(dbHelper);
+        friendDAO = new FriendDAO(dbHelper);
     }
 
     public View.OnClickListener editMemoButton = new View.OnClickListener() {
@@ -179,6 +183,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             AsyncTaskHelper.execute(() -> FriendServiceImpl.delete(friendNo), empty -> {
+                friendDAO.delete(friendNo);
                 Intent intent = new Intent();
                 intent.setClass(FriendsIntroductionActivity.this, FriendSearchActivity.class);
                 startActivity(intent);
