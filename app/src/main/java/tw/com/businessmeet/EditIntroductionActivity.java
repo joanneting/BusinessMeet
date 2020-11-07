@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -72,7 +71,6 @@ public class EditIntroductionActivity extends AppCompatActivity {
         if (cursor.moveToFirst()) {
             do {
                 name = cursor.getString(cursor.getColumnIndex("name"));
-                Log.d("edit", name);
                 pro = cursor.getString(cursor.getColumnIndex("profession"));
                 gen = cursor.getString(cursor.getColumnIndex("gender"));
                 mail = cursor.getString(cursor.getColumnIndex("mail"));
@@ -96,7 +94,7 @@ public class EditIntroductionActivity extends AppCompatActivity {
             ufb.setTel(tel.getText().toString());
             ufb.setAvatar(AvatarHelper.setImageResource(avatar));
             userInformationDAO.update(ufb);
-            AsyncTaskHelper.execute(() -> UserInformationServiceImpl.update(ufb));
+            AsyncTaskHelper.execute(() -> UserInformationServiceImpl.update(ufb), userInformationDAO::update);
             changeToSelfIntroductionPage();
             finish();
         }
@@ -123,14 +121,12 @@ public class EditIntroductionActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == RESULT_OK) {
             Uri uri = data.getData();
-            Log.d("resultUri", uri.toString());
             ContentResolver cr = this.getContentResolver();
             try {
                 Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
 
                 avatar.setImageBitmap(AvatarHelper.toCircle(bitmap));
             } catch (Exception e) {
-                Log.d("Exception", e.getMessage());
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

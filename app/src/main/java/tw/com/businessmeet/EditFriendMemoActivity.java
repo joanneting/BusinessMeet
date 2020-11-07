@@ -1,6 +1,5 @@
 package tw.com.businessmeet;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -17,12 +16,10 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 
-import java.util.List;
-
-import retrofit2.Call;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
-import tw.com.businessmeet.bean.ResponseBody;
+import tw.com.businessmeet.dao.FriendCustomizationDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
+import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.service.Impl.FriendCustomizationServiceImpl;
 
 public class EditFriendMemoActivity extends AppCompatActivity {
@@ -34,25 +31,10 @@ public class EditFriendMemoActivity extends AppCompatActivity {
     private String originalChipContent, updateChipContent, deleteChipContent;
     private String[] originalChipContentSplit, updateChipContentSplit, deleteChipContentSplit;
     private FriendCustomizationBean fcb = new FriendCustomizationBean();
+    private FriendCustomizationDAO friendCustomizationDAO;
+    private DBHelper dbHelper;
     private FriendCustomizationBean friendCustomizationBean = new FriendCustomizationBean();
     private FriendCustomizationServiceImpl friendCustomizationServiceImpl = new FriendCustomizationServiceImpl();
-
-//    private AsyncTaskHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean> editResponseListener = new AsyncTaskHelper.OnResponseListener<FriendCustomizationBean, FriendCustomizationBean>() {
-//
-//        @Override
-//        public Call<ResponseBody<FriendCustomizationBean>> request(FriendCustomizationBean... friendCustomizationBeans) {
-//            return friendCustomizationServiceImpl.update(friendCustomizationBeans[0]);
-//        }
-//
-//        @Override
-//        public void onSuccess(FriendCustomizationBean friendCustomizationBeans) {
-//            changeToAnotherPage();
-//        }
-//
-//        @Override
-//        public void onFail(int status, String message) {
-//        }
-//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,28 +98,29 @@ public class EditFriendMemoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 originalChipContentSplit = originalChipContent.split(",");
-                deleteChipContentSplit = deleteChipContent.split(",");
-                for (int i = 1; i < originalChipContentSplit.length; i++) {
-                    for (int j = 1; j < deleteChipContentSplit.length; j++) {
-                        System.out.println("original = " + originalChipContentSplit[i] + "   delete = " + deleteChipContentSplit[j]);
-                        if (originalChipContentSplit[i].equals(deleteChipContentSplit[j])) {
-                            break;
+                if (deleteChipContent != null) {
+                    deleteChipContentSplit = deleteChipContent.split(",");
+                    for (int i = 1; i < originalChipContentSplit.length; i++) {
+                        for (int j = 1; j < deleteChipContentSplit.length; j++) {
+                            System.out.println("original = " + originalChipContentSplit[i] + "   delete = " + deleteChipContentSplit[j]);
+                            if (originalChipContentSplit[i].equals(deleteChipContentSplit[j])) {
+                                break;
+                            }
+                            updateChipContent = updateChipContent + "," + originalChipContentSplit[i];
                         }
-                        updateChipContent = updateChipContent + "," + originalChipContentSplit[i];
                     }
+                } else {
+                    updateChipContent = originalChipContent;
                 }
-
                 fcb.setFriendCustomizationNo(getIntent().getIntExtra("friendCustomizationNo", 0));
                 fcb.setFriendNo(getIntent().getIntExtra("friendNo", 0));
                 fcb.setName(addColumnMemo.getText().toString());
                 fcb.setContent(updateChipContent);
                 if (checkData(fcb)) {
-                    System.out.println("fcb.getFriendCustomizationNo() = " + fcb.getFriendCustomizationNo());
-                    System.out.println("fcb.getFriendNo() = " + fcb.getFriendNo());
-                    System.out.println("fcb.getName() = " + fcb.getName());
-                    System.out.println("fcb.getContent() = " + fcb.getContent());
                     AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.update(fcb), friendCustomizationBean -> {
+                        friendCustomizationDAO.update(friendCustomizationBean);
                         changeToAnotherPage();
+
                     });
                     originalChipContent = "";
                     deleteChipContent = "";
@@ -160,6 +143,11 @@ public class EditFriendMemoActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void openDB() {
+        dbHelper = new DBHelper(this);
+        friendCustomizationDAO = new FriendCustomizationDAO(dbHelper);
     }
 
     private boolean checkData(FriendCustomizationBean friendCustomizationBean) {

@@ -5,7 +5,8 @@
         android:id="@+id/menu_bell"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_bell_thin_24dp"
-        android:title="通知" />
+        android:title="通知"
+        android:actionLayout="@layout/invite_badge"/>
     <item
         android:id="@+id/menu_add_calendar"
         app:showAsAction="ifRoom"

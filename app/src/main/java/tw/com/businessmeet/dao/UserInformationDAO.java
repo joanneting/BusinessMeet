@@ -3,7 +3,6 @@ package tw.com.businessmeet.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,6 +61,9 @@ public class UserInformationDAO {
         if (identifier != null && !identifier.equals("")) {
             values.put("identifier", identifier);
         }
+        if (identifier != null && !identifier.equals("")) {
+            values.put("firebase_token", identifier);
+        }
         if (roleNo != null && roleNo != 0) {
             values.put("role_no", roleNo);
         }
@@ -70,15 +72,11 @@ public class UserInformationDAO {
     }
 
     public void add(UserInformationBean userInformationBean) {
-        Log.d("add:", "add");
-
-        Log.d("add", "dbsuccess");
         ContentValues values = putValues(userInformationBean);
 
         String createDate = dateFormat.format(new Date());
         values.put("create_date", createDate);
         db.insert(tableName, null, values);
-
     }
 
     public void update(UserInformationBean userInformationBean) {
@@ -90,16 +88,12 @@ public class UserInformationDAO {
 //        String[] whereArgs1 = {"#100", b.getStorage_id()};
 //        String whereClause1 = DatabaseSchema.TABLE_TALKS.COLUMN_TID + "=? AND " + DatabaseSchema.TABLE_TALKS.COLUMN_STORAGEID + "=?";
 //        db.update(DatabaseSchema.TABLE_TALKS.NAME, values1, whereClause1, whereArgs1);
-        System.out.println("=====================" + userInformationBean.getUserId());
-        System.out.println(values);
         db.update(tableName, values, whereClause, new String[]{userInformationBean.getUserId()});
-        db.close();
     }
 
     public void delete(String identifier) {
 
         db.delete(tableName, whereClause, new String[]{identifier});
-        db.close();
     }
 
     public Cursor getById(String userId) {
@@ -149,8 +143,9 @@ public class UserInformationDAO {
         String identifier = userInformationBean.getIdentifier();
         String avatar = userInformationBean.getAvatar();
         String tel = userInformationBean.getTel();
-        String[] searchValue = new String[]{userId, password, name, gender, mail, profession, identifier, avatar, tel};
-        String[] searchColumn = new String[]{column[0], column[1], column[2], column[3], column[4], column[5], column[6], column[7], column[8]};
+        String firebaseToken = userInformationBean.getFirebaseToken();
+        String[] searchValue = new String[]{userId, password, name, gender, mail, profession, identifier, firebaseToken, avatar, tel};
+        String[] searchColumn = new String[]{column[0], column[1], column[2], column[3], column[4], column[5], column[6], column[7], column[8], column[9]};
         String where = "";
         ArrayList<String> args = new ArrayList<>();
 

@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
@@ -16,13 +20,13 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import tw.com.businessmeet.bean.ActivityInviteBean;
 import tw.com.businessmeet.bean.ActivityLabelBean;
 import tw.com.businessmeet.bean.TimelineBean;
+import tw.com.businessmeet.dao.TimelineDAO;
 import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
+import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.helper.DeviceHelper;
 import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 
@@ -34,14 +38,16 @@ public class EventActivity extends AppCompatActivity {
     private Boolean meet = true;
     private String friendId;
     private TimelineBean activityBean;
-    private ImageView participantAvatar, tagIcon, participantIcon;
+    private ImageView tagIcon, participantIcon;
     private UserInformationDAO userInformationDAO;
+    private TimelineDAO timelineDAO;
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event);
-
+        openDB();
         Integer timelineNo = Integer.parseInt(getIntent().getStringExtra("timelineNo"));
 
         event = findViewById(R.id.event);
@@ -51,14 +57,11 @@ public class EventActivity extends AppCompatActivity {
         eventParticipant = findViewById(R.id.event_participant);
         eventTag = findViewById(R.id.event_label);
         addEventMemo = findViewById(R.id.add_event_memo);
-        participantAvatar = findViewById(R.id.participant_avatar);
         participantIcon = findViewById(R.id.participant_icon);
         tagIcon = findViewById(R.id.tag_icon);
         AsyncTaskHelper.execute(() -> TimelineServiceImpl.getById(timelineNo), timelineBean -> {
-            System.out.println(timelineBean.getCreateDateStr());
             event.setText(timelineBean.getTitle());
             eventLocation.setText(timelineBean.getPlace());
-            System.out.println("timelineBean.getRemark() = " + timelineBean.getRemark());
             addEventMemo.setText(timelineBean.getRemark());
             if (timelineBean.getTimelinePropertiesNo() == 1) {
                 meet = false;
@@ -104,7 +107,6 @@ public class EventActivity extends AppCompatActivity {
                 eventTag.setVisibility(View.GONE);
                 eventTime.setVisibility(View.GONE);
                 participantIcon.setVisibility(View.GONE);
-                participantAvatar.setVisibility(View.GONE);
                 eventParticipant.setVisibility(View.GONE);
                 eventDate.setText(timelineBean.getCreateDateStr());
             }
@@ -116,6 +118,17 @@ public class EventActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String page = getIntent().getStringExtra("page");
+                switch (page) {
+                    case "self":
+                        Intent selfIntent = new Intent(activity, SelfIntroductionActivity.class);
+                        startActivity(selfIntent);
+                        finish();
+                        break;
+                    case "friend":
+                        onBackPressed();
+                        finish();
+                }
                 //do back
             }
         });
@@ -126,13 +139,14 @@ public class EventActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.menu_toolbar_delete:
-                        new AlertDialog.Builder(EventActivity.this)
+                        AlertDialog dialog = new AlertDialog.Builder(EventActivity.this)
                                 .setTitle("刪除確認")
                                 .setMessage("確定要刪除嗎?一但刪除便無法復原。")
                                 .setPositiveButton("確定", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        AsyncTaskHelper.execute(() -> TimelineServiceImpl.delete(timelineNo));
+                                        AsyncTaskHelper.execute(() -> TimelineServiceImpl.delete(timelineNo), empty -> timelineDAO.delete(timelineNo));
+
                                         Intent intent = new Intent();
                                         if (meet) {
                                             intent.setClass(EventActivity.this, FriendsTimelineActivity.class);
@@ -144,11 +158,14 @@ public class EventActivity extends AppCompatActivity {
                                         }
                                         startActivity(intent);
                                     }
-                                }).setNegativeButton("取消", null).create()
-                                .show();
+                                }).setNegativeButton("取消", null).create();
+                        dialog.show();
+                        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY);
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.GRAY);
+
+
                         break;
                     case R.id.menu_toolbar_search:
-                        System.out.println(event.getText().toString());//偵測按下去的事件
                         Intent intent = new Intent();
                         intent.setClass(EventActivity.this, EditEventActivity.class);
                         Bundle bundle = new Bundle();
@@ -156,6 +173,7 @@ public class EventActivity extends AppCompatActivity {
                         bundle.putString("place", eventLocation.getText().toString());
                         bundle.putString("addEventMemo", addEventMemo.getText().toString());
                         bundle.putString("timelineNo", timelineNo.toString());
+                        bundle.putString("page", getIntent().getExtras().getString("page"));
                         if (meet) {
                             bundle.putString("action", "meet");
                             bundle.putString("friendId", friendId);
@@ -176,6 +194,11 @@ public class EventActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void openDB() {
+        dbHelper = new DBHelper(this);
+        timelineDAO = new TimelineDAO(dbHelper);
     }
 
 }

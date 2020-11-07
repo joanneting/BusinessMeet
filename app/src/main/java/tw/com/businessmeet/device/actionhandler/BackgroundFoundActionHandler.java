@@ -11,11 +11,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -23,6 +23,7 @@ import tw.com.businessmeet.background.NotificationService;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.TimelineBean;
 import tw.com.businessmeet.bean.UserInformationBean;
+import tw.com.businessmeet.dao.FriendDAO;
 import tw.com.businessmeet.dao.TimelineDAO;
 import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.device.DeviceFinder;
@@ -31,6 +32,7 @@ import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.helper.DeviceHelper;
 import tw.com.businessmeet.helper.NotificationHelper;
+import tw.com.businessmeet.network.ApplicationContext;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
@@ -44,6 +46,8 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
     private LocationListener locationListener = new MyLocationListener();
     private double longitude;
     private double latitude;
+    private FriendDAO friendDAO;
+    private UserInformationDAO userInformationDAO;
 
     public BackgroundFoundActionHandler(NotificationService notificationService) {
         this(notificationService, null);
@@ -61,8 +65,13 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
             Toast.makeText(notificationService, "請至設定開啟定位功能", Toast.LENGTH_SHORT).show();
             return;
         }
-        this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+        this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1800000, 0, locationListener);
         this.dbHelper = dbHelper;
+        if (dbHelper == null) {
+            dbHelper = new DBHelper(ApplicationContext.get());
+        }
+        friendDAO = new FriendDAO(dbHelper);
+        userInformationDAO = new UserInformationDAO(dbHelper);
     }
 
     @Override
@@ -74,10 +83,24 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
         if (deviceDetail != null) {
             String identifier = deviceDetail.getIdentifier();
             distance = (int) deviceDetail.getDistance();
-            AsyncTaskHelper.execute(
-                    () -> UserInformationServiceImpl.getByIdentifier(identifier),
-                    this::searchFriend
-            );
+            String userId = userInformationDAO.getId(identifier);
+            if (userId != null) {
+                Cursor cursor = userInformationDAO.getById(userId);
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                String avatar = cursor.getString(cursor.getColumnIndex("avatar"));
+                String profession = cursor.getString(cursor.getColumnIndex("profession"));
+                UserInformationBean userInformationBean = new UserInformationBean();
+                userInformationBean.setUserId(userId);
+                userInformationBean.setProfession(profession);
+                userInformationBean.setName(name);
+                userInformationBean.setAvatar(avatar);
+                searchFriend(userInformationBean);
+            } else {
+                AsyncTaskHelper.execute(
+                        () -> UserInformationServiceImpl.getByIdentifier(identifier),
+                        this::searchFriend
+                );
+            }
         }
     }
 
@@ -87,10 +110,21 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
         UserInformationDAO userInformationDAO = new UserInformationDAO(dbHelper);
         friendBean.setMatchmakerId(DeviceHelper.getUserId(dbHelper.getContext(), userInformationDAO));
         friendBean.setFriendId(searchId);
-        AsyncTaskHelper.execute(
-                () -> FriendServiceImpl.search(friendBean),
-                friendBeanList -> checkFriendMatched(userInformationBean, friendBeanList)
-        );
+        Cursor cursor = friendDAO.search(friendBean);
+        if (cursor != null) {
+            String friendNo = cursor.getString(cursor.getColumnIndex("friend_no"));
+            String remark = cursor.getString(cursor.getColumnIndex("remark"));
+            friendBean.setFriendNo(Integer.parseInt(friendNo));
+            friendBean.setRemark(remark);
+            List<FriendBean> friendBeanList = new ArrayList<>();
+            friendBeanList.add(friendBean);
+            checkFriendMatched(userInformationBean, friendBeanList);
+        } else {
+            AsyncTaskHelper.execute(
+                    () -> FriendServiceImpl.search(friendBean),
+                    friendBeanList -> checkFriendMatched(userInformationBean, friendBeanList)
+            );
+        }
     }
 
     private void checkFriendMatched(UserInformationBean userInformationBean, List<FriendBean> friendBeanList) {
@@ -99,58 +133,50 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
                 (friendBeanList.size() == 1 && friendBeanList.get(0).getCreateDate() != null)
         ) {
 
-            if (distance <= 10000) {
-                if (ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-                    return;
-                }
-
-                //更新位置
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                TimelineBean timelineBean = new TimelineBean();
-                timelineBean.setFriendId(friendBean.getFriendId());
-                timelineBean.setMatchmakerId(friendBean.getMatchmakerId());
-                Geocoder gc = new Geocoder(notificationService, Locale.TRADITIONAL_CHINESE);
-
-
-                try {
-                    longitude = location.getLongitude();        //取得經度
-                    latitude = location.getLatitude();
-                    List<Address> lstAddress = gc.getFromLocation(latitude, longitude, 1);
-//                    Toast.makeText(
-//                            notificationService.getBaseContext(),
-//                            lstAddress.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
-                    timelineBean.setPlace(lstAddress.get(0).getAddressLine(0));
-                    locationManager.removeUpdates(locationListener);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    timelineBean.setPlace("室內");
-                }
-//                    if (!Geocoder.isPresent()){ //Since: API Level 9
-//                        returnAddress = "Sorry! Geocoder service not Present.";
-//                    }
-                timelineBean.setTimelinePropertiesNo(2);
-
-                timelineBean.setTitle(timelineBean.getPlace());
-                Log.d("place", timelineBean.getPlace());
-                TimelineDAO timelineDAO = new TimelineDAO(dbHelper);
-                TimelineBean searchBean = new TimelineBean();
-                searchBean.setFriendId(friendBean.getFriendId());
-                searchBean.setMatchmakerId(friendBean.getMatchmakerId());
-                Cursor cursor = timelineDAO.search(searchBean);
-                String lastMeetPlace = "";
-                if (cursor != null && cursor.moveToLast()) {
-                    lastMeetPlace = cursor.getString(cursor.getColumnIndex("place"));
-                }
-                AsyncTaskHelper.execute(
-                        () -> TimelineServiceImpl.add(timelineBean),
-                        timelineDAO::add
-                );
-
-                notificationHelper.sendBackgroundMessage(userInformationBean, lastMeetPlace);
+                return;
             }
+
+            //更新位置
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            TimelineBean timelineBean = new TimelineBean();
+            timelineBean.setFriendId(friendBean.getFriendId());
+            timelineBean.setMatchmakerId(friendBean.getMatchmakerId());
+            Geocoder gc = new Geocoder(notificationService, Locale.TRADITIONAL_CHINESE);
+
+
+            try {
+                longitude = location.getLongitude();        //取得經度
+                latitude = location.getLatitude();
+                List<Address> lstAddress = gc.getFromLocation(latitude, longitude, 1);
+                timelineBean.setPlace(lstAddress.get(0).getAddressLine(0));
+                locationManager.removeUpdates(locationListener);
+            } catch (Exception e) {
+                e.printStackTrace();
+                timelineBean.setPlace("室內");
+            }
+            timelineBean.setTimelinePropertiesNo(2);
+
+            timelineBean.setTitle(timelineBean.getPlace());
+            TimelineDAO timelineDAO = new TimelineDAO(dbHelper);
+            TimelineBean searchBean = new TimelineBean();
+            searchBean.setFriendId(friendBean.getFriendId());
+            searchBean.setMatchmakerId(friendBean.getMatchmakerId());
+            Cursor cursor = timelineDAO.search(searchBean);
+            String lastMeetPlace = "";
+            if (cursor != null && cursor.moveToLast()) {
+                lastMeetPlace = cursor.getString(cursor.getColumnIndex("place"));
+            }
+            AsyncTaskHelper.execute(
+                    () -> TimelineServiceImpl.add(timelineBean),
+                    timelineDAO::add
+            );
+
+            notificationHelper.sendBackgroundMessage(userInformationBean, lastMeetPlace);
         }
+//        }
     }
 
     private class MyLocationListener implements LocationListener {

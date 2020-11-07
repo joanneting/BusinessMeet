@@ -5,12 +5,15 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageButton;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,15 +23,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.DBHelper;
@@ -45,6 +39,7 @@ public class FriendSearchActivity extends AppCompatActivity {
     private FriendSearchAllFragment friendSearchAllFragment;
     private FriendSearchGroupFragment friendSearchGroupFragment;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.friend_search);
@@ -53,6 +48,7 @@ public class FriendSearchActivity extends AppCompatActivity {
         //toolbar
         toolbar = (Toolbar) findViewById(R.id.search_friend_topAppBar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         //Set Home
         bottomNavigationView.setSelectedItemId(R.id.menu_friends);
@@ -66,6 +62,7 @@ public class FriendSearchActivity extends AppCompatActivity {
 
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
+        result.close();
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
         viewPager = findViewById(R.id.viewPager);
         tabLayout = findViewById(R.id.search_friend_tabs);
@@ -81,8 +78,8 @@ public class FriendSearchActivity extends AppCompatActivity {
         viewPager.setAdapter(viewPagerAdapter);
 
     }
+
     private void openDB() {
-        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
     }
@@ -119,6 +116,7 @@ public class FriendSearchActivity extends AppCompatActivity {
             return fragmentsTitle.get(position);
         }
     }
+
     //Perform ItemSelectedListener
     BottomNavigationView.OnNavigationItemSelectedListener navListener =
             (new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -146,4 +144,9 @@ public class FriendSearchActivity extends AppCompatActivity {
 
             });
 
+    @Override
+    public void onBackPressed() {
+//        鎖住Back鍵
+        return;
+    }
 }

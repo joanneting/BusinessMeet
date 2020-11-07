@@ -115,7 +115,6 @@ public class EventAddParticipantActivity extends AppCompatActivity implements Ev
             ActivityInviteBean.inviteBean = resultInviteList;
 
             setResult(RequestCode.REQUEST_ADD_PARTICIPANT, intent);
-            System.out.println("inviteList.size() = " + resultInviteList.size());
             finish();
         }
     };

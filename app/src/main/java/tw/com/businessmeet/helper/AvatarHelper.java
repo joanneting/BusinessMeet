@@ -12,7 +12,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
@@ -55,7 +54,6 @@ public class AvatarHelper {
 
     public static String setImageResource(ImageView avatar) {
         Drawable avatarDraw = avatar.getDrawable();
-        Log.d("resultavatar", String.valueOf(avatarDraw));
         if (avatarDraw == null) {
             return "";
         }

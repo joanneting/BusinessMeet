@@ -1,10 +1,8 @@
 package tw.com.businessmeet.bean;
 
-import java.util.Date;
-
 public class FriendCustomizationBean {
 
-    private static String[] column = new String[]{"friend_customization_no","name","friend_no","create_date","modify_date"};
+    private static String[] column = new String[]{"friend_customization_no", "name", "content", "friend_no", "create_date", "modify_date"};
     private Integer friendCustomizationNo;
     private String name;
     private Integer friendNo;

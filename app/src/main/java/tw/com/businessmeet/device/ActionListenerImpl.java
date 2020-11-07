@@ -3,7 +3,6 @@ package tw.com.businessmeet.device;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.widget.TextView;
 
 import tw.com.businessmeet.R;
@@ -37,8 +36,6 @@ public class ActionListenerImpl implements ActionListener {
         if (state == FindState.STATE_ON) {
             activity.setProgressBarIndeterminateVisibility(true);
             TextView search_title = activity.findViewById(R.id.search_title);
-            Log.e("search", String.valueOf(activity));
-            Log.e("search", String.valueOf(search_title));
             search_title.setText("正在搜尋...");
         }
     }

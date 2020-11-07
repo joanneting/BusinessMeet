@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +27,7 @@ import tw.com.businessmeet.adapter.FriendProfileListViewAdapter;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.FriendCustomizationBean;
 import tw.com.businessmeet.bean.UserInformationBean;
+import tw.com.businessmeet.dao.FriendDAO;
 import tw.com.businessmeet.dao.UserInformationDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.helper.AvatarHelper;
@@ -46,9 +46,11 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
     private String friendId, content;
     private Integer friendNo;
     private UserInformationDAO userInformationDAO;
-    private DBHelper DH;
+    private DBHelper dbHelper;
     private final FriendBean friendBean = new FriendBean();
     private final ArrayList<FriendCustomizationBean> friendCustomizationBeanList = new ArrayList<FriendCustomizationBean>();
+    private FriendDAO friendDAO;
+
 
     private static void setListViewHeight(ListView listView) {
         if (listView == null) {
@@ -86,6 +88,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
                 userInformationBean.setMail(cursor.getString(cursor.getColumnIndex("mail")));
                 userInformationBean.setTel(cursor.getString(cursor.getColumnIndex("tel")));
                 userInformationBean.setAvatar(cursor.getString(cursor.getColumnIndex("avatar")));
+                cursor.close();
             }
             id.append(userInformationBean.getUserId());
             userName.append(userInformationBean.getName());
@@ -96,17 +99,17 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
             avatar.setImageBitmap(AvatarHelper.getImageResource(userInformationBean.getAvatar()));
         });
         friendBean.setFriendId(friendId);
-        friendBean.setMatchmakerId(DeviceHelper.getUserId(this, userInformationDAO));
+        friendBean.setMatchmakerId(DeviceHelper.getUserId(this));
         AsyncTaskHelper.execute(() -> FriendServiceImpl.search(friendBean), friendBeanList -> {
             if (friendBeanList.get(0).getRemark() != null) {
                 content = friendBeanList.get(0).getRemark();
-                remark.append(friendBeanList.get(0).getRemark());
+                System.out.println(content);
+                remark.append(content);
             }
 
             friendNo = friendBeanList.get(0).getFriendNo();
             FriendCustomizationBean fcb = new FriendCustomizationBean();
             fcb.setFriendNo(friendNo);
-            System.out.println("friendNo = " + friendNo);
             AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.search(fcb), friendCustomizationBeans -> {
                 if (friendCustomizationBeans.size() > 1 || (friendCustomizationBeans.size() == 1 && (friendCustomizationBeans.get(0).getCreateDate() != null && !friendCustomizationBeans.get(0).equals("")))) {
                     friendCustomizationBeanList.addAll(friendCustomizationBeans);
@@ -145,7 +148,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
-
+        result.close();
         toolbar = (Toolbar) findViewById(R.id.friends_profile_topAppBar);
         //toolbarMenu
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_ios_24px);  //back
@@ -153,15 +156,21 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent = new Intent();
+                intent.setClass(FriendsIntroductionActivity.this, FriendsTimelineActivity.class);
+                String friendId = getIntent().getStringExtra("friendId");
+                Bundle bundle = new Bundle();
+                bundle.putString("friendId", friendId);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
     }
 
     private void openDB() {
-        Log.d("add", "openDB");
-        DH = new DBHelper(this);
-        userInformationDAO = new UserInformationDAO(DH);
+        dbHelper = new DBHelper(this);
+        userInformationDAO = new UserInformationDAO(dbHelper);
+        friendDAO = new FriendDAO(dbHelper);
     }
 
     public View.OnClickListener editMemoButton = new View.OnClickListener() {
@@ -173,8 +182,8 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
     public View.OnClickListener deleteListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            System.out.println("friendNo = " + friendNo);
             AsyncTaskHelper.execute(() -> FriendServiceImpl.delete(friendNo), empty -> {
+                friendDAO.delete(friendNo);
                 Intent intent = new Intent();
                 intent.setClass(FriendsIntroductionActivity.this, FriendSearchActivity.class);
                 startActivity(intent);
@@ -189,6 +198,7 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
         bundle.putString("friendId", getIntent().getStringExtra("friendId"));
         bundle.putString("userId", friendBean.getMatchmakerId());
         bundle.putInt("friendNo", friendNo);
+        System.out.println("friendNo = " + friendNo);
         bundle.putString("remark", content);
         bundle.putString("matchmakerId", friendBean.getMatchmakerId());
 
@@ -221,4 +231,11 @@ public class FriendsIntroductionActivity extends AppCompatActivity {
                     return false;
                 }
             });
+
+    @Override
+    public void onBackPressed() {
+//        鎖住Back鍵
+//        如tbtn被選的話，不執行super 就可以把Back預設行為無效
+        return;
+    }
 }

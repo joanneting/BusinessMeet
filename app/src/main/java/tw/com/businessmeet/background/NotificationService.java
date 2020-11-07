@@ -7,9 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.util.Log;
-
-import java.io.IOException;
 
 import tw.com.businessmeet.device.DeviceFinder;
 import tw.com.businessmeet.device.DeviceFinderCompat;
@@ -17,7 +14,6 @@ import tw.com.businessmeet.device.actionhandler.supplier.BackgroundActionHandler
 import tw.com.businessmeet.device.bluetooth.connector.BluetoothConnectServer;
 import tw.com.businessmeet.device.discover.DiscoverServer;
 import tw.com.businessmeet.device.discover.DiscoverServerCompat;
-import tw.com.businessmeet.exception.BluetoothServerStartException;
 
 public class NotificationService extends Service {
     private final LocalBinder mLocBin = new LocalBinder();
@@ -33,7 +29,6 @@ public class NotificationService extends Service {
 
     @Override
     public void onCreate() {
-        Log.e("service ", "serviceStart");
 //        try {
 //            connectServer = new BluetoothConnectServer(this);
 //            connectServer.start();
@@ -49,30 +44,29 @@ public class NotificationService extends Service {
             finder.find(new BackgroundActionHandlerSupplier(this, finder));
 
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            sharedPreferences.edit().putBoolean("KEY_NOTIFICATION", true).apply();
+            sharedPreferences.edit().putBoolean(KEY_NOTIFICATION, true).apply();
         }
-
         super.onCreate();
     }
 
     @Override
     public void onDestroy() {
-        try {
-            connectServer.close();
-        } catch (IOException e) {
-            throw new BluetoothServerStartException(e);
-        }
+//        try {
+//            connectServer.close();
+//        } catch (IOException e) {
+//            throw new BluetoothServerStartException(e);
+//        }
 
         super.onDestroy();
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-        try {
-            connectServer.close();
-        } catch (IOException e) {
-            throw new BluetoothServerStartException(e);
-        }
+//        try {
+//            connectServer.close();
+//        } catch (IOException e) {
+//            throw new BluetoothServerStartException(e);
+//        }
 
         return super.onUnbind(intent);
     }

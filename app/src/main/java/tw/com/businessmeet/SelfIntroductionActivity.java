@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,17 +12,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import q.rorbin.badgeview.QBadgeView;
 import tw.com.businessmeet.adapter.ProfileTimelineRecyclerViewAdapter;
 import tw.com.businessmeet.background.NotificationService;
 import tw.com.businessmeet.bean.TimelineBean;
@@ -32,7 +31,6 @@ import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.helper.AvatarHelper;
 import tw.com.businessmeet.helper.DBHelper;
 import tw.com.businessmeet.helper.DeviceHelper;
-import tw.com.businessmeet.service.FriendService;
 import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 
 public class SelfIntroductionActivity extends AppCompatActivity implements ProfileTimelineRecyclerViewAdapter.ClickListener {
@@ -48,6 +46,8 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
     private RecyclerView recyclerViewProfileTimeline;
     private ProfileTimelineRecyclerViewAdapter profileTimelineRecyclerViewAdapter;
     private final List<TimelineBean> timelineBeanList = new ArrayList<>();
+//    private QBadgeView qBadgeView;
+
 
 
     @Override
@@ -61,11 +61,9 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
         goProfile.setOnClickListener(goProfileClick);
         menu = findViewById(R.id.bottom_navigation);
         recyclerViewProfileTimeline = findViewById(R.id.profile_timeline_view);
-        //this.personal = personal;
-        Intent intent = new Intent(this, NotificationService.class);
-        Intent friendIntent = new Intent(this, FriendService.class);
-        this.startService(intent);
-        this.startService(friendIntent);
+//        qBadgeView = new QBadgeView(content);
+//        qBadgeView.bindTarget(view);
+//        qBadgeView.hide(true);//隐藏Badge
         //toolbar
         toolbar = findViewById(R.id.toolbar);
         //toolbarMenu
@@ -94,7 +92,6 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
         AsyncTaskHelper.execute(() -> TimelineServiceImpl.searchList(timelineBean), timelineBeans -> {
             for (TimelineBean searchBean : timelineBeans) {
                 profileTimelineRecyclerViewAdapter.dataInsert(searchBean);
-                //Log.e("MatchedBean", String.valueOf(matchedBean.getBlueTooth()));
             }
         });
         openDB();
@@ -111,19 +108,16 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
         bottomNavigationView.setItemIconTintList(null);  //顯示頭像
         AvatarHelper avatarHelper = new AvatarHelper();
         createRecyclerViewProfileTimeline();
-        Log.d("seedmess", "ness");
         Cursor result = userInformationDAO.getById(DeviceHelper.getUserId(this));
-        Log.e("result", String.valueOf(result));
 
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = AvatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
-
+        result.close();
     }
 
 
     private void openDB() {
-        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
     }
@@ -131,12 +125,6 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
     public void searchUserInformation() {
 
         Cursor result = userInformationDAO.getById(DeviceHelper.getUserId(this));
-        Log.d("result", String.valueOf(result.getColumnCount()));
-
-        for (int i = 0; i < result.getColumnCount(); i++) {
-            Log.d("result", result.getColumnName(i));
-        }
-
 
         if (result.moveToFirst()) {
             userName.append(result.getString(result.getColumnIndex("name")));
@@ -178,11 +166,16 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
         intent.setClass(this, EventActivity.class); //改到活動事件內容
         Bundle bundle = new Bundle();
         bundle.putString("timelineNo", profileTimelineRecyclerViewAdapter.getTimelineBean(position).getTimelineNo().toString());
+        bundle.putString("page", "self");
         intent.putExtras(bundle);
         startActivity(intent);
 
     }
 
+
+    public void getView(){
+
+    }
 
     //Perform ItemSelectedListener
     BottomNavigationView.OnNavigationItemSelectedListener navListener =
@@ -210,5 +203,8 @@ public class SelfIntroductionActivity extends AppCompatActivity implements Profi
 
             });
 
-
+    @Override
+    public void onBackPressed() {
+        return;
+    }
 }

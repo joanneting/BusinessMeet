@@ -1,14 +1,17 @@
 package tw.com.businessmeet.bean;
 
-import java.util.Date;
-
 public class ActivityDateBean {
+    private static String[] column = new String[]{"activity_date_no", "activity_no", "start_date", "end_date", "create_date", "modify_date"};
     private Integer activityDateNo;
     private Integer activityNo;
     private String startDate;
     private String endDate;
     private String createDate;
     private String modifyDate;
+
+    public static String[] getColumn() {
+        return column;
+    }
 
     public Integer getActivityDateNo() {
         return activityDateNo;

@@ -8,7 +8,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,8 +93,9 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //do back
-                onBackPressed();
+                Intent intent = new Intent();
+                intent.setClass(FriendsTimelineActivity.this, FriendSearchActivity.class);
+                startActivity(intent);
             }
         });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -133,12 +133,13 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         Menu BVMenu = bottomNavigationView.getMenu();
         AvatarHelper avatarHelper = new AvatarHelper();
         UserInformationBean ufb = new UserInformationBean();
+        ufb.setUserId(DeviceHelper.getUserId(this));
         Cursor result = userInformationDAO.searchAll(ufb);
         createRecyclerViewFriendsTimeline(); //timelineRecycleView
         MenuItem userItem = BVMenu.findItem(R.id.menu_home);
         Bitmap myPhoto = avatarHelper.getImageResource(result.getString(result.getColumnIndex("avatar")));
         userItem.setIcon(new BitmapDrawable(getResources(), myPhoto));
-
+        result.close();
         if (getIntent().hasExtra("avatar")) {
             ImageView photo = findViewById(R.id.friends_photo);
             Bitmap profilePhoto = BitmapFactory.decodeByteArray(
@@ -148,7 +149,6 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
     }
 
     private void openDB() {
-        Log.d("add", "openDB");
         DH = new DBHelper(this);
         userInformationDAO = new UserInformationDAO(DH);
         matchedDAO = new FriendDAO(DH);
@@ -171,6 +171,7 @@ public class FriendsTimelineActivity extends AppCompatActivity implements Friend
         bundle.putString("timelineNo", friendsTimelineRecyclerViewAdapter.getTimelineBean(position).getTimelineNo().toString());
         String friendId = getIntent().getStringExtra("friendId");
         bundle.putString("friendId", friendId);
+        bundle.putString("page", "friend");
         intent.putExtras(bundle);
         startActivity(intent);
 
