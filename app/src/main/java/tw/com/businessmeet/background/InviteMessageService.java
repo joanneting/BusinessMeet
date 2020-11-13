@@ -39,7 +39,7 @@ import tw.com.businessmeet.helper.NotificationHelper;
 import tw.com.businessmeet.service.Impl.FriendServiceImpl;
 import tw.com.businessmeet.service.Impl.TimelineServiceImpl;
 
-public class ActivityMessageService extends FirebaseMessagingService {
+public class InviteMessageService extends FirebaseMessagingService {
     private static final String ACTION_OK = "tw.com.businessmeet.action.notification.bluetooth.ok";
     private static final String ACTION_DENIED = "tw.com.businessmeet.action.notification.bluetooth.denied";
     private static Notification ACTIVE_NOTIFICATION;
@@ -230,7 +230,7 @@ public class ActivityMessageService extends FirebaseMessagingService {
                     () -> FriendServiceImpl.createInviteNotification(friendBean),
                     newFriendBean -> {
 //                        inviteRequestList.removeFirst();
-                        ActivityMessageService.ACTIVE_NOTIFICATION = null;
+                        InviteMessageService.ACTIVE_NOTIFICATION = null;
                         if (action.equals(ACTION_OK)) {
                             Intent startActivityIntent = new Intent(context, FriendsIntroductionActivity.class);
                             startActivityIntent.putExtra("friendId", friendBean.getFriendId());
@@ -240,7 +240,7 @@ public class ActivityMessageService extends FirebaseMessagingService {
                     },
                     (status, message) -> {
 //                        inviteRequestList.removeFirst();
-                        ActivityMessageService.ACTIVE_NOTIFICATION = null;
+                        InviteMessageService.ACTIVE_NOTIFICATION = null;
                     }
             );
 

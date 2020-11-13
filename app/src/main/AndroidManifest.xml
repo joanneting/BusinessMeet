@@ -83,7 +83,7 @@
         <receiver android:name=".background.FriendInviteService$FriendInviteBroadcastReceiver" />
 
         <service
-            android:name=".background.ActivityMessageService"
+            android:name=".background.InviteMessageService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
