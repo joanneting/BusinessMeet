@@ -7,13 +7,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
@@ -22,15 +22,15 @@ import androidx.core.app.NotificationManagerCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import tw.com.businessmeet.FriendsIntroductionActivity;
 import tw.com.businessmeet.R;
+import tw.com.businessmeet.activity.FriendsIntroductionActivity;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.bean.TimelineBean;
+import tw.com.businessmeet.dao.FriendDAO;
 import tw.com.businessmeet.dao.TimelineDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
 import tw.com.businessmeet.helper.DBHelper;
@@ -43,7 +43,6 @@ public class InviteMessageService extends FirebaseMessagingService {
     private static final String ACTION_OK = "tw.com.businessmeet.action.notification.bluetooth.ok";
     private static final String ACTION_DENIED = "tw.com.businessmeet.action.notification.bluetooth.denied";
     private static Notification ACTIVE_NOTIFICATION;
-    //    private static Notification Accept_NOTIFICATION;
     private int notificationId = 0;
     private NotificationManagerCompat notificationManager;
     private static RemoteMessage remoteMessage = null;
@@ -51,12 +50,10 @@ public class InviteMessageService extends FirebaseMessagingService {
     private double longitude;
     private double latitude;
     private LocationListener locationListener = new MyLocationListener();
-    private static final LinkedList<FriendBean> inviteRequestList = new LinkedList<>();
 
     @Override
     public void onCreate() {
         super.onCreate();
-
     }
 
     private class MyLocationListener implements LocationListener {
@@ -85,32 +82,47 @@ public class InviteMessageService extends FirebaseMessagingService {
         this.remoteMessage = remoteMessage;
         notificationManager = NotificationManagerCompat.from(this);
         Map<String, String> data = remoteMessage.getData();
-        System.out.println("data = " + data);
+        FriendBean friendBean = new FriendBean();
         if (data != null) {
+            DBHelper dbHelper = new DBHelper(this);
+            FriendDAO friendDAO = new FriendDAO(dbHelper);
             switch (data.get("type")) {
                 case "friendInvite":
-//                    Looper.prepare();
-                    FriendBean friendBean = new FriendBean();
                     String friendId = data.get("friendId");
                     String friendName = data.get("friendName");
-                    System.out.println("friendName = " + friendName);
                     friendBean.setFriendId(friendId);
+                    friendBean.setMatchmakerId(DeviceHelper.getUserId(this));
                     friendBean.setFriendName(friendName);
                     addTimeline(friendId, friendName);
-//                    inviteRequestList.add(friendBean);
                     createInviteFriendNotification(friendBean);
-//                    Looper.loop();
+
+                    Cursor friendInvite = friendDAO.search(friendBean);
+                    if (friendInvite != null) {
+                        friendBean.setFriendNo(Integer.parseInt(friendInvite.getString(friendInvite.getColumnIndex("friend_no"))));
+                        friendBean.setRemark(friendInvite.getString(friendInvite.getColumnIndex("remark")));
+                        friendBean.setCreateDate(friendInvite.getString(friendInvite.getColumnIndex("create_date")));
+                        friendBean.setStatus(2);
+                        friendDAO.update(friendBean);
+                    }
                     break;
                 case "acceptFriendInvite":
-
                     String acceptFriendId = data.get("friendId");
                     String acceptFriendName = data.get("friendName");
+                    friendBean.setFriendId(acceptFriendId);
+                    friendBean.setMatchmakerId(DeviceHelper.getUserId(this));
+
+
+                    Cursor acceptFriendInvite = friendDAO.search(friendBean);
+                    friendBean.setFriendNo(Integer.parseInt(acceptFriendInvite.getString(acceptFriendInvite.getColumnIndex("friend_no"))));
+                    friendBean.setRemark(acceptFriendInvite.getString(acceptFriendInvite.getColumnIndex("remark")));
+                    friendBean.setCreateDate(acceptFriendInvite.getString(acceptFriendInvite.getColumnIndex("create_date")));
+                    friendBean.setStatus(2);
+                    friendDAO.update(friendBean);
                     addTimeline(acceptFriendId, acceptFriendName);
                     createAccrptFriendNotification(acceptFriendId, acceptFriendName);
+                    break;
             }
-
         }
-
     }
 
     private void addTimeline(String acceptFriendId, String acceptFriendName) {
@@ -119,20 +131,17 @@ public class InviteMessageService extends FirebaseMessagingService {
         timelineBean.setFriendId(acceptFriendId);
         Geocoder gc = new Geocoder(this, Locale.TRADITIONAL_CHINESE);
         //更新位置
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-
         try {
             longitude = location.getLongitude();        //取得經度
             latitude = location.getLatitude();
             List<Address> lstAddress = gc.getFromLocation(latitude, longitude, 1);
-//                    Toast.makeText(
-//                            notificationService.getBaseContext(),
-//                            lstAddress.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
             timelineBean.setPlace(lstAddress.get(0).getAddressLine(0));
             locationManager.removeUpdates(locationListener);
         } catch (Exception e) {
@@ -140,7 +149,6 @@ public class InviteMessageService extends FirebaseMessagingService {
             timelineBean.setPlace("室內");
         }
         timelineBean.setTimelinePropertiesNo(2);
-
         timelineBean.setTitle(timelineBean.getPlace());
         DBHelper dbHelper = new DBHelper(this);
         TimelineDAO timelineDAO = new TimelineDAO(dbHelper);
@@ -200,11 +208,6 @@ public class InviteMessageService extends FirebaseMessagingService {
 
     @Override
     public void onNewToken(String token) {
-        Log.d("activitymessage", "Refreshed token: " + token);
-
-        // If you want to send messages to this application instance or
-        // manage this apps subscriptions on the server side, send the
-        // Instance ID token to your app server.
         sendRegistrationToServer(token);
     }
 
@@ -219,7 +222,6 @@ public class InviteMessageService extends FirebaseMessagingService {
             notificationManager.cancelAll();
             String action = intent.getAction();
             String friend = intent.getStringExtra("friend");
-            System.out.println("friendId = " + friend);
             FriendBean friendBean = new FriendBean();
             if (friend == null) {
                 friend = remoteMessage.getData().get("friendId");
@@ -229,7 +231,6 @@ public class InviteMessageService extends FirebaseMessagingService {
             AsyncTaskHelper.execute(
                     () -> FriendServiceImpl.createInviteNotification(friendBean),
                     newFriendBean -> {
-//                        inviteRequestList.removeFirst();
                         InviteMessageService.ACTIVE_NOTIFICATION = null;
                         if (action.equals(ACTION_OK)) {
                             Intent startActivityIntent = new Intent(context, FriendsIntroductionActivity.class);
@@ -239,12 +240,9 @@ public class InviteMessageService extends FirebaseMessagingService {
                         }
                     },
                     (status, message) -> {
-//                        inviteRequestList.removeFirst();
                         InviteMessageService.ACTIVE_NOTIFICATION = null;
                     }
             );
-
         }
     }
-
 }
