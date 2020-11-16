@@ -82,8 +82,12 @@ public class ForegroundFoundActionHandler extends AbstractFoundActionHandler {
         if (cursor != null) {
             String friendNo = cursor.getString(cursor.getColumnIndex("friend_no"));
             String remark = cursor.getString(cursor.getColumnIndex("remark"));
+            int status = Integer.parseInt(cursor.getString(cursor.getColumnIndex("status")));
+            String createDate = cursor.getString(cursor.getColumnIndex("create_date"));
+            friendBean.setStatus(status);
             friendBean.setFriendNo(Integer.parseInt(friendNo));
             friendBean.setRemark(remark);
+            friendBean.setCreateDate(createDate);
             List<FriendBean> friendBeanList = new ArrayList<>();
             friendBeanList.add(friendBean);
             checkFriendMatched(userInformationBean, friendBeanList);
@@ -96,9 +100,8 @@ public class ForegroundFoundActionHandler extends AbstractFoundActionHandler {
     }
 
     private void checkFriendMatched(UserInformationBean userInformationBean, List<FriendBean> friendBeanList) {
-        FriendBean friendBean = friendBeanList.get(0);
         if (friendBeanList.size() > 1 ||
-                (friendBeanList.size() == 1 && friendBean.getCreateDate() != null)
+                (friendBeanList.size() == 1 && friendBeanList.get(0).getCreateDate() != null)
         ) {
             matchListener.onMatched(userInformationBean);
         } else {
