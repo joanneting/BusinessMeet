@@ -33,6 +33,7 @@ public class ActionListenerImpl implements ActionListener {
 
     @Override
     public void onChange(FindState state, Context context, Intent intent) {
+
         if (state == FindState.STATE_ON) {
             activity.setProgressBarIndeterminateVisibility(true);
             TextView search_title = activity.findViewById(R.id.search_title);

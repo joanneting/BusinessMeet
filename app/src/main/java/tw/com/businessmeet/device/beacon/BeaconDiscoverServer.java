@@ -38,10 +38,10 @@ public class BeaconDiscoverServer implements DiscoverServer {
     public void start() {
         Beacon beacon = new Beacon.Builder()
                 .setId1(beaconIdentifier)
-                .setId2("1")
-                .setId3("1")
-                .setManufacturer(0x0118)
-                .setTxPower(-59)
+                .setId2("1")//做虛擬分類
+                .setId3("1")//做虛擬分類
+                .setManufacturer(0x0118)//廠商 //0x0118表示未定義
+                .setTxPower(-59)//發射功率//通常在一米處大約為-59 dBm。
                 .setDataFields(Collections.singletonList(0L))
                 .build();
         transmitter.startAdvertising(beacon, new AdvertiseCallback() {

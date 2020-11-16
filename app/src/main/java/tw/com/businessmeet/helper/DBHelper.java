@@ -8,7 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
     private final static int _DBVersion = 1;
     private final static String _DBName = "BeMet.db";
-    private final static String[] _TableName = new String[]{"user_information", "friend", "groups", "friend_group", "friend_customization", "timeline", "activity_label", "activity_remind", "activity_invite", "problem_report", "user_role", "activity_date"};
+    private final static String[] _TableName = new String[]{"user_information", "friend", "groups", "friend_group", "friend_customization",
+            "timeline", "activity_label", "activity_remind", "activity_invite", "problem_report", "user_role", "activity_date"};
     private Context context;
 
     public DBHelper(Context context) {

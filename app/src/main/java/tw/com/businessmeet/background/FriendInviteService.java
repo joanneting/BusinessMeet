@@ -14,9 +14,7 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
 
-import java.util.LinkedList;
-
-import tw.com.businessmeet.FriendsIntroductionActivity;
+import tw.com.businessmeet.activity.FriendsIntroductionActivity;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.dao.FriendDAO;
 import tw.com.businessmeet.helper.AsyncTaskHelper;
@@ -29,8 +27,6 @@ public class FriendInviteService extends Service {
     private static final String ACTION_DENIED = "tw.com.businessmeet.action.notification.bluetooth.denied";
 
     private static Notification ACTIVE_NOTIFICATION;
-
-    private static final LinkedList<FriendBean> inviteRequestList = new LinkedList<>();
     private int notificationId = 0;
     private NotificationManagerCompat notificationManager;
 
@@ -56,9 +52,7 @@ public class FriendInviteService extends Service {
             channel1.enableVibration(true);
             notificationManager.createNotificationChannel(channel1);
         }
-
     }
-
 
     @Override
     public void onDestroy() {
@@ -81,8 +75,7 @@ public class FriendInviteService extends Service {
             friendBean.setFriendId(friendId);
             friendBean.setStatus(action.equals(ACTION_OK) ? 2 : null);
             AsyncTaskHelper.execute(
-                    () -> FriendServiceImpl.createInviteNotification(friendBean),
-                    newFriendBean -> {
+                    () -> FriendServiceImpl.createInviteNotification(friendBean), newFriendBean -> {
                         friendDAO.add(newFriendBean);
                         FriendInviteService.ACTIVE_NOTIFICATION = null;
                         if (action.equals(ACTION_OK)) {

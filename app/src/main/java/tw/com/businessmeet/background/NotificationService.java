@@ -29,12 +29,6 @@ public class NotificationService extends Service {
 
     @Override
     public void onCreate() {
-//        try {
-//            connectServer = new BluetoothConnectServer(this);
-//            connectServer.start();
-//        } catch (IOException e) {
-//            throw new BluetoothServerStartException(e);
-//        }
         boolean isOpen = getSharedPreferences(KEY_NOTIFICATION, Context.MODE_PRIVATE)
                 .getBoolean(KEY_NOTIFICATION, false);
         if (!isOpen) {
@@ -51,23 +45,11 @@ public class NotificationService extends Service {
 
     @Override
     public void onDestroy() {
-//        try {
-//            connectServer.close();
-//        } catch (IOException e) {
-//            throw new BluetoothServerStartException(e);
-//        }
-
         super.onDestroy();
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
-//        try {
-//            connectServer.close();
-//        } catch (IOException e) {
-//            throw new BluetoothServerStartException(e);
-//        }
-
         return super.onUnbind(intent);
     }
 

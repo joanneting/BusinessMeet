@@ -3,7 +3,7 @@ package tw.com.businessmeet.device.enumerate;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 
-public enum FindAction {
+public enum FindAction {//列舉
     UNKNOWN, FOUND, CHANGE, FINISH;
 
     public static FindAction getInstance(String action) {

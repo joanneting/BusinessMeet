@@ -156,7 +156,8 @@ public class EventAddParticipantRecyclerViewAdapter extends RecyclerView.Adapter
                         ActivityInviteBean activityInviteBean = activityInviteBeanList.get(i);
                         String userName = activityInviteBean.getUserName();
                         //根據需求，新增過濾內容
-                        if (userName.contains(filterString) || userName.toLowerCase().contains(filterString.toLowerCase()) || userName.toUpperCase().contains(filterString.toUpperCase())) {
+                        if (userName.contains(filterString) || userName.toLowerCase().contains(filterString.toLowerCase()) ||
+                                userName.toUpperCase().contains(filterString.toUpperCase())) {
                             RecyclerViewFilterBean<ActivityInviteBean> recyclerViewFilterBean = new RecyclerViewFilterBean<>();
                             recyclerViewFilterBean.setData(activityInviteBean);
                             recyclerViewFilterBean.setPosition(i);

@@ -32,41 +32,41 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
-        <activity android:name=".SelfInviteActivity" />
-        <activity android:name=".EventAddParticipantActivity" />
-        <activity android:name=".EventAddLocationActivity" />
-        <activity android:name=".EventSearch" />
+        <activity android:name=".activity.SelfInviteActivity" />
+        <activity android:name=".activity.EventAddParticipantActivity" />
+        <activity android:name=".activity.EventAddLocationActivity" />
+        <activity android:name=".activity.EventSearchActivity" />
         <activity
-            android:name=".EventColorSelectActivity"
+            android:name=".activity.EventColorSelectActivity"
             android:theme="@style/AppTheme.PopMe" />
-        <activity android:name=".EventCreateActivity" />
-        <activity android:name=".EditEventActivity" />
-        <activity android:name=".EventActivity" />
+        <activity android:name=".activity.EventCreateActivity" />
+        <activity android:name=".activity.EditEventActivity" />
+        <activity android:name=".activity.EventActivity" />
         <activity
-            android:name=".FriendSearchActivity"
+            android:name=".activity.FriendSearchActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".FriendsTimelineActivity"
-            android:parentActivityName=".FriendsActivity" />
+            android:name=".activity.FriendsTimelineActivity"
+            android:parentActivityName=".activity.FriendsActivity" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.LoginActivity"
             android:label="@string/title_activity_login" />
-        <activity android:name=".BaseActivity" />
+        <activity android:name=".activity.BaseActivity" />
         <activity
-            android:name=".FriendsActivity"
+            android:name=".activity.FriendsActivity"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".FriendsIntroductionActivity" />
-        <activity android:name=".FriendsMemoActivity" />
-        <activity android:name=".OpenActivityFriendsSearchActivity" />
-        <activity android:name=".FriendsFilterActivity" />
-        <activity android:name=".EditIntroductionActivity" />
-        <activity android:name=".SelfIntroductionActivity" />
-        <activity android:name=".AddIntroductionActivity" />
-        <activity android:name=".SearchActivity" />
-        <activity android:name=".EditFriendMemoActivity" />
-        <activity android:name=".EditFriendsProfileActivity" />
-        <activity android:name=".SelfInformationActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.FriendsIntroductionActivity" />
+        <activity android:name=".activity.FriendsMemoActivity" />
+        <activity android:name=".activity.OpenActivityFriendsSearchActivity" />
+        <activity android:name=".activity.FriendsFilterActivity" />
+        <activity android:name=".activity.EditIntroductionActivity" />
+        <activity android:name=".activity.SelfIntroductionActivity" />
+        <activity android:name=".activity.AddIntroductionActivity" />
+        <activity android:name=".activity.SearchActivity" />
+        <activity android:name=".activity.EditFriendMemoActivity" />
+        <activity android:name=".activity.EditFriendsProfileActivity" />
+        <activity android:name=".activity.SelfInformationActivity" />
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -83,7 +83,7 @@
         <receiver android:name=".background.FriendInviteService$FriendInviteBroadcastReceiver" />
 
         <service
-            android:name=".background.ActivityMessageService"
+            android:name=".background.InviteMessageService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

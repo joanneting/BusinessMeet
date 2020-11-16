@@ -31,7 +31,9 @@ public class BeaconFinder implements DeviceFinder {
     @Override
     public void find(ActionHandlerSupplier actionHandlerSupplier, ActionListener actionListener) {
         ActionHandler foundActionHandler = actionHandlerSupplier.get(FindAction.FOUND);
-        
+        if (actionListener != null) {
+            foundActionHandler.executeListener(actionListener, context, new Intent());
+        }
         beaconHelper.addRangeNotifier((beaconCollection, region) -> {
             for (Beacon beacon : beaconCollection) {
                 if (foundedBeacon.add(beacon.getId1().toString())) {
@@ -39,6 +41,7 @@ public class BeaconFinder implements DeviceFinder {
                     FoundedDeviceDetail deviceDetail = new BeaconDeviceDetail(beacon);
                     intent.putExtra(DeviceFinder.EXTRA_FOUNDED_DEVICE_DETAIL, deviceDetail);
                     foundActionHandler.handle(context, intent);
+
                 }
             }
         });
@@ -49,6 +52,5 @@ public class BeaconFinder implements DeviceFinder {
     @Override
     public void cancel() {
         beaconHelper.unbind();
-        finishActionHandler.handle(context, new Intent());
     }
 }

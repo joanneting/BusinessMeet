@@ -4,7 +4,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-public interface FoundedDeviceDetail extends Parcelable {
+public interface FoundedDeviceDetail extends Parcelable/*序列化*/ {
     @NonNull
     String getIdentifier();
 

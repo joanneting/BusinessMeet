@@ -21,7 +21,7 @@ public class ActivityInviteBean implements Parcelable {
     private String userName;
     private String avatar;
     private Integer status;
-    private Boolean isInvite;
+    private transient Boolean isInvite;//json不序列化
     private String title;
     private String place;
     private String activityDate;
