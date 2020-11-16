@@ -89,7 +89,9 @@ public class ForegroundFoundActionHandler extends AbstractFoundActionHandler {
             friendBean.setRemark(remark);
             friendBean.setCreateDate(createDate);
             List<FriendBean> friendBeanList = new ArrayList<>();
-            friendBeanList.add(friendBean);
+            if (status == 2) {
+                friendBeanList.add(friendBean);
+            }
             checkFriendMatched(userInformationBean, friendBeanList);
         } else {
             AsyncTaskHelper.execute(
