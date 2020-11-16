@@ -129,15 +129,11 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
 
     private void checkFriendMatched(UserInformationBean userInformationBean, List<FriendBean> friendBeanList) {
         FriendBean friendBean = friendBeanList.get(0);
-        if (friendBeanList.size() > 1 ||
-                (friendBeanList.size() == 1 && friendBeanList.get(0).getCreateDate() != null)
-        ) {
-
-            if (ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
+        if (friendBeanList.size() > 1 || (friendBeanList.size() == 1 && friendBeanList.get(0).getCreateDate() != null)) {
+            if (ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(notificationService, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-
             //更新位置
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -145,8 +141,6 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
             timelineBean.setFriendId(friendBean.getFriendId());
             timelineBean.setMatchmakerId(friendBean.getMatchmakerId());
             Geocoder gc = new Geocoder(notificationService, Locale.TRADITIONAL_CHINESE);
-
-
             try {
                 longitude = location.getLongitude();        //取得經度
                 latitude = location.getLatitude();
@@ -158,7 +152,6 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
                 timelineBean.setPlace("室內");
             }
             timelineBean.setTimelinePropertiesNo(2);
-
             timelineBean.setTitle(timelineBean.getPlace());
             TimelineDAO timelineDAO = new TimelineDAO(dbHelper);
             TimelineBean searchBean = new TimelineBean();
@@ -173,22 +166,15 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
                     () -> TimelineServiceImpl.add(timelineBean),
                     timelineDAO::add
             );
-
             notificationHelper.sendBackgroundMessage(userInformationBean, lastMeetPlace);
         }
-//        }
     }
 
     private class MyLocationListener implements LocationListener {
         @Override
         public void onLocationChanged(Location loc) {
-//            Toast.makeText(
-//                    notificationService,
-//                    "Location changed: Lat: " + loc.getLatitude() + " Lng: "
-//                            + loc.getLongitude(), Toast.LENGTH_SHORT).show();
             longitude = loc.getLongitude();
             latitude = loc.getLatitude();
-            /*------- To get city name from coordinates -------- */
         }
 
         @Override

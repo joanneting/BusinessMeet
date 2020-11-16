@@ -15,11 +15,6 @@ public class BackgroundStateChangeActionHandler extends AbstractStateChangeActio
                 BluetoothHelper.startDiscovery();
                 break;
             case STATE_OFF:
-//                Intent enable = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-//                enable.putExtra(
-//                        BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,
-//                        3600);
-//                notificationService.startActivityForResult(enable, RequestCode.REQUEST_DISCOVERABLE);
                 Toast.makeText(context, "檢測到您的藍芽已關閉，請至設定開啟。", Toast.LENGTH_SHORT).show();
                 break;
         }

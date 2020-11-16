@@ -23,8 +23,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import tw.com.businessmeet.FriendsIntroductionActivity;
 import tw.com.businessmeet.R;
+import tw.com.businessmeet.activity.FriendsIntroductionActivity;
 import tw.com.businessmeet.bean.FriendBean;
 import tw.com.businessmeet.dao.FriendDAO;
 import tw.com.businessmeet.dao.UserInformationDAO;

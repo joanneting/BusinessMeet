@@ -84,8 +84,6 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
                         friendCustomizationBeanList.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, friendCustomizationBeanList.size());
-                        System.out.println("!!!deleteButton success!!!");
-
                     });
                 }
             });

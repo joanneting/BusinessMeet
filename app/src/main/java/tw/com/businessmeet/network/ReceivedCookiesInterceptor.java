@@ -13,7 +13,6 @@ public class ReceivedCookiesInterceptor implements Interceptor {
     private final static String TAG = "CookiesInterceptor";
 
     public ReceivedCookiesInterceptor() {
-//        this.context = context;
         super();
     }
 

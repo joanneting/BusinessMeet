@@ -126,7 +126,8 @@ public class FriendGroupRecyclerViewAdapter extends RecyclerView.Adapter<FriendG
                         FriendGroupBean friendGroupBean = friendGroupBeanList.get(i);
                         String groupName = friendGroupBean.getGroupName();
                         //根據需求，新增過濾內容
-                        if (groupName.contains(filterString) || groupName.toLowerCase().contains(filterString.toLowerCase()) || groupName.toUpperCase().contains(filterString.toUpperCase())) {
+                        if (groupName.contains(filterString) || groupName.toLowerCase().contains(filterString.toLowerCase())
+                                || groupName.toUpperCase().contains(filterString.toUpperCase())) {
                             RecyclerViewFilterBean<FriendGroupBean> recyclerViewFilterBean = new RecyclerViewFilterBean<>();
                             recyclerViewFilterBean.setData(friendGroupBean);
                             recyclerViewFilterBean.setPosition(i);

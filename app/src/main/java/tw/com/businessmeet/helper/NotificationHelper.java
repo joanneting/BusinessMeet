@@ -16,8 +16,8 @@ import androidx.core.app.NotificationCompat;
 
 import java.io.ByteArrayOutputStream;
 
-import tw.com.businessmeet.FriendsTimelineActivity;
 import tw.com.businessmeet.R;
+import tw.com.businessmeet.activity.FriendsTimelineActivity;
 import tw.com.businessmeet.background.NotificationService;
 import tw.com.businessmeet.bean.UserInformationBean;
 import tw.com.businessmeet.service.Impl.UserInformationServiceImpl;
@@ -28,8 +28,6 @@ public class NotificationHelper {
     private AvatarHelper avatarHelper = new AvatarHelper();
     private static int NOTIFICATION_ID = 0;
     public static final String CHANNEL_1_ID = "channel1";
-    private int position;
-    //private static int NOTIFICATION_ID = 0x30001; //196610
     private static int SUMMARY_ID = 1;
     private String GROUP_KEY_MEET = "tw.com.bemet.meet";
     private NotificationService notificationService;
@@ -49,17 +47,10 @@ public class NotificationHelper {
         );
     }
 
-
-    //public static final String CHANNEL_2_ID = "channel2";
-
-
     public void sendBackgroundMessage(UserInformationBean userInformationBean, String lastMeetPlace) {
         String userName = userInformationBean.getName();
         String profession = userInformationBean.getProfession();
-        String mail = userInformationBean.getMail();
-        String tel = userInformationBean.getTel();
 
-        //String avatar = userInformationBean.getAvatar();
         Notification groupBuilder =
                 new NotificationCompat.Builder(notificationService, CHANNEL_1_ID)
                         .setContentTitle(userName + " " + profession)
@@ -75,14 +66,6 @@ public class NotificationHelper {
                         .setGroupSummary(true)
                         .build();
 
-
-
-                    /*String title2 = "李赫宰";
-                    String message2 = " SM娛樂公司";*/
-        /**/
-
-//        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
-//        bigStyle.bigText(memo);
         NotificationCompat.Builder notification1 = new NotificationCompat.Builder(
                 notificationService, CHANNEL_1_ID
         )
@@ -95,15 +78,7 @@ public class NotificationHelper {
                 .setColor(Color.rgb(4, 42, 88))
                 .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
                 .setLargeIcon(avatarHelper.getImageResource(userInformationBean.getAvatar()))
-                //.setStyle(bigStyle)
-//                .setStyle(new NotificationCompat.BigTextStyle()
-//                        .bigText(memo))
                 .setGroup(GROUP_KEY_MEET);
-
-
-        //宣告Intent物件 跳至friends_introduction
-/*                    Intent intent = new Intent(notificationService,
-                            FriendsIntroductionActivity.class);*/
 
         Intent intent = new Intent();
         intent.setClass(notificationService, FriendsTimelineActivity.class);

@@ -73,26 +73,19 @@ public class UserInformationDAO {
 
     public void add(UserInformationBean userInformationBean) {
         ContentValues values = putValues(userInformationBean);
-
         String createDate = dateFormat.format(new Date());
         values.put("create_date", createDate);
         db.insert(tableName, null, values);
     }
 
     public void update(UserInformationBean userInformationBean) {
-
         ContentValues values = putValues(userInformationBean);
         String modifyDate = dateFormat.format(new Date());
         values.put("modify_date", modifyDate);
-        //範例
-//        String[] whereArgs1 = {"#100", b.getStorage_id()};
-//        String whereClause1 = DatabaseSchema.TABLE_TALKS.COLUMN_TID + "=? AND " + DatabaseSchema.TABLE_TALKS.COLUMN_STORAGEID + "=?";
-//        db.update(DatabaseSchema.TABLE_TALKS.NAME, values1, whereClause1, whereArgs1);
         db.update(tableName, values, whereClause, new String[]{userInformationBean.getUserId()});
     }
 
     public void delete(String identifier) {
-
         db.delete(tableName, whereClause, new String[]{identifier});
     }
 
@@ -132,8 +125,6 @@ public class UserInformationDAO {
     }
 
     public Cursor searchAll(UserInformationBean userInformationBean) {
-
-
         String userId = userInformationBean.getUserId();
         String password = userInformationBean.getPassword();
         String name = userInformationBean.getName();
@@ -148,7 +139,6 @@ public class UserInformationDAO {
         String[] searchColumn = new String[]{column[0], column[1], column[2], column[3], column[4], column[5], column[6], column[7], column[8], column[9]};
         String where = "";
         ArrayList<String> args = new ArrayList<>();
-
         for (int i = 0; i < searchColumn.length; i++) {
             if (searchValue[i] != null && !searchValue[i].equals("")) {
                 if (!where.equals("")) {
@@ -165,6 +155,4 @@ public class UserInformationDAO {
             return null;
         }
     }
-
-
 }

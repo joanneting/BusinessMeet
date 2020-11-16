@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditEventActivity">
+    tools:context=".activity.EditEventActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/event_create_toolbar"
@@ -16,6 +16,7 @@
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="1dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,6 +59,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="16dp">
+
                 <ImageView
                     android:id="@+id/clock_icon"
                     android:layout_width="wrap_content"
@@ -91,7 +93,7 @@
                             android:theme="@style/AppTheme.content"
                             app:layout_constraintStart_toEndOf="@id/clock_icon"
                             app:layout_constraintTop_toBottomOf="@+id/edit_event"
-                            android:layout_weight="1"/>
+                            android:layout_weight="1" />
 
                         <Switch
                             android:id="@+id/switch_day"
@@ -120,7 +122,7 @@
                             android:theme="@style/AppTheme.content"
                             app:layout_constraintStart_toStartOf="@+id/event_date"
                             app:layout_constraintTop_toBottomOf="@+id/event_date"
-                            android:layout_weight="1"/>
+                            android:layout_weight="1" />
 
                         <TextView
                             android:id="@+id/time_start"
@@ -130,8 +132,7 @@
                             android:theme="@style/AppTheme.content"
                             app:layout_constraintBottom_toBottomOf="@+id/date_start"
                             app:layout_constraintEnd_toEndOf="@+id/switch_day"
-                            app:layout_constraintTop_toTopOf="@+id/date_start"
-                            />
+                            app:layout_constraintTop_toTopOf="@+id/date_start" />
                     </LinearLayout>
 
 
@@ -142,6 +143,7 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:layout_margin="16dp">
+
                         <TextView
                             android:id="@+id/date_end"
                             android:layout_width="wrap_content"
@@ -150,7 +152,7 @@
                             android:theme="@style/AppTheme.content"
                             app:layout_constraintStart_toStartOf="@+id/date_start"
                             app:layout_constraintTop_toBottomOf="@+id/date_start"
-                            android:layout_weight="1"/>
+                            android:layout_weight="1" />
 
 
                         <TextView
@@ -166,7 +168,6 @@
 
 
                 </LinearLayout>
-
 
 
             </LinearLayout>
@@ -200,6 +201,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginLeft="16dp">
+
                     <com.google.android.material.chip.ChipGroup
                         android:id="@+id/event_tag"
                         android:layout_width="wrap_content"
@@ -213,13 +215,12 @@
                         app:singleSelection="false" />
 
 
-
                     <TextView
                         android:id="@+id/more_event_tag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="更多標籤"
-                        android:textSize="14dp"/>
+                        android:textSize="14dp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -233,131 +234,133 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="16dp">
-            <ImageView
-                android:id="@+id/location_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_place_24px"
-                android:layout_marginLeft="24dp"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_event_location"
-                app:layout_constraintEnd_toEndOf="@+id/tag_icon"
-                app:layout_constraintStart_toStartOf="@+id/tag_icon"
-                app:layout_constraintTop_toTopOf="@+id/edit_event_location" />
 
-            <EditText
-                android:id="@+id/edit_event_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="新增地點"
-                android:layout_marginLeft="16dp"
-                android:textColor="@color/colorAlmostBlack"
-                android:textSize="14dp"
-                app:layout_constraintStart_toStartOf="@+id/more_event_tag"
-                app:layout_constraintTop_toBottomOf="@+id/more_event_tag" />
+                <ImageView
+                    android:id="@+id/location_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_place_24px"
+                    android:layout_marginLeft="24dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_event_location"
+                    app:layout_constraintEnd_toEndOf="@+id/tag_icon"
+                    app:layout_constraintStart_toStartOf="@+id/tag_icon"
+                    app:layout_constraintTop_toTopOf="@+id/edit_event_location" />
 
-            <!--            地點-->
+                <EditText
+                    android:id="@+id/edit_event_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="新增地點"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="@color/colorAlmostBlack"
+                    android:textSize="14dp"
+                    app:layout_constraintStart_toStartOf="@+id/more_event_tag"
+                    app:layout_constraintTop_toBottomOf="@+id/more_event_tag" />
+
+                <!--            地點-->
 
             </LinearLayout>
 
             <!--            參與者-->
-        <LinearLayout
-            android:id="@+id/participant_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
-
-            <ImageView
-                android:id="@+id/participant_icon"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/participant_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_people_24px"
-                android:layout_marginLeft="24dp"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_event_participant"
-                app:layout_constraintEnd_toEndOf="@+id/location_icon"
-                app:layout_constraintStart_toStartOf="@+id/location_icon"
-                app:layout_constraintTop_toTopOf="@+id/edit_event_participant" />
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
 
-            <TextView
-                android:id="@+id/edit_event_participant"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:hint="新增參與者"
-                android:textColor="@color/colorAlmostBlack"
-                android:textSize="14dp"
-                app:layout_constraintStart_toStartOf="@+id/edit_event_location"
-                app:layout_constraintTop_toBottomOf="@+id/edit_event_location" />
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/participant_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_people_24px"
+                    android:layout_marginLeft="24dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_event_participant"
+                    app:layout_constraintEnd_toEndOf="@+id/location_icon"
+                    app:layout_constraintStart_toStartOf="@+id/location_icon"
+                    app:layout_constraintTop_toTopOf="@+id/edit_event_participant" />
+
+                <TextView
+                    android:id="@+id/edit_event_participant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:hint="新增參與者"
+                    android:textColor="@color/colorAlmostBlack"
+                    android:textSize="14dp"
+                    app:layout_constraintStart_toStartOf="@+id/edit_event_location"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_event_location" />
+            </LinearLayout>
             <!--            參與者-->
 
             <!--            color-->
-        <LinearLayout
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
-
-            <ImageView
-                android:id="@+id/add_event_color"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="24dp"
-                android:background="@color/timelineGreen"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_color"
-                app:layout_constraintEnd_toEndOf="@+id/participant_icon"
-                app:layout_constraintHorizontal_bias="0.08"
-                app:layout_constraintStart_toStartOf="@+id/participant_icon"
-                app:layout_constraintTop_toTopOf="@+id/edit_color" />
-
-            <TextView
-                android:id="@+id/edit_color"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:hint="預設顏色"
-                android:textColor="@color/colorAlmostBlack"
-                android:textSize="14dp"
-                app:layout_constraintStart_toStartOf="@+id/edit_event_participant"
-                app:layout_constraintTop_toBottomOf="@id/edit_event_participant" />
-            <!--            color-->
-        </LinearLayout>
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:id="@+id/add_event_color"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="24dp"
+                    android:background="@color/timelineGreen"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_color"
+                    app:layout_constraintEnd_toEndOf="@+id/participant_icon"
+                    app:layout_constraintHorizontal_bias="0.08"
+                    app:layout_constraintStart_toStartOf="@+id/participant_icon"
+                    app:layout_constraintTop_toTopOf="@+id/edit_color" />
+
+                <TextView
+                    android:id="@+id/edit_color"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:hint="預設顏色"
+                    android:textColor="@color/colorAlmostBlack"
+                    android:textSize="14dp"
+                    app:layout_constraintStart_toStartOf="@+id/edit_event_participant"
+                    app:layout_constraintTop_toBottomOf="@id/edit_event_participant" />
+                <!--            color-->
+            </LinearLayout>
 
             <!--            說明-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="16dp"
-            android:gravity="center_vertical|left">
-            <ImageView
-                android:id="@+id/memo_icon"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:src="@drawable/ic_format_align_left_24px"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_event_memo"
-                app:layout_constraintEnd_toEndOf="@+id/add_event_color"
-                app:layout_constraintStart_toStartOf="@+id/add_event_color"
-                app:layout_constraintTop_toTopOf="@+id/edit_event_memo" />
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical|left">
 
-            <EditText
-                android:id="@+id/edit_event_memo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="新增說明"
-                android:minWidth="250dp"
-                android:textSize="16dp"
-                android:layout_marginLeft="16dp"
-                android:textColor="@color/colorAlmostBlack"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/edit_color"
-                app:layout_constraintTop_toBottomOf="@+id/edit_color"
-                app:layout_constraintVertical_bias="1.0" />
-        </LinearLayout>
+                <ImageView
+                    android:id="@+id/memo_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24dp"
+                    android:src="@drawable/ic_format_align_left_24px"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_event_memo"
+                    app:layout_constraintEnd_toEndOf="@+id/add_event_color"
+                    app:layout_constraintStart_toStartOf="@+id/add_event_color"
+                    app:layout_constraintTop_toTopOf="@+id/edit_event_memo" />
+
+                <EditText
+                    android:id="@+id/edit_event_memo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="新增說明"
+                    android:minWidth="250dp"
+                    android:textSize="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:textColor="@color/colorAlmostBlack"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/edit_color"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_color"
+                    app:layout_constraintVertical_bias="1.0" />
+            </LinearLayout>
 
             <!--            說明-->
         </LinearLayout>
