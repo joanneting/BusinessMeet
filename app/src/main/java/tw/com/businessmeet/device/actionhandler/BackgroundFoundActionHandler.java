@@ -114,8 +114,10 @@ public class BackgroundFoundActionHandler extends AbstractFoundActionHandler {
         if (cursor != null) {
             String friendNo = cursor.getString(cursor.getColumnIndex("friend_no"));
             String remark = cursor.getString(cursor.getColumnIndex("remark"));
+            String createDate = cursor.getString(cursor.getColumnIndex("create_date"));
             friendBean.setFriendNo(Integer.parseInt(friendNo));
             friendBean.setRemark(remark);
+            friendBean.setCreateDate(createDate);
             List<FriendBean> friendBeanList = new ArrayList<>();
             friendBeanList.add(friendBean);
             checkFriendMatched(userInformationBean, friendBeanList);
