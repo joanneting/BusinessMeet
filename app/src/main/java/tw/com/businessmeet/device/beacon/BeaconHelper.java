@@ -24,7 +24,8 @@ public class BeaconHelper implements BeaconConsumer {
         this.context = context;
         this.beaconManager = BeaconManager.getInstanceForApplication(context);
         this.beaconManager.getBeaconParsers().add(new BeaconParser(BeaconParser.ALTBEACON_LAYOUT));
-        beaconManager.setBackgroundBetweenScanPeriod(500L);
+        beaconManager.setBackgroundBetweenScanPeriod(5L);
+        beaconManager.setForegroundBetweenScanPeriod(5L);
     }
 
     @Override
