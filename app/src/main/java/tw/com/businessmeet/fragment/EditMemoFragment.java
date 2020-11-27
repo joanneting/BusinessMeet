@@ -115,6 +115,7 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
     public View.OnClickListener dialogClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            originalChipContent = "";
             LayoutInflater inflater = getActivity().getLayoutInflater();
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             View view = inflater.inflate(R.layout.friend_add_column, null);
@@ -129,6 +130,7 @@ public class EditMemoFragment extends Fragment implements FriendMemoAddColumnRec
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
                         originalChipContent = originalChipContent + "," + addChipMemo.getText().toString();
+                        System.out.println("originalChipContent = " + originalChipContent);
                         Chip chip = new Chip(getContext());
                         ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(getContext(), null, 0, R.style.Widget_MaterialComponents_Chip_Action);
                         chip.setChipDrawable(chipDrawable);
