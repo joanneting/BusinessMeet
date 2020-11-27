@@ -119,7 +119,7 @@ public class InviteMessageService extends FirebaseMessagingService {
                     friendBean.setStatus(2);
                     friendDAO.update(friendBean);
                     addTimeline(acceptFriendId, acceptFriendName);
-                    createAccrptFriendNotification(acceptFriendId, acceptFriendName);
+                    createAcceptFriendNotification(acceptFriendId, acceptFriendName);
                     break;
             }
         }
@@ -186,7 +186,7 @@ public class InviteMessageService extends FirebaseMessagingService {
         notificationManager.notify(notificationId--, ACTIVE_NOTIFICATION);
     }
 
-    private void createAccrptFriendNotification(String friendId, String friendName) {
+    private void createAcceptFriendNotification(String friendId, String friendName) {
         Intent intent = new Intent(this, FriendsIntroductionActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("friendId", friendId);
