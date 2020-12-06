@@ -110,6 +110,8 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
             clickListener.onClick(v, getAdapterPosition());
             if (clickListener != null) {
                 clickListener.onClick(v, getAdapterPosition());
+                System.out.println("getAdapterPosition() = " + getAdapterPosition());
+
             }
         }
     }
