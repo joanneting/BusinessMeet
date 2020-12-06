@@ -119,7 +119,6 @@ public class EditFriendMemoActivity extends AppCompatActivity {
                 fcb.setContent(updateChipContent);
                 if (checkData(fcb)) {
                     AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.update(fcb), friendCustomizationBean -> {
-                        friendCustomizationDAO.update(friendCustomizationBean);
                         changeToAnotherPage();
 
                     });
