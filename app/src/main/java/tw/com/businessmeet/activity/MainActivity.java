@@ -39,8 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startService(new Intent(this, NotificationService.class));
-        startService(new Intent(this, FriendInviteService.class));
+
         ApplicationContext.getInstance().init(getApplicationContext());
         userInformationDAO = new UserInformationDAO(new DBHelper(this));
 
@@ -78,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
                     if (permission) {
                         String userId = DeviceHelper.getUserId(MainActivity.this, userInformationDAO);
                         Intent intent = new Intent();
+                        startService(new Intent(MainActivity.this, NotificationService.class));
+                        startService(new Intent(MainActivity.this, FriendInviteService.class));
                         if (userId == "" || userId == null) {
                             intent.setClass(MainActivity.this, LoginActivity.class);
                             MainActivity.this.startActivity(intent);
