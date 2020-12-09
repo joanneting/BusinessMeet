@@ -79,12 +79,10 @@ public class FriendInviteService extends Service {
                         () -> FriendServiceImpl.createInviteNotification(friendBean), newFriendBean -> {
                             friendDAO.add(newFriendBean);
                             FriendInviteService.ACTIVE_NOTIFICATION = null;
-                            if (action.equals(ACTION_OK)) {
-                                Intent startActivityIntent = new Intent(context, FriendsIntroductionActivity.class);
-                                startActivityIntent.putExtra("friendId", friendBean.getFriendId());
-                                startActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                context.startActivity(startActivityIntent);
-                            }
+                            Intent startActivityIntent = new Intent(context, FriendsIntroductionActivity.class);
+                            startActivityIntent.putExtra("friendId", friendBean.getFriendId());
+                            startActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(startActivityIntent);
                         },
                         (status, message) -> {
                             FriendInviteService.ACTIVE_NOTIFICATION = null;

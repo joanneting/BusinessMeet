@@ -35,7 +35,7 @@ public class FriendDAO {
     }
 
     public void add(FriendBean friendBean) {
-        if (friendBean.getRemark() == null || friendBean.getRemark().equals("")) {
+        if (friendBean.getRemark() == null) {
             friendBean.setRemark("");
         }
         ContentValues values = putValues(friendBean);
