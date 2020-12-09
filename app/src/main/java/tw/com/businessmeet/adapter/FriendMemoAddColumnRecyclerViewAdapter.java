@@ -60,6 +60,7 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
     @Override
     public void onBindViewHolder(@NonNull FriendMemoAddColumnRecyclerViewAdapter.ViewHolder holder, int position) {
         FriendCustomizationBean data = friendCustomizationBeanList.get(position);
+        System.out.println("HERE!! - " + position + ":" + friendCustomizationBeanList.get(position).getName());
         holder.memoTitle.setText(data.getName());
         friendCustomizationNo = data.getFriendCustomizationNo();
         String content = data.getContent();
@@ -78,9 +79,8 @@ public class FriendMemoAddColumnRecyclerViewAdapter extends RecyclerView.Adapter
             holder.deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    System.out.println(friendCustomizationNo);
-                    AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.delete(friendCustomizationNo), empty -> {
-                        friendCustomizationDAO.delete(friendCustomizationNo);
+
+                    AsyncTaskHelper.execute(() -> FriendCustomizationServiceImpl.delete(friendCustomizationBeanList.get(position).getFriendCustomizationNo()), empty -> {
                         friendCustomizationBeanList.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, friendCustomizationBeanList.size());
