@@ -70,25 +70,25 @@ public class FriendInviteService extends Service {
             dbHelper = new DBHelper(context);
             friendDAO = new FriendDAO(dbHelper);
             String action = intent.getAction();
-            String friendId = intent.getStringExtra("friendId");
-            FriendBean friendBean = new FriendBean();
-            friendBean.setFriendId(friendId);
-            friendBean.setStatus(action.equals(ACTION_OK) ? 2 : null);
-            AsyncTaskHelper.execute(
-                    () -> FriendServiceImpl.createInviteNotification(friendBean), newFriendBean -> {
-                        friendDAO.add(newFriendBean);
-                        FriendInviteService.ACTIVE_NOTIFICATION = null;
-                        if (action.equals(ACTION_OK)) {
+            if (action.equals(ACTION_OK)) {
+                String friendId = intent.getStringExtra("friendId");
+                FriendBean friendBean = new FriendBean();
+                friendBean.setFriendId(friendId);
+                friendBean.setStatus(action.equals(ACTION_OK) ? 2 : null);
+                AsyncTaskHelper.execute(
+                        () -> FriendServiceImpl.createInviteNotification(friendBean), newFriendBean -> {
+                            friendDAO.add(newFriendBean);
+                            FriendInviteService.ACTIVE_NOTIFICATION = null;
                             Intent startActivityIntent = new Intent(context, FriendsIntroductionActivity.class);
                             startActivityIntent.putExtra("friendId", friendBean.getFriendId());
                             startActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(startActivityIntent);
+                        },
+                        (status, message) -> {
+                            FriendInviteService.ACTIVE_NOTIFICATION = null;
                         }
-                    },
-                    (status, message) -> {
-                        FriendInviteService.ACTIVE_NOTIFICATION = null;
-                    }
-            );
+                );
+            }
         }
     }
 }
