@@ -63,7 +63,10 @@ public class SelfInformationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //What to do on back clicked
-                onBackPressed();
+                Intent intent = new Intent();
+                intent.setClass(SelfInformationActivity.this, SelfIntroductionActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
