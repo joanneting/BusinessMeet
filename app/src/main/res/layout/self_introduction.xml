@@ -5,163 +5,98 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
 android:layout_height="match_parent">
 
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/profile_information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F3F3F3"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:ignore="MissingConstraints">
+
+
+        <ImageButton
+            android:id="@+id/goProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:src="@drawable/ic_proceed"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.94"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <ImageView
+            android:id="@+id/edit_person_photo"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.06"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/avatar" />
+
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="31dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="8dp"
+            android:text=""
+            android:textColor="@color/colorAlmostBlack"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="@id/edit_person_photo"
+            app:layout_constraintStart_toEndOf="@+id/edit_person_photo"
+            app:layout_constraintTop_toTopOf="@+id/edit_person_photo"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/user_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text=""
+            android:textColor="@color/colorLabelGray"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/profile_name"
+            app:layout_constraintTop_toBottomOf="@+id/profile_name" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <TextView
-        android:id="@+id/editPersonalProfile"
+        android:id="@+id/profile_timeline_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="23dp"
-        android:layout_marginLeft="23dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:text="時間軸"
+        android:textColor="@color/colorAlmostBlack"
+        android:textSize="18dp"
         android:textStyle="bold"
-        android:text="個人檔案"
-        android:textColor="@color/colorAlmostBlack"
-        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_information"
+        tools:ignore="MissingConstraints" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/profile_timeline_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-<TextView
-    android:id="@+id/profile_name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="132dp"
-
-    android:textColor="@color/colorAlmostBlack"
-    android:textSize="23sp"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.12"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
-
-<Button
-    android:id="@+id/editPersonalProfileButton"
-    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="#00000000"
-    android:text="編輯個人檔案"
-    android:textColor="#2196F3"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.0"
-    app:layout_constraintStart_toStartOf="@+id/profile_name"
-    app:layout_constraintTop_toBottomOf="@+id/profile_name" />
-
-<ImageView
-    android:id="@+id/edit_person_photo"
-    android:layout_width="100dp"
-    android:layout_height="100dp"
-    app:layout_constraintBottom_toBottomOf="@+id/editPersonalProfileButton"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.88"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="@+id/profile_name"
-    app:srcCompat="@drawable/avatar" />
-
-    <TextView
-        android:id="@+id/label_profile_company"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="公司"
-        android:textColor="@color/colorLabelGray"
-        app:layout_constraintBottom_toTopOf="@+id/profile_company"
-        app:layout_constraintStart_toStartOf="@+id/profile_company"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/profile_company"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="23dp"
-        android:layout_marginLeft="23dp"
-        android:layout_marginTop="264dp"
-        android:text=""
-        android:textColor="@color/colorAlmostBlack"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/label_profile_position"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="職稱"
-        android:textColor="@color/colorLabelGray"
-        app:layout_constraintBottom_toTopOf="@+id/profile_position"
-        app:layout_constraintStart_toStartOf="@+id/profile_position"
-        app:layout_constraintTop_toBottomOf="@+id/profile_company"
-        app:layout_constraintVertical_bias="0.2"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/profile_position"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text=""
-        android:textColor="@color/colorAlmostBlack"
-        app:layout_constraintStart_toStartOf="@+id/profile_company"
-        app:layout_constraintTop_toBottomOf="@+id/profile_company" />
-
-
-    <TextView
-        android:id="@+id/label_profile_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="信箱"
-        android:textColor="@color/colorLabelGray"
-        app:layout_constraintBottom_toTopOf="@+id/profile_email"
-        app:layout_constraintStart_toStartOf="@+id/profile_email"
-        app:layout_constraintTop_toBottomOf="@+id/profile_position"
-        app:layout_constraintVertical_bias="0.20"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/profile_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text=""
-        android:textColor="@color/colorAlmostBlack"
-        app:layout_constraintStart_toStartOf="@+id/profile_company"
-        app:layout_constraintTop_toBottomOf="@+id/profile_position" />
-
-
-    <TextView
-        android:id="@+id/label_profile_tel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="電話"
-        android:textColor="@color/colorLabelGray"
-        app:layout_constraintBottom_toTopOf="@+id/profile_tel"
-        app:layout_constraintStart_toStartOf="@+id/profile_tel"
-        app:layout_constraintTop_toBottomOf="@+id/profile_email"
-        app:layout_constraintVertical_bias="0.2"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/profile_tel"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginTop="36dp"
-        android:text=""
-        android:textColor="@color/colorAlmostBlack"
-        app:layout_constraintStart_toStartOf="@+id/profile_position"
-        app:layout_constraintTop_toBottomOf="@+id/profile_email" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_timeline_text"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="MissingConstraints,NotSibling" />
 
     <View
         android:layout_width="match_parent"
@@ -182,4 +117,26 @@ android:layout_height="match_parent">
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/menu_navigation"
         tools:layout_editor_absoluteX="16dp" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/AppTheme.ToolBarStyle"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:layout_constraintTop_toTopOf="parent"
+        android:elevation="3dp"
+        tools:layout_editor_absoluteX="1dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAlmostBlack"
+        android:text="個人資料"
+        android:id="@+id/toolbar_title"
+        android:textStyle="bold"
+        tools:ignore="MissingConstraints" />
+    </androidx.appcompat.widget.Toolbar>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

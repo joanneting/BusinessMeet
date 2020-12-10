@@ -1,8 +1,55 @@
 <resources>
-    <string name="app_name">BussinessMeet</string>
+    <string name="app_name">BeMet</string>
     <string name="user_name">姓名</string>
     <string name="company">公司</string>
     <string name="position">職稱</string>
     <string name="email">信箱</string>
     <string name="tel">電話</string>
+
+    <!-- friends_profile_toolbar -->
+    <string name="friends_profile_topAppBar_timelineIcon">時間軸</string>
+    <string name="friends_profile_topAppBar">好友簡歷</string>
+
+    <!-- friends_profile_information -->
+    <string name="friends_profile_information_idTitle">ID : " "</string>
+    <string name="friends_profile_information_edit">編輯</string>
+    <string name="friends_profile_information_delete">刪除</string>
+    <string name="friends_profile_information_genderTitle">性別</string>
+    <string name="friends_profile_information_occupationTitle">職業</string>
+    <string name="friends_profile_information_emailTitle">信箱</string>
+    <string name="friends_profile_information_phoneTitle">電話</string>
+
+    <!-- friends_profile_memo -->
+    <string name="friends_profile_memo_favorite">新增喜好</string>
+    <string name="friends_profile_memo_limit">新增禁忌</string>
+    <string name="friends_profile_memo_personality">新增個性</string>
+
+    <!-- friends_profile_edit_tab -->
+    <string name="friends_edit">編輯</string>
+    <string name="friends_profile_information_tab">好友簡歷</string>
+    <string name="friends_profile_memo_tab">備註</string>
+
+    <!-- friends_profile_edit_toolbar -->
+    <string name="friends_profile_edit_topAppBar_backIcon">返回</string>
+    <string name="friends_profile_edit_topAppBar_confirmIcon">確認</string>
+
+    <!-- edit_friends_profile floating button-->
+    <string name="add_column_memo">新增備註</string>
+    <string name="add_column_profile">新增好友資訊欄位</string>
+
+    <!-- edit_friends_profile dialog -->
+    <string name="confirm">確認</string>
+    <string name="cancel">取消</string>
+
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">登入</string>
+    <string name="action_register">註冊</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >0 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
 </resources>

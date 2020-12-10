@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#042A58</color>
+    <color name="colorPrimary">#6BB5A7</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorAlmostBlack">#111111</color>
     <color name="colorLabelGray">#929191</color>
+    <color name="colorSearchGray">#E6E3E3</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="trasparent">#00000000</color>
+
+    <color name="timelineGreen">#ECF2F1</color>
+    <color name="timelineYellow">#FDF2D2</color>
+    <color name="timelineOrange">#FDD8D2</color>
+    <color name="timelineBlue">#CADDF0</color>
+    <color name="timelineRed">#F4A8AC</color>
+    <color name="timelineBrown">#B8ADAC</color>
+    <color name="lightPrimary">#C4E8E1</color>
+
+    <!-- Grey -->
+    <color name="grey_68">#707070</color>
+    <color name="grey_60">#999999</color>
+    <color name="grey_73">#BBBBBB</color>
+    <color name="grey_96">#F5F5F5</color>
+
+
 </resources>

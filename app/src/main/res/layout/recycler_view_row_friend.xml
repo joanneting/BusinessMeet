@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -12,42 +11,44 @@
 
         <ImageView
             android:id="@+id/friends_photo"
-            android:layout_width="match_parent"
+            android:layout_width="284dp"
             android:layout_height="73dp"
             android:layout_margin="10dp"
-            android:src="@drawable/avatar"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:src="@drawable/avatar" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_weight="0.5">
+            android:layout_weight="0.5"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/friends_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginLeft="12dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="4dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|left"
                 android:text="王曉明"
                 android:textColor="@color/colorAlmostBlack"
-                android:textSize="17sp"
-                android:layout_weight="1"/>
+                android:textSize="17sp" />
 
             <TextView
-                android:id="@+id/friends_company"
+                android:id="@+id/friends_profession"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginLeft="12dp"
                 android:layout_marginBottom="8dp"
-                android:text="SM Entertainment"
+                android:layout_weight="1"
+                android:gravity="center_vertical|left"
+                android:text="學生"
                 android:textColor="#6F6F6F"
-                android:textSize="14sp"
-                android:layout_weight="1"/>
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 

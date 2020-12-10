@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_bell"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_bell_thin_24dp"
+        android:title="通知"
+        android:actionLayout="@layout/invite_badge"/>
+    <item
+        android:id="@+id/menu_add_calendar"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_calendar_add_thin_24dp"
+        android:title="新增時間軸" />
+
+</menu>
