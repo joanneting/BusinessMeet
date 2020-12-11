@@ -228,21 +228,23 @@ public class InviteMessageService extends FirebaseMessagingService {
             }
             friendBean.setFriendId(friend);
             friendBean.setStatus(action.equals(ACTION_OK) ? 2 : null);
-            AsyncTaskHelper.execute(
-                    () -> FriendServiceImpl.createInviteNotification(friendBean),
-                    newFriendBean -> {
-                        InviteMessageService.ACTIVE_NOTIFICATION = null;
-                        if (action.equals(ACTION_OK)) {
+            if (action.equals(ACTION_OK)) {
+                AsyncTaskHelper.execute(
+                        () -> FriendServiceImpl.createInviteNotification(friendBean),
+                        newFriendBean -> {
+                            InviteMessageService.ACTIVE_NOTIFICATION = null;
+
                             Intent startActivityIntent = new Intent(context, FriendsIntroductionActivity.class);
                             startActivityIntent.putExtra("friendId", friendBean.getFriendId());
                             startActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(startActivityIntent);
+
+                        },
+                        (status, message) -> {
+                            InviteMessageService.ACTIVE_NOTIFICATION = null;
                         }
-                    },
-                    (status, message) -> {
-                        InviteMessageService.ACTIVE_NOTIFICATION = null;
-                    }
-            );
+                );
+            }
         }
     }
 }
